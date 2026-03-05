@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/MyMoviesApp.Presentation/">
+    <Project Path="src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI/MyMoviesApp.Presentation.WebAPI.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/MyMoviesApp.Application/MyMoviesApp.Application.csproj" />
+    <Project Path="src/MyMoviesApp.Domain/MyMoviesApp.Domain.csproj" />
+    <Project Path="src/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MyMoviesApp.Domain.Tests/MyMoviesApp.Domain.Tests.csproj" />
+    <Project Path="tests/MyMoviesApp.Infrastructure.Tests/MyMoviesApp.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>

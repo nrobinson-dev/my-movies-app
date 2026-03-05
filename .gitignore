@@ -19,9 +19,11 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+[Bb]in\\*
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+**/Migrations/**
 
 # .NET Core
 project.lock.json
@@ -30,6 +32,10 @@ artifacts/
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
+
+# App Settings
+appsettings.json
+appsettings.Development.json
 
 # NuGet Packages
 *.nupkg
@@ -52,3 +58,15 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# DLLs
+*.dll
+
+# JetBrains Rider
+.idea/
+
+# SQL Lite database files
+*.db
+
+# Client-side projects for now
+**/React/**
