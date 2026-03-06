@@ -34,11 +34,6 @@ The Web API is built using a **Clean Architecture** approach. Most endpoints are
 - **SQLite** — simple local database
 - **MediatR** — request handling
 
-**Long-term plan:**
-- Migrate to PostgreSQL
-- Remove MediatR
-- Improve infrastructure and architecture
-
 ---
 
 ## Project Goals
@@ -50,6 +45,7 @@ The long-term goal is to evolve this into a full ecosystem:
 - Rate limiting
 - Swagger / OpenAPI documentation
 - Centralized exception handling
+- Remove MediatR and implement custom request handling
 
 **Web Applications** — multiple front-end implementations of the same API:
 - React
@@ -59,6 +55,9 @@ The long-term goal is to evolve this into a full ecosystem:
 
 **Infrastructure**
 - PostgreSQL database
+- Email service for account creation and password resets
+- Caching strategy for TMDB API responses
+- OpenTelemetry for logging and monitoring
 - Docker containerization
 
 ---
@@ -68,6 +67,7 @@ The long-term goal is to evolve this into a full ecosystem:
 ### Prerequisites
 
 - [TMDB API Access Token](https://www.themoviedb.org/settings/api)
+- [JWT Signing Token](https://jwtsecretkeygenerator.com/) (256 for testing authenticated endpoints)
 - .NET 10 CLI
 - Entity Framework Core CLI
 
@@ -77,8 +77,11 @@ The long-term goal is to evolve this into a full ecosystem:
 
 2. **Configure application settings.**
 
-   Open `appsettings.Example.json`, add your TMDB Bearer Token under `TmdbSettings:BearerToken`, then rename the file to `appsettings.json`.
+   a. Open `appsettings.Example.json`, add your TMDB Bearer Token under `TmdbSettings:BearerToken`.
+   
+   b. Add your JWT signing token under `JwtSettings:SigningKey`.
 
+   c. Rename the file to `appsettings.json`.
 3. **Set up the database.**
 
    From the root directory of the repository, run:
@@ -87,13 +90,13 @@ The long-term goal is to evolve this into a full ecosystem:
    # Install EF Core CLI
    dotnet tool install --global dotnet-ef
 
-   # Create migration
+   # Create database migration
    dotnet ef migrations add InitialCreate \
      --project src/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj \
      --startup-project src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI/MyMoviesApp.Presentation.WebAPI.csproj \
      --output-dir Data/Migrations
 
-   # Apply migration
+   # Apply database migration
    dotnet ef database update \
      --project src/MyMoviesApp.Infrastructure \
      --startup-project src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI
