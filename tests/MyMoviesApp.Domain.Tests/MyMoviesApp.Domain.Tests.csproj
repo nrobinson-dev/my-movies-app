@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities/" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="../../src/MyMoviesApp.Domain/MyMoviesApp.Domain.csproj" />
   </ItemGroup>
 

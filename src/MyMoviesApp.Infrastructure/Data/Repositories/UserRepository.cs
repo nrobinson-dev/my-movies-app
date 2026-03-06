@@ -3,6 +3,8 @@ using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Domain.Entities;
 using MyMoviesApp.Domain.Enums;
 using MyMoviesApp.Infrastructure.Data.Models;
+using UserMovieDigitalRetailer = MyMoviesApp.Infrastructure.Data.Models.UserMovieDigitalRetailer;
+using UserMovieFormat = MyMoviesApp.Infrastructure.Data.Models.UserMovieFormat;
 
 namespace MyMoviesApp.Infrastructure.Data.Repositories;
 
@@ -54,20 +56,30 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
             .ToListAsync(cancellationToken);
 
         var movies = userMovies.Select(m => new MovieSummary
-        {
-            MovieId = m.TmdbId,
-            Title = m.Title,
-            ReleaseDate = m.ReleaseDate,
-            PosterPath = m.PosterPath,
-            Formats = m.UserMovieFormats
-                .Select(umf => (Format)umf.MovieFormatId)
-                .Distinct()
-                .ToList(),
-            DigitalRetailers = m.UserMovieDigitalRetailers
-                .Select(r => (Domain.Enums.DigitalRetailer)r.DigitalRetailerId)
-                .Distinct()
-                .ToList()
-        }).ToList();
+            {
+                MovieId = m.TmdbId,
+                Title = m.Title,
+                ReleaseDate = m.ReleaseDate,
+                PosterPath = m.PosterPath,
+                Formats = m.UserMovieFormats
+                    .Select(umf => new Domain.Entities.UserMovieFormat
+                    {
+                        Id = umf.MovieFormatId,
+                        Name = ((Format)umf.MovieFormatId).ToString()
+                    })
+                    .Distinct()
+                    .ToList(),
+                DigitalRetailers = m.UserMovieDigitalRetailers
+                    .Select(r => new Domain.Entities.UserMovieDigitalRetailer
+                    {
+                        Id = r.DigitalRetailerId,
+                        Name = ((Domain.Enums.DigitalRetailer)r.DigitalRetailerId).ToString()
+                    })
+                    .Distinct()
+                    .ToList()
+            })
+            .Distinct()
+            .ToList();
 
         return new MovieSummaryCollection(movies);
     }
@@ -77,14 +89,22 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
         var formats = await dbcontext.UserMovieFormats
             .Where(f => dbcontext.UserMovies
                 .Any(um => um.UserId == userId && um.TmdbId == movieId && um.Id == f.UserMovieId))
-            .Select(f => (Format)f.MovieFormatId)
+            .Select(f => new Domain.Entities.UserMovieFormat()
+            {
+                Id = f.MovieFormatId,
+                Name = ((Format)f.MovieFormatId).ToString()
+            })
             .Distinct()
             .ToListAsync(cancellationToken);
 
         var retailers = await dbcontext.UserMovieDigitalRetailers
             .Where(r => dbcontext.UserMovies
                 .Any(um => um.UserId == userId && um.TmdbId == movieId && um.Id == r.UserMovieId))
-            .Select(r => (Domain.Enums.DigitalRetailer)r.DigitalRetailerId)
+            .Select(r => new Domain.Entities.UserMovieDigitalRetailer()
+            {
+                Id = r.DigitalRetailerId,
+                Name = ((Domain.Enums.DigitalRetailer)r.DigitalRetailerId).ToString()
+            })
             .Distinct()
             .ToListAsync(cancellationToken);
 
@@ -95,7 +115,7 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
         };
     }
 
-    public async Task<int> SaveUserMovieAsync(Guid userId, MovieSummary movieSummary, CancellationToken cancellationToken)
+    public async Task<int> SaveUserMovieAsync(Guid userId, SaveMovieSummary movieSummary, CancellationToken cancellationToken)
     {
         await using var transaction = await dbcontext.Database.BeginTransactionAsync(cancellationToken);
         try

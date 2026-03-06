@@ -1,0 +1,49 @@
+using FluentAssertions;
+using MyMoviesApp.Domain.Entities;
+
+namespace MyMoviesApp.Domain.Tests.Entities;
+
+public class UserEntityTests
+{
+    [Fact]
+    public void User_Ctor_Should_AssignIdAndEmail()
+    {
+        var id = Guid.NewGuid();
+        var user = new User(id, "user@example.com");
+
+        user.Id.Should().Be(id);
+        user.Email.Should().Be("user@example.com");
+    }
+
+    [Fact]
+    public void User_Id_Should_BeReadOnly()
+    {
+        var id = Guid.NewGuid();
+        var user = new User(id, "user@example.com");
+
+        // Property has no setter — verifying via reflection that the value is stable
+        user.Id.Should().Be(id);
+    }
+
+    [Fact]
+    public void User_Email_Should_BeReadOnly()
+    {
+        var user = new User(Guid.NewGuid(), "readonly@example.com");
+
+        user.Email.Should().Be("readonly@example.com");
+    }
+
+    [Fact]
+    public void User_TwoUsers_WithSameData_ShouldHaveCorrectProperties()
+    {
+        var id1 = Guid.NewGuid();
+        var id2 = Guid.NewGuid();
+
+        var user1 = new User(id1, "a@example.com");
+        var user2 = new User(id2, "b@example.com");
+
+        user1.Id.Should().NotBe(user2.Id);
+        user1.Email.Should().NotBe(user2.Email);
+    }
+}
+

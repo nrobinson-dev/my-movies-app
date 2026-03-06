@@ -1,0 +1,117 @@
+using FluentAssertions;
+using Moq;
+using MyMoviesApp.Application.Common.Interfaces;
+using MyMoviesApp.Application.Features.User.Queries;
+using MyMoviesApp.Domain.Entities;
+using MyMoviesApp.Domain.Enums;
+
+namespace MyMoviesApp.Application.Tests.Features.User.Queries;
+
+public class GetMovieOwnershipQueryHandlerTests
+{
+    private readonly Mock<IUserRepository> _userRepositoryMock = new();
+    private readonly GetMovieOwnershipQueryHandler _handler;
+    private readonly UserMovieFormat _dvdFormat = new() { Id = (int)Format.Dvd, Name = "DVD" };
+    private readonly UserMovieFormat _bluRayFormat = new() { Id = (int)Format.BluRay, Name = "Blu-ray" };
+    private readonly UserMovieFormat _bluRay4KFormat = new() { Id = (int)Format.BluRay4K, Name = "Blu-ray 4K" };
+    private readonly UserMovieDigitalRetailer _appleTvRetailer = new() { Id = (int)DigitalRetailer.AppleTv, Name = "Apple TV" };
+    private readonly UserMovieDigitalRetailer _moviesAnywhereRetailer = new() { Id = (int)DigitalRetailer.MoviesAnywhere, Name = "Movies Anywhere" };
+    private readonly UserMovieDigitalRetailer _youTubeRetailer = new() { Id = (int)DigitalRetailer.YouTube, Name = "YouTube" };
+    
+    public GetMovieOwnershipQueryHandlerTests()
+    {
+        _handler = new GetMovieOwnershipQueryHandler(_userRepositoryMock.Object);
+    }
+
+    [Fact]
+    public async Task Handle_Should_ReturnCollectionDto_WithAllMovies()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var movies = new List<MovieSummary>
+        {
+            new() { MovieId = 1, Title = "The Matrix",  ReleaseDate = new DateOnly(1999, 3, 31),  PosterPath = "/matrix.jpg",    Formats = [_bluRayFormat] },
+            new() { MovieId = 2, Title = "Inception",   ReleaseDate = new DateOnly(2010, 7, 16),  PosterPath = "/inception.jpg", Formats = [_dvdFormat] }
+        };
+
+        _userRepositoryMock
+            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MovieSummaryCollection(movies));
+
+        var query = new GetMovieOwnershipQuery(userId);
+
+        // Act
+        var result = await _handler.Handle(query, CancellationToken.None);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Movies.Should().HaveCount(2);
+        result.TotalCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task Handle_Should_ReturnEmptyCollection_WhenUserHasNoMovies()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+
+        _userRepositoryMock
+            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary>()));
+
+        // Act
+        var result = await _handler.Handle(new GetMovieOwnershipQuery(userId), CancellationToken.None);
+
+        // Assert
+        result.Movies.Should().BeEmpty();
+        result.TotalCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task Handle_Should_MapFormatAndRetailerCounts_Correctly()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var movies = new List<MovieSummary>
+        {
+            new() { MovieId = 1, Title = "A", ReleaseDate = new DateOnly(2020, 1, 1), PosterPath = "/a.jpg",
+                    Formats = [_dvdFormat, _bluRayFormat], DigitalRetailers = [_appleTvRetailer] },
+            new() { MovieId = 2, Title = "B", ReleaseDate = new DateOnly(2021, 1, 1), PosterPath = "/b.jpg",
+                    Formats = [_bluRay4KFormat] },
+            new() { MovieId = 3, Title = "C", ReleaseDate = new DateOnly(2022, 1, 1), PosterPath = "/c.jpg",
+                    Formats = [_dvdFormat], DigitalRetailers = [_moviesAnywhereRetailer, _youTubeRetailer] }
+        };
+
+        _userRepositoryMock
+            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MovieSummaryCollection(movies));
+
+        // Act
+        var result = await _handler.Handle(new GetMovieOwnershipQuery(userId), CancellationToken.None);
+
+        // Assert
+        result.TotalCount.Should().Be(3);
+        result.TotalDvdCount.Should().Be(2);       // movies A and C
+        result.TotalBluRayCount.Should().Be(1);    // movie A
+        result.TotalBluRay4KCount.Should().Be(1);  // movie B
+        result.TotalDigitalCount.Should().Be(2);   // movies A and C
+    }
+
+    [Fact]
+    public async Task Handle_Should_PassUserIdToRepository()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+
+        _userRepositoryMock
+            .Setup(r => r.GetUserMoviesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary>()));
+
+        // Act
+        await _handler.Handle(new GetMovieOwnershipQuery(userId), CancellationToken.None);
+
+        // Assert
+        _userRepositoryMock.Verify(r => r.GetUserMoviesAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+    }
+}
+

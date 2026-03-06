@@ -13,7 +13,11 @@ namespace MyMoviesApp.Domain.Tests.Entities
         private readonly string _title = "The Matrix";
         private readonly DateOnly _releaseDate = DateOnly.Parse("1999-03-31");
         private readonly string _posterPath = "/poster.jpg";
-
+        private readonly UserMovieFormat _dvdFormat = new() { Id = (int)Format.Dvd, Name = "DVD" };
+        private readonly UserMovieFormat _bluRayFormat = new() { Id = (int)Format.BluRay, Name = "Blu-ray" };
+        private readonly UserMovieDigitalRetailer _appleTvRetailer = new() { Id = (int)DigitalRetailer.AppleTv, Name = "Apple TV" };
+        private readonly UserMovieDigitalRetailer _moviesAnywhereRetailer = new() { Id = (int)DigitalRetailer.MoviesAnywhere, Name = "Movies Anywhere" };
+        
         [Fact]
         public void MovieSummary_Ctor_AssignsAllProperties()
         {
@@ -37,7 +41,7 @@ namespace MyMoviesApp.Domain.Tests.Entities
         public void MovieSummary_Should_AllowFormats()
         {
             // Arrange
-            var formats = new List<Format> { Format.Dvd, Format.BluRay };
+            var formats = new List<UserMovieFormat> { _dvdFormat, _bluRayFormat };
 
             // Act
             var entity = new MovieSummary
@@ -50,15 +54,15 @@ namespace MyMoviesApp.Domain.Tests.Entities
 
             entity.Formats = formats;
             // Assert
-            entity.Formats.Should().Contain(Format.Dvd);
-            entity.Formats.Should().Contain(Format.BluRay);
+            entity.Formats.Should().Contain(_dvdFormat);
+            entity.Formats.Should().Contain(_bluRayFormat);
         }
 
         [Fact]
         public void MovieSummary_Should_AllowDigitalRetailers()
         {
             // Arrange
-            var digitalRetailers = new List<DigitalRetailer> { DigitalRetailer.MoviesAnywhere, DigitalRetailer.AppleTv };
+            var digitalRetailers = new List<UserMovieDigitalRetailer> { _moviesAnywhereRetailer, _appleTvRetailer };
 
             // Act
             var entity = new MovieSummary
@@ -72,8 +76,8 @@ namespace MyMoviesApp.Domain.Tests.Entities
             entity.DigitalRetailers = digitalRetailers;
             
             // Assert
-            entity.DigitalRetailers.Should().Contain(DigitalRetailer.MoviesAnywhere);
-            entity.DigitalRetailers.Should().Contain(DigitalRetailer.AppleTv);
+            entity.DigitalRetailers.Should().Contain(_moviesAnywhereRetailer);
+            entity.DigitalRetailers.Should().Contain(_appleTvRetailer);
         }
     }
 }

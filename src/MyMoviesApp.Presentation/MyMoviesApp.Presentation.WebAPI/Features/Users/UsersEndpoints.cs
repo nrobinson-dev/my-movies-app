@@ -44,6 +44,8 @@ public static class UsersEndpoints
         .WithTags(nameof(Users))
         .WithName("SaveUserMovieOwnership")
         .Produces(StatusCodes.Status200OK)
+        .ProducesValidationProblem()
+        .AddEndpointFilter<ValidationFilter<SaveUserMovieOwnershipDto>>()
         .RequireAuthorization();
         
         

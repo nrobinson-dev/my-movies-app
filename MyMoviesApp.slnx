@@ -8,6 +8,7 @@
     <Project Path="src/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/MyMoviesApp.Application.Tests/MyMoviesApp.Application.Tests.csproj" />
     <Project Path="tests/MyMoviesApp.Domain.Tests/MyMoviesApp.Domain.Tests.csproj" />
     <Project Path="tests/MyMoviesApp.Infrastructure.Tests/MyMoviesApp.Infrastructure.Tests.csproj" />
   </Folder>

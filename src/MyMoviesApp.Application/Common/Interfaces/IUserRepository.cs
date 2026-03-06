@@ -47,10 +47,10 @@ public interface IUserRepository
     /// Saves a movie summary to the user's collection.
     /// </summary>
     /// <param name="userId"></param>
-    /// <param name="movieSummary"></param>
+    /// <param name="saveMovieSummary"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<int> SaveUserMovieAsync(Guid userId, MovieSummary movieSummary, CancellationToken cancellationToken);
+    Task<int> SaveUserMovieAsync(Guid userId, SaveMovieSummary saveMovieSummary, CancellationToken cancellationToken);
     
     /// <summary>
     /// Gets the collection of movie summaries associated with the user.

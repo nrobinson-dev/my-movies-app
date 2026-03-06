@@ -19,7 +19,7 @@ public class SaveMovieOwnershipCommandHandler(IUserRepository userRepository) : 
 {
     public async Task<int> Handle(SaveMovieOwnershipCommand request, CancellationToken cancellationToken)
     {
-        var movieSummary = new MovieSummary
+        var movieSummary = new SaveMovieSummary
         {
             MovieId = request.TmdbId,
             Title = request.Title,

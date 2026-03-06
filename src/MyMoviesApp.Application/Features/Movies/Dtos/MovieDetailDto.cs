@@ -13,6 +13,6 @@ public class MovieDetailDto(MovieDetail movieDetail)
     public string BackdropPath { get; init; } = movieDetail.BackdropPath;
     public string Tagline { get; init; } = movieDetail.Tagline;
     public string Overview { get; init; } = movieDetail.Overview;
-    public List<Format> Formats { get; set; } = new();
-    public List<DigitalRetailer> DigitalRetailers { get; set; } = new();
+    public List<UserMovieFormat> Formats { get; set; } = new();
+    public List<UserMovieDigitalRetailer> DigitalRetailers { get; set; } = new();
 }

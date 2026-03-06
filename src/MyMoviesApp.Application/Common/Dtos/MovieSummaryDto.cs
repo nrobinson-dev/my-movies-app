@@ -10,9 +10,9 @@ public class MovieSummaryCollectionDto
         var summaries = movieSummaryCollection as MovieSummaryDto[] ?? movieSummaryCollection.ToArray();
         Movies = [..summaries];
         TotalCount = summaries.Length;
-        TotalDvdCount = summaries.Count(ms => ms.Formats.Contains(Format.Dvd));
-        TotalBluRayCount = summaries.Count(ms => ms.Formats.Contains(Format.BluRay));
-        TotalBluRay4KCount = summaries.Count(ms => ms.Formats.Contains(Format.BluRay4K));
+        TotalDvdCount = summaries.Count(ms => ms.Formats.Any(x => x.Id == (int)Format.Dvd));
+        TotalBluRayCount = summaries.Count(ms => ms.Formats.Any(x => x.Id == (int)Format.BluRay));
+        TotalBluRay4KCount = summaries.Count(ms => ms.Formats.Any(x => x.Id == (int)Format.BluRay4K));
         TotalDigitalCount = summaries.Count(ms => ms.DigitalRetailers.Any());
     }
 
@@ -29,8 +29,8 @@ public record MovieSummaryDto(
     string Title,
     DateOnly ReleaseDate,
     string PosterPath,
-    List<Format> Formats,
-    List<DigitalRetailer> DigitalRetailers)
+    List<UserMovieFormat> Formats,
+    List<UserMovieDigitalRetailer> DigitalRetailers)
 {
     public static MovieSummaryDto FromDomain(MovieSummary m) =>
         new(m.MovieId, m.Title, m.ReleaseDate, m.PosterPath, m.Formats, m.DigitalRetailers);

@@ -2,7 +2,7 @@ namespace MyMoviesApp.Domain.Enums;
 
 public enum Format
 {
-    Dvd,
-    BluRay,
-    BluRay4K
+    Dvd = 1,
+    BluRay = 2,
+    BluRay4K = 3
 }
