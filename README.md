@@ -1,2 +1,286 @@
-# my-movies-app
-This is a passion project for the sake of showcasing a portfolio piece.
+# MyMoviesApp
+
+A passion and portfolio project that integrates with the [The Movie Database (TMDB) API](https://www.themoviedb.org/) to allow users to track their personal movie collections.
+
+> **Note:** This repository represents the Minimum Viable Product (MVP). It is early in development and currently missing some production features such as rate limiting, logging, and additional validation.
+
+---
+
+## Overview
+
+MyMoviesApp lets you keep track of movie ownership across physical and digital formats.
+
+**Physical Formats**
+- DVD
+- Blu-ray
+- 4K Blu-ray
+
+**Digital Retailers**
+- Apple TV
+- Movies Anywhere
+- Fandango at Home
+- YouTube
+- Amazon Prime Video
+
+---
+
+## Why This Project Exists
+
+As a full-stack software engineer, this project demonstrates my ability to design and implement a modern backend system.
+
+The Web API is built using a **Clean Architecture** approach. Most endpoints are implemented using **Minimal APIs**, with one controller-based endpoint included to demonstrate familiarity with both approaches.
+
+**Current technology choices** (intended for quick setup and development):
+- **SQLite** — simple local database
+- **MediatR** — request handling
+
+**Long-term plan:**
+- Migrate to PostgreSQL
+- Remove MediatR
+- Improve infrastructure and architecture
+
+---
+
+## Project Goals
+
+The long-term goal is to evolve this into a full ecosystem:
+
+**Web API**
+- Logging
+- Rate limiting
+- Swagger / OpenAPI documentation
+- Centralized exception handling
+
+**Web Applications** — multiple front-end implementations of the same API:
+- React
+- Vue
+- Angular
+- Blazor
+
+**Infrastructure**
+- PostgreSQL database
+- Docker containerization
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- [TMDB API Access Token](https://www.themoviedb.org/settings/api)
+- .NET 10 CLI
+- Entity Framework Core CLI
+
+### Setup
+
+1. **Clone the repository.**
+
+2. **Configure application settings.**
+
+   Open `appsettings.Example.json`, add your TMDB Bearer Token under `TmdbSettings:BearerToken`, then rename the file to `appsettings.json`.
+
+3. **Set up the database.**
+
+   From the root directory of the repository, run:
+
+   ```bash
+   # Install EF Core CLI
+   dotnet tool install --global dotnet-ef
+
+   # Create migration
+   dotnet ef migrations add InitialCreate \
+     --project src/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj \
+     --startup-project src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI/MyMoviesApp.Presentation.WebAPI.csproj \
+     --output-dir Data/Migrations
+
+   # Apply migration
+   dotnet ef database update \
+     --project src/MyMoviesApp.Infrastructure \
+     --startup-project src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI
+   ```
+
+   This will create the SQLite database.
+
+---
+
+## API Reference
+
+Swagger has not been integrated yet. Use a tool such as [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` to test the endpoints.
+
+**Base URL**
+```
+https://localhost:7184/api/v1
+```
+
+---
+
+### Authentication
+
+#### Create Account
+
+```
+POST /auth/create
+```
+
+**Headers**
+```
+Accept: application/json
+```
+
+**Request Body**
+```json
+{
+  "Email": "name@email.com",
+  "Password": "Password"
+}
+```
+
+**Response**
+```json
+{
+  "userId": "{guid}",
+  "token": "{token}"
+}
+```
+
+---
+
+#### Login
+
+```
+POST /auth/login
+```
+
+**Headers**
+```
+Accept: application/json
+```
+
+**Request Body**
+```json
+{
+  "Email": "name@email.com",
+  "Password": "Password"
+}
+```
+
+**Response**
+```json
+{
+  "userId": "{guid}",
+  "token": "{token}"
+}
+```
+
+---
+
+### Movies
+
+#### Search Movies
+
+```
+GET /movies?search={movieName}
+```
+
+**Authorization:** `Bearer {token}`
+
+**Response**
+```json
+{
+  "movies": [
+    {
+      "tmdbId": 123,
+      "title": "Movie Title",
+      "releaseDate": "0001-01-01",
+      "posterPath": "/asdf.jpg",
+      "formats": [
+        { "id": 1, "name": "Dvd" }
+      ],
+      "digitalRetailers": [
+        { "id": 1, "name": "MoviesAnywhere" }
+      ]
+    }
+  ],
+  "totalCount": 0,
+  "totalDvdCount": 0,
+  "totalBluRayCount": 0,
+  "totalBluRay4KCount": 0,
+  "totalDigitalCount": 0
+}
+```
+
+---
+
+### User Movies
+
+#### Get All Movies
+
+```
+GET /users/{userId}/movies
+```
+
+**Authorization:** `Bearer {token}`
+
+---
+
+#### Get Movie
+
+```
+GET /users/{userId}/movies/{tmdbId}
+```
+
+**Authorization:** `Bearer {token}`
+
+**Response**
+```json
+{
+  "tmdbId": 123,
+  "title": "Movie Title",
+  "releaseDate": "0001-01-01",
+  "runtime": 120,
+  "posterPath": "/poster.jpg",
+  "backdropPath": "/backdrop.jpg",
+  "tagline": "Example tagline",
+  "overview": "Movie description",
+  "formats": [
+    { "id": 1, "name": "Dvd" }
+  ],
+  "digitalRetailers": [
+    { "id": 1, "name": "MoviesAnywhere" }
+  ]
+}
+```
+
+---
+
+#### Add Movie to Collection
+
+```
+POST /users/{userId}/movies/{tmdbId}
+```
+
+**Authorization:** `Bearer {token}`
+
+**Request Body**
+```json
+{
+  "TmdbId": 123,
+  "Title": "Movie Title",
+  "ReleaseDate": "2024-01-01",
+  "PosterPath": "/poster.jpg",
+  "Formats": [1], // Dvd: 1, BluRay: 2, BluRay4K: 3
+  "DigitalRetailers": [1, 5] // MoviesAnywhere: 1, AppleTv: 2, FandangoAtHome: 3, YouTube: 4, AmazonPrime: 5
+}
+```
+
+**Response:** `int`
+
+---
+
+#### Delete Movie
+
+```
+DELETE /users/{userId}/movies/{tmdbId}
+```
+
+**Authorization:** `Bearer {token}`
