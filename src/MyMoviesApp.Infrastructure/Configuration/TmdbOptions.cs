@@ -10,5 +10,5 @@ public class TmdbOptions
     public string ApiBaseUrl { get; set; } = "https://api.themoviedb.org/3";
     
     [Required][MinLength(1)]
-    public string BearerToken { get; set; }
+    public string? BearerToken { get; set; }
 }

@@ -4,6 +4,7 @@ using MyMoviesApp.Infrastructure.Configuration;
 using MyMoviesApp.Infrastructure.Data;
 using MyMoviesApp.Presentation.WebAPI.Features.Users;
 using MyMoviesApp.Presentation.WebAPI.Features.Auth;
+using MyMoviesApp.Presentation.WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,10 +38,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 7184;
-});
+builder.Services.AddHttpSecurity();
 
 var app = builder.Build();
 app.MigrateDb();
@@ -48,6 +46,10 @@ app.MigrateDb();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+}
+else
+{
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();

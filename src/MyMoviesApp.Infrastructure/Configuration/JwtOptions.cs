@@ -12,7 +12,7 @@ public class JwtOptions
     public string Audience { get; set; } = "MyMoviesApp.Client";
     
     [Required][MinLength(1)]
-    public string SigningKey { get; set; }
+    public string? SigningKey { get; set; }
     
     [Required]
     public int AccessTokenExpirationMinutes { get; set; } = 60;
