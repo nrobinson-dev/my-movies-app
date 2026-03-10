@@ -103,12 +103,20 @@ The long-term goal is to evolve this into a full ecosystem:
    ```
 
    This will create the SQLite database.
+4. **Run the application.**
+
+   From the root directory of the repository, run:
+
+   ```bash
+   dotnet run --project src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI
+   ```
+
 
 ---
 
 ## API Reference
 
-Swagger has not been integrated yet. Use a tool such as [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` to test the endpoints.
+Neither Swagger nor Scalar have not been integrated yet. Use a tool such as [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` to test the endpoints.
 
 **Base URL**
 ```

@@ -1,5 +1,6 @@
 using MyMoviesApp.Infrastructure.DependencyInjection;
 using MyMoviesApp.Application;
+using MyMoviesApp.Infrastructure.Configuration;
 using MyMoviesApp.Infrastructure.Data;
 using MyMoviesApp.Presentation.WebAPI.Features.Users;
 using MyMoviesApp.Presentation.WebAPI.Features.Auth;

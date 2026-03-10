@@ -1,8 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MyMoviesApp.Infrastructure.Configuration;
 
 public class TmdbOptions
 {
     public const string SectionName = "TmdbSettings";
-    public string ApiBaseUrl { get; init; } = "https://api.themoviedb.org/3";
-    public string BearerToken { get; init; } = string.Empty;
+    
+    [Required]
+    public string ApiBaseUrl { get; set; } = "https://api.themoviedb.org/3";
+    
+    [Required][MinLength(1)]
+    public string BearerToken { get; set; }
 }

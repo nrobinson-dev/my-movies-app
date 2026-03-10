@@ -34,25 +34,26 @@ public static class ServiceRegistration
 
     private static IServiceCollection AddTmdbServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Try to get the bearer token from environment variable first, then fall back to configuration (appsettings or user secrets)
-        var bearerToken = Environment.GetEnvironmentVariable("TMDB_ACCESS_TOKEN") ?? configuration.GetSection(TmdbOptions.SectionName).GetValue<string>("BearerToken");
-        
-        if (string.IsNullOrWhiteSpace(bearerToken))        {
-            throw new InvalidOperationException("TMDB Bearer token is not configured. Set the TMDB_ACCESS_TOKEN environment variable or configure it in appsettings/user secrets under TmdbOptions:BearerToken.");
-        }
-        
         services.Configure<TmdbOptions>(configuration.GetSection(TmdbOptions.SectionName));
 
+        services.PostConfigure<TmdbOptions>(options =>
+        {
+            // Try to get the bearer token from environment variable first, then fall back to configuration
+            var envToken = Environment.GetEnvironmentVariable("TMDB_ACCESS_TOKEN");
+            if (!string.IsNullOrWhiteSpace(envToken))
+                options.BearerToken = envToken;
+        });
+
+        services.AddOptions<TmdbOptions>().ValidateDataAnnotations().ValidateOnStart();
+        
         services.AddHttpClient<ITmdbService, TmdbService>((sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<TmdbOptions>>().Value;
 
-            bearerToken = Environment.GetEnvironmentVariable("TMDB_ACCESS_TOKEN") ?? options.BearerToken;
-
             client.BaseAddress = new Uri(options.ApiBaseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", bearerToken);
+                new AuthenticationHeaderValue("Bearer", options.BearerToken);
         });
 
         return services;
@@ -60,21 +61,25 @@ public static class ServiceRegistration
     
     private static IServiceCollection AddSecurityInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtSigningKey = Environment.GetEnvironmentVariable("MYMOVIESAPP_JWT_SIGNING_KEY") ?? configuration.GetSection(JwtOptions.SectionName).GetValue<string>("SigningKey");
-        if (string.IsNullOrWhiteSpace(jwtSigningKey))        {
-            throw new InvalidOperationException("JWT signing key is not configured. Set the MYMOVIESAPP_JWT_SIGNING_KEY environment variable or configure it in appsettings/user secrets under JwtOptions:SigningKey.");
-        }
-        
         services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
-        var jwtOptions = configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ?? new JwtOptions();
+
+        services.PostConfigure<JwtOptions>(options =>
+        {
+            var envKey = Environment.GetEnvironmentVariable("MYMOVIESAPP_JWT_SIGNING_KEY");
+            if (!string.IsNullOrWhiteSpace(envKey))
+                options.SigningKey = envKey;
+        });
         
-        jwtSigningKey = Environment.GetEnvironmentVariable("MYMOVIESAPP_JWT_SIGNING_KEY") ?? jwtOptions.SigningKey;
+        services.AddOptions<JwtOptions>().ValidateDataAnnotations().ValidateOnStart();
         
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
+                var sp = services.BuildServiceProvider();
+                var jwtOptions = sp.GetRequiredService<IOptions<JwtOptions>>().Value;
+                
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -83,7 +88,7 @@ public static class ServiceRegistration
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtOptions.Issuer,
                     ValidAudience = jwtOptions.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
                     ClockSkew = TimeSpan.Zero
                 };
             });
