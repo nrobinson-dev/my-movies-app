@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using MyMoviesApp.Application.Features.Movies.Queries;
 using MyMoviesApp.Application.Common.Dtos;
 using MyMoviesApp.Presentation.WebAPI.Models;
@@ -7,6 +8,7 @@ using MyMoviesApp.Presentation.WebAPI.Models;
 namespace MyMoviesApp.Presentation.WebAPI.Controllers
 {
     [ApiController]
+    [EnableRateLimiting("user")]
     [Route("api/v1/[controller]")]
     public class MoviesController : BaseApiController
     {

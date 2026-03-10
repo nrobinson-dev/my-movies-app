@@ -11,7 +11,8 @@ public static class UsersEndpoints
 {
     public static void MapUsersEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/api/v1/users");
+        var group = app.MapGroup("/api/v1/users")
+            .RequireRateLimiting("user");
         
         
         group.MapGet("{userId}/movies", async (Guid userId, IMediator mediator, CancellationToken cancellationToken) =>

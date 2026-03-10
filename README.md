@@ -43,7 +43,7 @@ The long-term goal is to evolve this into a full ecosystem:
 **Web API**
 - Logging
 - Rate limiting
-- Swagger / OpenAPI documentation
+- Swagger / Scalar / OpenAPI documentation
 - Centralized exception handling
 - Remove MediatR and implement custom request handling
 

@@ -1,8 +1,11 @@
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
+
 namespace MyMoviesApp.Presentation.WebAPI.Extensions;
 
 public static class HttpSecurityExtensions
 {
-    public static IServiceCollection AddHttpSecurity(this IServiceCollection services)
+    public static IServiceCollection AddHttpProtection(this IServiceCollection services)
     {
         services.AddHttpsRedirection(options =>
         {
@@ -15,6 +18,30 @@ public static class HttpSecurityExtensions
             options.MaxAge = TimeSpan.FromDays(365);
             options.IncludeSubDomains = true;
             options.Preload = true;
+        });
+        
+        services.AddRateLimiter(options =>
+        {
+            options.AddFixedWindowLimiter("auth", limiterOptions =>
+            {
+                limiterOptions.PermitLimit = 5;
+                limiterOptions.Window = TimeSpan.FromMinutes(1);
+                limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                limiterOptions.QueueLimit = 0;
+            });
+    
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+        });
+
+        services.AddRateLimiter(options =>
+        {
+            options.AddFixedWindowLimiter("user", limiterOptions =>
+            {
+                limiterOptions.PermitLimit = 30;
+                limiterOptions.Window = TimeSpan.FromMinutes(1);
+                limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                limiterOptions.QueueLimit = 5;
+            });
         });
         
         return services;
