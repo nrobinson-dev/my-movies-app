@@ -26,19 +26,19 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
 
     public async Task<User?> GetAuthenticatedUserAsync(string userName, string passwordHash)
     {
-        var userDb = await dbcontext.Users.FirstOrDefaultAsync(u => u.Email == userName && u.PasswordHash == passwordHash);
+        var userDb = await dbcontext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == userName && u.PasswordHash == passwordHash);
         return userDb is null ? null : new User(userDb.Id, userDb.Email);
     }
 
     public async Task<User?> GetUserByEmailAsync(string email, CancellationToken ct)
     {
-        var userDb = await dbcontext.Users.FirstOrDefaultAsync(u => u.Email == email, ct);
+        var userDb = await dbcontext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, ct);
         return userDb is null ? null : new User(userDb.Id, userDb.Email);
     }
 
     public async Task<(User user, string passwordHash)?> GetUserWithPasswordHashByEmailAsync(string email, CancellationToken ct)
     {
-        var userDb = await dbcontext.Users.FirstOrDefaultAsync(u => u.Email == email, ct);
+        var userDb = await dbcontext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, ct);
         if (userDb is null)
             return null;
 
@@ -50,6 +50,7 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
     public async Task<MovieSummaryCollection> GetUserMoviesAsync(Guid userId, CancellationToken cancellationToken)
     {
         var userMovies = await dbcontext.UserMovies
+            .AsNoTracking()
             .Include(m => m.UserMovieFormats)
             .Include(m => m.UserMovieDigitalRetailers)
             .Where(m => m.UserId == userId)
@@ -87,6 +88,7 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
     public async Task<UserMovieFormatsAndDigitalRetailers> GetUserMovieFormatsAndDigitalRetailersAsync(Guid userId, int movieId, CancellationToken cancellationToken)
     {
         var formats = await dbcontext.UserMovieFormats
+            .AsNoTracking()
             .Where(f => dbcontext.UserMovies
                 .Any(um => um.UserId == userId && um.TmdbId == movieId && um.Id == f.UserMovieId))
             .Select(f => new Domain.Entities.UserMovieFormat()
@@ -98,6 +100,7 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
             .ToListAsync(cancellationToken);
 
         var retailers = await dbcontext.UserMovieDigitalRetailers
+            .AsNoTracking()
             .Where(r => dbcontext.UserMovies
                 .Any(um => um.UserId == userId && um.TmdbId == movieId && um.Id == r.UserMovieId))
             .Select(r => new Domain.Entities.UserMovieDigitalRetailer()
