@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\backend\MyMoviesApp.Infrastructure\MyMoviesApp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

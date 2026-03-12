@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MyMoviesApp.Presentation.WebAPI.Controllers
+namespace MyMoviesApp.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

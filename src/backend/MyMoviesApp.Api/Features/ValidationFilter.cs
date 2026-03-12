@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MyMoviesApp.Presentation.WebAPI.Features;
+namespace MyMoviesApp.Api.Features;
 
 /// <summary>
 /// Endpoint filter that runs DataAnnotations validation on the first argument of type

@@ -1,7 +1,7 @@
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace MyMoviesApp.Presentation.WebAPI.Extensions;
+namespace MyMoviesApp.Api.Extensions;
 
 public static class HttpSecurityExtensions
 {

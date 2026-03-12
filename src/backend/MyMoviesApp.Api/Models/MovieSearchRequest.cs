@@ -1,4 +1,4 @@
-namespace MyMoviesApp.Presentation.WebAPI.Models;
+namespace MyMoviesApp.Api.Models;
 
 public class MovieSearchRequest
 {

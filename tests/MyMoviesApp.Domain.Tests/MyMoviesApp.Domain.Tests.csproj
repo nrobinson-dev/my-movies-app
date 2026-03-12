@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/MyMoviesApp.Domain/MyMoviesApp.Domain.csproj" />
+    <ProjectReference Include="..\..\src\backend\MyMoviesApp.Domain\MyMoviesApp.Domain.csproj" />
   </ItemGroup>
 
 </Project>

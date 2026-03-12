@@ -1,11 +1,9 @@
 <Solution>
-  <Folder Name="/src/MyMoviesApp.Presentation/">
-    <Project Path="src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI/MyMoviesApp.Presentation.WebAPI.csproj" />
-  </Folder>
-  <Folder Name="/src/">
-    <Project Path="src/MyMoviesApp.Application/MyMoviesApp.Application.csproj" />
-    <Project Path="src/MyMoviesApp.Domain/MyMoviesApp.Domain.csproj" />
-    <Project Path="src/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj" />
+  <Folder Name="/src/backend/">
+    <Project Path="src/backend/MyMoviesApp.Api/MyMoviesApp.Api.csproj" />
+    <Project Path="src/backend/MyMoviesApp.Application/MyMoviesApp.Application.csproj" />
+    <Project Path="src/backend/MyMoviesApp.Domain/MyMoviesApp.Domain.csproj" />
+    <Project Path="src/backend/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/MyMoviesApp.Application.Tests/MyMoviesApp.Application.Tests.csproj" />

@@ -5,7 +5,7 @@ using MyMoviesApp.Application.Features.User.Dtos;
 using MyMoviesApp.Application.Features.User.Queries;
 using MediatR;
 
-namespace MyMoviesApp.Presentation.WebAPI.Features.Users;
+namespace MyMoviesApp.Api.Features.Users;
 
 public static class UsersEndpoints
 {

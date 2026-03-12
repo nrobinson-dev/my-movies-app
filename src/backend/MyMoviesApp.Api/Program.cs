@@ -1,9 +1,9 @@
 using MyMoviesApp.Infrastructure.DependencyInjection;
 using MyMoviesApp.Application;
 using MyMoviesApp.Infrastructure.Data;
-using MyMoviesApp.Presentation.WebAPI.Features.Users;
-using MyMoviesApp.Presentation.WebAPI.Features.Auth;
-using MyMoviesApp.Presentation.WebAPI.Extensions;
+using MyMoviesApp.Api.Features.Users;
+using MyMoviesApp.Api.Features.Auth;
+using MyMoviesApp.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

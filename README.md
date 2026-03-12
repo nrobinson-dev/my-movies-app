@@ -2,7 +2,7 @@
 
 A passion and portfolio project that integrates with the [The Movie Database (TMDB) API](https://www.themoviedb.org/) to allow users to track their personal movie collections.
 
-> **Note:** This repository represents the Minimum Viable Product (MVP). It is early in development and currently missing some production features such as rate limiting, logging, and additional validation.
+> **Note:** This repository represents the Minimum Viable Product (MVP). It is early in development and currently missing some production features.
 
 ---
 
@@ -92,14 +92,14 @@ The long-term goal is to evolve this into a full ecosystem:
 
    # Create database migration
    dotnet ef migrations add InitialCreate \
-     --project src/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj \
-     --startup-project src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI/MyMoviesApp.Presentation.WebAPI.csproj \
+     --project src/backend/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj \
+     --startup-project src/backend/MyMoviesApp.Api/MyMoviesApp.Api.csproj \
      --output-dir Data/Migrations
 
    # Apply database migration
    dotnet ef database update \
-     --project src/MyMoviesApp.Infrastructure \
-     --startup-project src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI
+     --project src/backend/MyMoviesApp.Infrastructure \
+     --startup-project src/backend/MyMoviesApp.Api
    ```
 
    This will create the SQLite database.
@@ -108,7 +108,7 @@ The long-term goal is to evolve this into a full ecosystem:
    From the root directory of the repository, run:
 
    ```bash
-   dotnet run --project src/MyMoviesApp.Presentation/MyMoviesApp.Presentation.WebAPI
+   dotnet run --project src/backend/MyMoviesApp.Api
    ```
 
 

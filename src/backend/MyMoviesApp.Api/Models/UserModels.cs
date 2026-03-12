@@ -1,4 +1,4 @@
-namespace MyMoviesApp.Presentation.WebAPI.Models;
+namespace MyMoviesApp.Api.Models;
 
 /// <summary>
 /// Request model for creating a user via the API.

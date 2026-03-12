@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MyMoviesApp.Infrastructure\MyMoviesApp.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\MyMoviesApp.Application\MyMoviesApp.Application.csproj" />
+    <ProjectReference Include="..\MyMoviesApp.Infrastructure\MyMoviesApp.Infrastructure.csproj" />
+    <ProjectReference Include="..\MyMoviesApp.Application\MyMoviesApp.Application.csproj" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

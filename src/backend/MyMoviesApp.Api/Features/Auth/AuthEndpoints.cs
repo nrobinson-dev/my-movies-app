@@ -3,7 +3,7 @@ using MyMoviesApp.Application.Features.User.Dtos;
 using MediatR;
 using MyMoviesApp.Domain.Exceptions;
 
-namespace MyMoviesApp.Presentation.WebAPI.Features.Auth;
+namespace MyMoviesApp.Api.Features.Auth;
 
 public static class AuthEndpoints
 {
