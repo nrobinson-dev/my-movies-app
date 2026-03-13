@@ -116,7 +116,7 @@ The long-term goal is to evolve this into a full ecosystem:
 
 ## API Reference
 
-Neither Swagger nor Scalar have not been integrated yet. Use a tool such as [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` to test the endpoints.
+Neither Swagger nor Scalar have been integrated yet. Use a tool such as [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` to test the endpoints.
 
 **Base URL**
 ```
