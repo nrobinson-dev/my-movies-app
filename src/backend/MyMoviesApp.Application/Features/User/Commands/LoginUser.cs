@@ -20,6 +20,8 @@ public class LoginUserCommandHandler(IAuthenticationService authenticationServic
             return null;
 
         var (user, token) = result.Value;
-        return new LoginUserResultDto(user.Id, token);
+        var expiration = DateTime.UtcNow.AddHours(1);
+        
+        return new LoginUserResultDto(user.Id, token, expiration);
     }
 }

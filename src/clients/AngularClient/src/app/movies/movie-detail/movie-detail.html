@@ -1,0 +1,106 @@
+@if (notFound()) {
+<h2 class="text-center pt-10 text-xl mb-4">
+    Movie not found. It may have been removed from the Movie Database.
+</h2>
+}
+
+@if (movieDetail()) {
+<div [style.background-image]="'url(' + backgroundImageUrl() + ')'"
+    class="relative bg-cover bg-top py-10 movie-detail-wrapper flex items-center justify-center">
+    <div class="absolute backdrop-blur-xs top-0 left-0 w-full h-full"></div>
+
+    <div class="relative z-10 text-white p-10 pt-4 max-w-3xl mx-auto rounded-lg shadow-md overflow-hidden">
+        <div class="bg-black opacity-80 absolute top-0 left-0 w-full h-full"></div>
+
+        <button (click)="location.back()"
+            class="cursor-pointer absolute z-20 top-4 left-4 border border-1 border-gray-400 bg-gray-500 rounded-full p-1 transition hover:bg-blue-500">
+            <img src="/images/icons/arrow_back.svg" alt="Back" title="Go back" />
+        </button>
+
+        <div class="relative z-20">
+            <h1 class="text-center text-3xl mb-4 grow">
+                {{ movieDetail()?.title }}
+            </h1>
+
+            <div class="eye-candy flex flex-col md:flex-row flex-row-wrap gap-2">
+                <div class="movie-poster shrink-1">
+                    @if (movieDetail()?.posterPath) {
+                    <img class="movie-card__poster" [src]="posterUrl()" [alt]="movieDetail()?.title + ' poster'"
+                        class="float-left mr-4 mb-4 w-49 rounded-lg shadow-md" />
+                    }
+                </div>
+
+                <div class="ownership-controls grow-1">
+                    <p class="mb-2">
+                        <strong>Release Date:</strong> {{ movieDetail()?.releaseDate | date }}
+                    </p>
+                    <p class="mb-2"><strong>Runtime:</strong> {{ movieDetail()?.runtime }} minutes</p>
+                    <div>
+                        <p class="mb-1">Physical Media:</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @for (format of ownedFormats(); track format.value) {
+                            <div class="platform-wrapper platform-wrapper--button border border-2 rounded-lg py-1 px-3 transition"
+                                [class]="
+                          format.isOwned
+                            ? 'border-green-500'
+                            : 'border-gray-500 hover:border-blue-500'
+                        " (click)="togglePlatformOwnership(format.value, ownedFormats)">
+                                <span class="platform" [style]="{ backgroundImage: 'url(' + format.image + ')' }"
+                                    [class]="format.label" [attr.alt]="format.label" [attr.title]="format.label"></span>
+                            </div>
+                            }
+                        </div>
+
+                        <p class="mb-1">Digital Retailers:</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @for (digitalRetailer of ownedDigitalRetailers(); track digitalRetailer.value) {
+                            <div class="platform-wrapper platform-wrapper--button border border-2 rounded-lg py-2 px-3 transition"
+                                [class]="
+                          digitalRetailer.isOwned
+                            ? 'border-green-500'
+                            : 'border-gray-500 hover:border-blue-500'
+                        " (click)="
+                          togglePlatformOwnership(digitalRetailer.value, ownedDigitalRetailers)
+                        ">
+                                <span class="platform"
+                                    [style]="{ backgroundImage: 'url(' + digitalRetailer.image + ')' }"
+                                    [class]="digitalRetailer.label" [attr.alt]="digitalRetailer.label"
+                                    [attr.title]="digitalRetailer.label"></span>
+                            </div>
+                            }
+                        </div>
+
+                        <div class="button-row flex gap-4">
+                            <button
+                                class="flex items-center gap-1 mb-4 border border-1 border-blue-500 bg-blue-600 hover:bg-blue-500 text-white pr-4 pl-3 py-2 rounded transition cursor-pointer"
+                                (click)="saveOwnership()">
+                                <img src="/images/icons/save.svg" alt="Save icon" class="w-6 h-6 cursor-pointer"
+                                    class="inline" />
+                                <span>Save Ownership</span>
+                            </button>
+
+                            <button
+                                class="flex items-center gap-1 mb-4 border border-1 border-gray-400 bg-gray-500 hover:bg-red-500 text-white pr-4 pl-3 py-2 rounded transition cursor-pointer"
+                                (click)="deleteMovieOwnership()">
+                                <img src="/images/icons/delete.svg" alt="Delete icon" class="w-6 h-6 cursor-pointer"
+                                    class="inline" />
+                                <span>Delete Ownership</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mb-2"><strong>Tagline:</strong> {{ movieDetail()?.tagline }}</p>
+            <p class="mb-2"><strong>Overview:</strong> {{ movieDetail()?.overview }}</p>
+        </div>
+    </div>
+</div>
+}
+
+@if (messageResult()) {
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white text-sm transition"
+    [class]="messageResult()!.type === 'success' ? 'bg-green-600' : 'bg-red-600'">
+    {{ messageResult()!.message }}
+</div>
+}

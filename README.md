@@ -26,13 +26,16 @@ MyMoviesApp lets you keep track of movie ownership across physical and digital f
 
 ## Why This Project Exists
 
-As a full-stack software engineer, this project demonstrates my ability to design and implement a modern backend system.
+As a full-stack software engineer, this project demonstrates my ability to design and implement a modern backend system as well as front-end frameworks.
 
-The Web API is built using a **Clean Architecture** approach. Most endpoints are implemented using **Minimal APIs**, with one controller-based endpoint included to demonstrate familiarity with both approaches.
+The Web API is built using a **Clean Architecture** approach (for now, anyway, I'll probably change it to a **Vertical Slice** architecture at some point). Most endpoints are implemented using **Minimal APIs**, with one controller-based endpoint included to demonstrate familiarity with both approaches.
 
 **Current technology choices** (intended for quick setup and development):
+- **.NET Core 10**
+- **EF Core**
 - **SQLite** — simple local database
 - **MediatR** — request handling
+- **Angular** — front-end framework
 
 ---
 
@@ -42,15 +45,15 @@ The long-term goal is to evolve this into a full ecosystem:
 
 **Web API**
 - Logging
-- Rate limiting
+- Rate limiting (Complete)
 - Swagger / Scalar / OpenAPI documentation
 - Centralized exception handling
 - Remove MediatR and implement custom request handling
 
 **Web Applications** — multiple front-end implementations of the same API:
+- Angular (MVP complete)
 - React
 - Vue
-- Angular
 - Blazor
 
 **Infrastructure**
@@ -275,12 +278,12 @@ POST /users/{userId}/movies/{tmdbId}
 **Request Body**
 ```json
 {
-  "TmdbId": 123,
-  "Title": "Movie Title",
-  "ReleaseDate": "2024-01-01",
-  "PosterPath": "/poster.jpg",
-  "Formats": [1], // Dvd: 1, BluRay: 2, BluRay4K: 3
-  "DigitalRetailers": [1, 5] // MoviesAnywhere: 1, AppleTv: 2, FandangoAtHome: 3, YouTube: 4, AmazonPrime: 5
+  "tmdbId": 123,
+  "title": "Movie Title",
+  "releaseDate": "2024-01-01",
+  "posterPath": "/poster.jpg",
+  "formats": [1], // Dvd: 1, BluRay: 2, BluRay4K: 3
+  "digitalRetailers": [1, 5] // MoviesAnywhere: 1, AppleTv: 2, FandangoAtHome: 3, YouTube: 4, AmazonPrime: 5
 }
 ```
 

@@ -5,7 +5,9 @@ namespace MyMoviesApp.Application.Features.User.Dtos;
 /// </summary>
 /// <param name="UserId"></param>
 /// <param name="Token"></param>
+/// <param name="Expiration"></param>
 public record LoginUserResultDto(
     Guid UserId,
-    string Token
-    );
+    string Token,
+    DateTime Expiration
+);

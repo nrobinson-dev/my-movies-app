@@ -1,0 +1,61 @@
+.movie-card {
+  width: 250px;
+  max-width: 100%;
+}
+
+.movie-card__placeholder-poster {
+  width: 100%;
+  padding-bottom: 150%; /* 3:2 aspect ratio */
+  position: relative;
+  background-color: #d1d1d1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    position: absolute;
+    width: 100px;
+    max-width: 90%;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
+.movie-card__platform--format {
+    &.DVD {
+        width: 40px;
+    }
+
+    &.Blu-ray {
+        width: 40px;
+    }
+
+    &.Ultra.HD.Blu-ray {
+        width: 70px;
+    }
+}
+
+.movie-card__platform--digital-retailer {
+    &.Movies.Anywhere {
+        width: 30px;
+    }
+
+    &.Apple.TV {
+        width: 24px;
+    }
+
+    &.Fandango.at.Home {
+        width: 30px;
+    }
+
+    &.YouTube {
+        width: 30px;
+    }
+
+    &.Amazon.Prime.Video {
+        width: 30px;
+    }
+}

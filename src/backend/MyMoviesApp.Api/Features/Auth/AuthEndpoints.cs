@@ -9,7 +9,7 @@ public static class AuthEndpoints
 {
     public static void MapAuthEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/api/v1/auth")
+        var group = app.MapGroup("/api/auth")
             .RequireRateLimiting("auth");
         
         group.MapPost("/register", async (CreateUserCommand command, IMediator mediator, CancellationToken cancellationToken) =>

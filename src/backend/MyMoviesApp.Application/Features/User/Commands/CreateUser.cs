@@ -16,6 +16,8 @@ public class CreateUserCommandHandler(IAuthenticationService authenticationServi
     {
         var (user, token) = await authenticationService.RegisterAsync(request.Email, request.Password, cancellationToken);
         
-        return new LoginUserResultDto(user.Id, token);
+        var expiration = DateTime.UtcNow.AddHours(1);
+        
+        return new LoginUserResultDto(user.Id, token, expiration);
     }
 }

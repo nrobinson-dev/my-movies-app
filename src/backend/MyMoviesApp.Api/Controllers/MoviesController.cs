@@ -9,7 +9,7 @@ namespace MyMoviesApp.Api.Controllers
 {
     [ApiController]
     [EnableRateLimiting("user")]
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     public class MoviesController : BaseApiController
     {
         [Authorize]

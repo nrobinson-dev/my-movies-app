@@ -27,8 +27,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MultiClientPolicy", policy =>
     {
         policy.WithOrigins(
+                "http://localhost:4200", // Angular
+                "https://localhost:4200" // Angular (HTTPS)
                 //"http://localhost:5173" // React & Vue (Vite)
-                //"http://localhost:4200" // Angular
                 //"https://localhost:7001" // Blazor
             )
             .AllowAnyMethod()
@@ -56,7 +57,7 @@ app.UseRateLimiter();
 app.UseHttpsRedirection();
 app.UseCors("MultiClientPolicy");
 app.UseWhen(
-    ctx => !ctx.Request.Path.StartsWithSegments("/api/v1/auth"),
+    ctx => !ctx.Request.Path.StartsWithSegments("/api/auth"),
     appBuilder => appBuilder.UseAntiforgeryTokenMiddleware()
 );
 app.UseAuthentication();
