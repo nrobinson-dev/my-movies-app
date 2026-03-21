@@ -17,9 +17,9 @@ export class MovieService {
     return this.http.get<MovieSummaryCollection>(`${this.baseUrl}/users/${userId}/movies`);
   }
   
-  getSearchResults(search: string): Observable<MovieSummaryCollection> {
+  getSearchResults(search: string, userId: string = ''): Observable<MovieSummaryCollection> {
     return this.http.get<MovieSummaryCollection>(`${this.baseUrl}/movies`, {
-      params: { search }
+      params: { search, userId }
     });
   }
 

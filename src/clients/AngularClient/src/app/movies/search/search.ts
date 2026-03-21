@@ -76,7 +76,7 @@ export class Search {
   private runSearch(query: string) {
     this.isSearching.set(true);
     this.isError.set(false);
-    this.movieService.getSearchResults(query).subscribe({
+    this.movieService.getSearchResults(query, localStorage.getItem('auth_user_id') || '').subscribe({
       next: (results) => {
         console.log('Search results:', results);
         this.movies.set(results.movies || []);
