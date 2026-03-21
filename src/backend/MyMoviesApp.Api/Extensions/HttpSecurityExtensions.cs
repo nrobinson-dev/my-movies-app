@@ -29,6 +29,14 @@ public static class HttpSecurityExtensions
                 limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                 limiterOptions.QueueLimit = 0;
             });
+
+            options.AddFixedWindowLimiter("login", limiterOptions =>
+            {
+                limiterOptions.PermitLimit = 3;
+                limiterOptions.Window = TimeSpan.FromMinutes(1);
+                limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                limiterOptions.QueueLimit = 0;
+            });
     
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
         });

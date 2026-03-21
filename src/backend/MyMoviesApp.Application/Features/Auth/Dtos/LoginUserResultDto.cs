@@ -1,4 +1,4 @@
-namespace MyMoviesApp.Application.Features.User.Dtos;
+namespace MyMoviesApp.Application.Features.Auth.Dtos;
 
 /// <summary>
 /// User DTO returned after a successful login, containing the user's ID and authentication token.

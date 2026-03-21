@@ -9,7 +9,7 @@ namespace MyMoviesApp.Infrastructure.Tests.Services;
 
 public class AuthenticationServiceTests
 {
-    private readonly Mock<IUserRepository> _userRepositoryMock = new();
+    private readonly Mock<IAuthRepository> _authRepositoryMock = new();
     private readonly Mock<IPasswordHasher> _passwordHasherMock = new();
     private readonly Mock<IJwtTokenGenerator> _jwtTokenGeneratorMock = new();
     private readonly AuthenticationService _service;
@@ -17,7 +17,7 @@ public class AuthenticationServiceTests
     public AuthenticationServiceTests()
     {
         _service = new AuthenticationService(
-            _userRepositoryMock.Object,
+            _authRepositoryMock.Object,
             _passwordHasherMock.Object,
             _jwtTokenGeneratorMock.Object);
     }
@@ -33,7 +33,7 @@ public class AuthenticationServiceTests
         const string hash = "hashed-password";
         const string token = "jwt-token";
 
-        _userRepositoryMock
+        _authRepositoryMock
             .Setup(r => r.GetUserByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
@@ -41,7 +41,7 @@ public class AuthenticationServiceTests
             .Setup(h => h.HashPassword(password))
             .Returns(hash);
 
-        _userRepositoryMock
+        _authRepositoryMock
             .Setup(r => r.CreateUserAsync(It.IsAny<User>(), hash, It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
@@ -64,7 +64,7 @@ public class AuthenticationServiceTests
         const string email = "existing@example.com";
         var existingUser = new User(Guid.NewGuid(), email);
 
-        _userRepositoryMock
+        _authRepositoryMock
             .Setup(r => r.GetUserByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existingUser);
 
@@ -83,12 +83,12 @@ public class AuthenticationServiceTests
         const string password = "securepassword";
         const string hash = "secure-hash";
 
-        _userRepositoryMock
+        _authRepositoryMock
             .Setup(r => r.GetUserByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((User?)null);
 
         _passwordHasherMock.Setup(h => h.HashPassword(password)).Returns(hash);
-        _userRepositoryMock.Setup(r => r.CreateUserAsync(It.IsAny<User>(), hash, It.IsAny<CancellationToken>())).ReturnsAsync(1);
+        _authRepositoryMock.Setup(r => r.CreateUserAsync(It.IsAny<User>(), hash, It.IsAny<CancellationToken>())).ReturnsAsync(1);
         _jwtTokenGeneratorMock.Setup(g => g.GenerateJwtToken(It.IsAny<User>())).Returns("token");
 
         // Act
@@ -96,7 +96,7 @@ public class AuthenticationServiceTests
 
         // Assert
         _passwordHasherMock.Verify(h => h.HashPassword(password), Times.Once);
-        _userRepositoryMock.Verify(r => r.CreateUserAsync(It.IsAny<User>(), hash, It.IsAny<CancellationToken>()), Times.Once);
+        _authRepositoryMock.Verify(r => r.CreateUserAsync(It.IsAny<User>(), hash, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     // ── LoginAsync ────────────────────────────────────────────────────────────
@@ -111,7 +111,7 @@ public class AuthenticationServiceTests
         const string token = "jwt-token";
         var user = new User(Guid.NewGuid(), email);
 
-        _userRepositoryMock
+        _authRepositoryMock
             .Setup(r => r.GetUserWithPasswordHashByEmailAsync(email, It.IsAny<CancellationToken>()))
             .ReturnsAsync((user, storedHash));
 
@@ -136,7 +136,7 @@ public class AuthenticationServiceTests
     public async Task LoginAsync_Should_ReturnNull_WhenUserNotFound()
     {
         // Arrange
-        _userRepositoryMock
+        _authRepositoryMock
             .Setup(r => r.GetUserWithPasswordHashByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((ValueTuple<User, string>?)null);
 
@@ -154,7 +154,7 @@ public class AuthenticationServiceTests
         var user = new User(Guid.NewGuid(), "user@example.com");
         const string storedHash = "stored-hash";
 
-        _userRepositoryMock
+        _authRepositoryMock
             .Setup(r => r.GetUserWithPasswordHashByEmailAsync("user@example.com", It.IsAny<CancellationToken>()))
             .ReturnsAsync((user, storedHash));
 
@@ -174,7 +174,7 @@ public class AuthenticationServiceTests
     public async Task LoginAsync_Should_NotGenerateToken_WhenUserNotFound()
     {
         // Arrange
-        _userRepositoryMock
+        _authRepositoryMock
             .Setup(r => r.GetUserWithPasswordHashByEmailAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((ValueTuple<User, string>?)null);
 
@@ -183,6 +183,61 @@ public class AuthenticationServiceTests
 
         // Assert
         _jwtTokenGeneratorMock.Verify(g => g.GenerateJwtToken(It.IsAny<User>()), Times.Never);
+    }
+
+    // ── DeleteUserAsync ───────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task DeleteUserAsync_Should_CallRepository_WithCorrectUserId()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+
+        _authRepositoryMock
+            .Setup(r => r.DeleteUserAsync(userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(1);
+
+        // Act
+        await _service.DeleteUserAsync(userId);
+
+        // Assert
+        _authRepositoryMock.Verify(r => r.DeleteUserAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteUserAsync_Should_ReturnRowsAffected_FromRepository()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var userFound = 1;
+
+        _authRepositoryMock
+            .Setup(r => r.DeleteUserAsync(userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(1);
+
+        // Act
+        var result = await _service.DeleteUserAsync(userId);
+
+        // Assert
+        result.Should().Be(userFound);
+    }
+
+    [Fact]
+    public async Task DeleteUserAsync_Should_ReturnZero_WhenUserNotFound()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        var userNotFound = 0;
+
+        _authRepositoryMock
+            .Setup(r => r.DeleteUserAsync(userId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(0);
+
+        // Act
+        var result = await _service.DeleteUserAsync(userId);
+
+        // Assert
+        result.Should().Be(userNotFound);
     }
 }
 

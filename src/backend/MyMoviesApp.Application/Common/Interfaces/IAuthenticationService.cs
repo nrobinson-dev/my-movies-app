@@ -16,4 +16,9 @@ public interface IAuthenticationService
     /// Authenticates a user and returns a JWT token if credentials are valid.
     /// </summary>
     Task<(User user, string token)?> LoginAsync(string email, string password, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes the user with the specified ID.
+    /// </summary>
+    Task<int> DeleteUserAsync(Guid userId, CancellationToken cancellationToken = default);
 }

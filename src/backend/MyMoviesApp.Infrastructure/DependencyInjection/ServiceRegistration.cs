@@ -24,10 +24,10 @@ public static class ServiceRegistration
         services.AddTmdbServices(configuration);
         services.AddSecurityInfrastructure(configuration);
         services.AddMyMoviesAppDb(configuration);
+        services.AddScoped<IAuthRepository, AuthRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-        
-        services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
         return services;
     }

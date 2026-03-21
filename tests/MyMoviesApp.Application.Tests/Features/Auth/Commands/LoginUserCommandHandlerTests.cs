@@ -1,9 +1,9 @@
 using FluentAssertions;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
-using MyMoviesApp.Application.Features.User.Commands;
+using MyMoviesApp.Application.Features.Auth.Commands;
 
-namespace MyMoviesApp.Application.Tests.Features.User.Commands;
+namespace MyMoviesApp.Application.Tests.Features.Auth.Commands;
 
 public class LoginUserCommandHandlerTests
 {
@@ -34,12 +34,12 @@ public class LoginUserCommandHandlerTests
 
         // Assert
         result.Should().NotBeNull();
-        result!.UserId.Should().Be(userId);
+        result.UserId.Should().Be(userId);
         result.Token.Should().Be(token);
     }
 
     [Fact]
-    public async Task Handle_Should_ReturnNull_WhenCredentialsAreInvalid()
+    public async Task Handle_Should_ThrowUnauthorizedAccessException_WhenCredentialsAreInvalid()
     {
         // Arrange
         _authServiceMock
@@ -49,19 +49,22 @@ public class LoginUserCommandHandlerTests
         var command = new LoginUserCommand("user@example.com", "wrongpassword");
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var act = async () => await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        result.Should().BeNull();
+        await act.Should().ThrowAsync<UnauthorizedAccessException>()
+            .WithMessage("Invalid email or password.");
     }
 
     [Fact]
     public async Task Handle_Should_CallLoginAsync_WithCorrectArguments()
     {
         // Arrange
+        var user = new Domain.Entities.User(Guid.NewGuid(), "specific@example.com");
+
         _authServiceMock
             .Setup(s => s.LoginAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((ValueTuple<Domain.Entities.User, string>?)null);
+            .ReturnsAsync((user, "token"));
 
         var command = new LoginUserCommand("specific@example.com", "specificpassword");
 

@@ -1,10 +1,10 @@
 using FluentAssertions;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
-using MyMoviesApp.Application.Features.User.Commands;
+using MyMoviesApp.Application.Features.Auth.Commands;
 using MyMoviesApp.Domain.Exceptions;
 
-namespace MyMoviesApp.Application.Tests.Features.User.Commands;
+namespace MyMoviesApp.Application.Tests.Features.Auth.Commands;
 
 public class CreateUserCommandHandlerTests
 {

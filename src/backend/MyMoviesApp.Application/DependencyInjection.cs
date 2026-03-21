@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using MyMoviesApp.Application.Features.Auth.Commands;
 using MyMoviesApp.Application.Features.Movies.Queries;
 using MyMoviesApp.Application.Features.User.Commands;
 using MyMoviesApp.Application.Features.User.Queries;

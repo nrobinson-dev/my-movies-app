@@ -10,42 +10,6 @@ namespace MyMoviesApp.Infrastructure.Data.Repositories;
 
 public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
 {
-    public async Task<int> CreateUserAsync(User user, string passwordHash, CancellationToken cancellationToken)
-    {
-        var userDb = new UserDb
-        {
-            Id = user.Id,
-            Email = user.Email,
-            PasswordHash = passwordHash,
-            CreatedAt = DateTime.UtcNow
-        };
-        dbcontext.Users.Add(userDb);
-        
-        return await dbcontext.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task<User?> GetAuthenticatedUserAsync(string userName, string passwordHash)
-    {
-        var userDb = await dbcontext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == userName && u.PasswordHash == passwordHash);
-        return userDb is null ? null : new User(userDb.Id, userDb.Email);
-    }
-
-    public async Task<User?> GetUserByEmailAsync(string email, CancellationToken ct)
-    {
-        var userDb = await dbcontext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, ct);
-        return userDb is null ? null : new User(userDb.Id, userDb.Email);
-    }
-
-    public async Task<(User user, string passwordHash)?> GetUserWithPasswordHashByEmailAsync(string email, CancellationToken ct)
-    {
-        var userDb = await dbcontext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email, ct);
-        if (userDb is null)
-            return null;
-
-        var user = new User(userDb.Id, userDb.Email);
-        return (user, userDb.PasswordHash);
-    }
-
     // TODO: implement filtering by format/retailer
     public async Task<MovieSummaryCollection> GetUserMoviesAsync(Guid userId, int page, int pageSize, CancellationToken cancellationToken)
     {

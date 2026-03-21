@@ -157,6 +157,11 @@ Accept: application/json
 }
 ```
 
+**Status Codes**
+- `201 Created` — account successfully created
+- `400 Bad Request` — invalid request body
+- `409 Conflict` — account with email already exists
+
 ---
 
 #### Login
@@ -185,6 +190,26 @@ Accept: application/json
   "token": "{token}"
 }
 ```
+
+**Status Codes**
+- `200 OK` — login successful
+- `400 Bad Request` — invalid request body
+- `401 Unauthorized` — invalid credentials
+- `429 Too Many Requests` — rate limit exceeded
+
+---
+
+#### Delete User
+
+```
+POST /auth/delete/{userId}
+```
+
+**Response**
+**Status Codes**
+- `204 No Content` — don't reveal whether the user existed or not, just return success
+- `401 Unauthorized` — invalid token
+- `403 Forbidden` — user can only delete their own account
 
 ---
 
@@ -224,6 +249,9 @@ GET /movies?search={movieName}
   "totalResults": 1
 }
 ```
+**Status Codes**
+- `200 OK` — login successful
+- `401 Unauthorized` — invalid credentials
 
 ---
 
@@ -263,6 +291,9 @@ GET /users/{userId}/movies?page={page}&pageSize={pageSize}
   "totalResults": 1
 }
 ```
+**Status Codes**
+- `200 OK` — login successful
+- `401 Unauthorized` — invalid credentials
 
 ---
 
@@ -293,7 +324,9 @@ GET /users/{userId}/movies/{tmdbId}
   ]
 }
 ```
-
+**Status Codes**
+- `200 OK` — login successful
+- `401 Unauthorized` — invalid credentials
 ---
 
 #### Add Movie to Collection
@@ -318,6 +351,11 @@ POST /users/{userId}/movies/{tmdbId}
 
 **Response:** `int`
 
+**Status Codes**
+- `200 OK` — login successful
+- `401 Unauthorized` — invalid credentials
+- `400 Bad Request` — invalid request body
+
 ---
 
 #### Delete Movie
@@ -327,3 +365,7 @@ DELETE /users/{userId}/movies/{tmdbId}
 ```
 
 **Authorization:** `Bearer {token}`
+
+**Status Codes**
+- `200 OK` — login successful
+- `401 Unauthorized` — invalid credentials
