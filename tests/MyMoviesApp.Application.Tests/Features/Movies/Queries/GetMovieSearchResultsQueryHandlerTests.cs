@@ -9,6 +9,7 @@ namespace MyMoviesApp.Application.Tests.Features.Movies.Queries;
 public class GetMovieSearchResultsQueryHandlerTests
 {
     private readonly Mock<ITmdbService> _tmdbServiceMock = new();
+    private readonly Mock<IUserRepository> _userRepositoryMock = new();
     private readonly GetMovieSearchResultsQueryHandler _handler;
     private readonly UserMovieFormat _dvdFormat = new() { Id = (int)Domain.Enums.Format.Dvd, Name = "DVD" };
     private readonly UserMovieFormat _bluRayFormat = new() { Id = (int)Domain.Enums.Format.BluRay, Name = "Blu-ray" };
@@ -19,7 +20,7 @@ public class GetMovieSearchResultsQueryHandlerTests
     
     public GetMovieSearchResultsQueryHandlerTests()
     {
-        _handler = new GetMovieSearchResultsQueryHandler(_tmdbServiceMock.Object);
+        _handler = new GetMovieSearchResultsQueryHandler(_tmdbServiceMock.Object, _userRepositoryMock.Object);
     }
 
     [Fact]
@@ -34,9 +35,9 @@ public class GetMovieSearchResultsQueryHandlerTests
 
         _tmdbServiceMock
             .Setup(s => s.SearchMoviesAsync("matrix", It.IsAny<CancellationToken>(), "1"))
-            .ReturnsAsync(new MovieSummaryCollection(movies));
+            .ReturnsAsync(new MovieSummaryCollection{Movies = movies});
 
-        var query = new GetMovieSearchResultsQuery("matrix");
+        var query = new GetMovieSearchResultsQuery("matrix", null, "1");
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -57,16 +58,15 @@ public class GetMovieSearchResultsQueryHandlerTests
         // Arrange
         _tmdbServiceMock
             .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
-            .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary>()));
+            .ReturnsAsync(new MovieSummaryCollection());
 
-        var query = new GetMovieSearchResultsQuery("unknown movie");
+        var query = new GetMovieSearchResultsQuery("unknown movie", null, "1");
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         result.Movies.Should().BeEmpty();
-        result.TotalOwnedCount.Should().Be(0);
     }
 
     [Fact]
@@ -75,9 +75,9 @@ public class GetMovieSearchResultsQueryHandlerTests
         // Arrange
         _tmdbServiceMock
             .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
-            .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary>()));
+            .ReturnsAsync(new MovieSummaryCollection());
 
-        var query = new GetMovieSearchResultsQuery("action", Page: "3");
+        var query = new GetMovieSearchResultsQuery("action", null, Page: "3");
 
         // Act
         await _handler.Handle(query, CancellationToken.None);
@@ -104,10 +104,10 @@ public class GetMovieSearchResultsQueryHandlerTests
 
         _tmdbServiceMock
             .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
-            .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary> { movie }));
+            .ReturnsAsync(new MovieSummaryCollection(){Movies = new List<MovieSummary>{movie}});
 
         // Act
-        var result = await _handler.Handle(new GetMovieSearchResultsQuery("dune"), CancellationToken.None);
+        var result = await _handler.Handle(new GetMovieSearchResultsQuery("dune", null, "1"), CancellationToken.None);
         
         // Assert
         result.Movies.FirstOrDefault()?.Formats.Should().Contain(_bluRay4KFormat);

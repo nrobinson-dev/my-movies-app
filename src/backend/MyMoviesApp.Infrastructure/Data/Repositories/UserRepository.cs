@@ -78,8 +78,9 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
         var totalDigitalCopies = allRetailers.Distinct().Count();
         var totalPages = (int)Math.Ceiling(totalMovies / (double)pageSize);
         
-        return new MovieSummaryCollection(movies)
+        return new MovieSummaryCollection()
         {
+            Movies =  movies,
             Page = page,
             TotalPages = totalPages,
             TotalResults = totalMovies,
@@ -87,10 +88,48 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
             TotalBluRayCount = totalBluRays,
             TotalBluRay4KCount = totalBluRay4K,
             TotalDigitalCount = totalDigitalCopies,
-
         };
     }
-    
+
+    public async Task<List<MovieSummary>> GetUserMoviesByTmdbIdsAsync(Guid userId, List<int> tmdbIds, CancellationToken cancellationToken)
+    {
+        var userMovies = await dbcontext.UserMovies
+            .AsNoTracking()
+            .Include(m => m.UserMovieFormats)
+            .Include(m => m.UserMovieDigitalRetailers)
+            .Where(m => m.UserId == userId && tmdbIds.Contains(m.TmdbId))
+            .OrderBy(m => m.Title)
+            .ToListAsync(cancellationToken);
+        
+        var movies = userMovies.Select(m => new MovieSummary
+            {
+                MovieId = m.TmdbId,
+                Title = m.Title,
+                ReleaseDate = m.ReleaseDate,
+                PosterPath = m.PosterPath,
+                Formats = m.UserMovieFormats
+                    .Select(umf => new Domain.Entities.UserMovieFormat
+                    {
+                        Id = umf.MovieFormatId,
+                        Name = ((Format)umf.MovieFormatId).ToString()
+                    })
+                    .Distinct()
+                    .ToList(),
+                DigitalRetailers = m.UserMovieDigitalRetailers
+                    .Select(r => new Domain.Entities.UserMovieDigitalRetailer
+                    {
+                        Id = r.DigitalRetailerId,
+                        Name = ((Domain.Enums.DigitalRetailer)r.DigitalRetailerId).ToString()
+                    })
+                    .Distinct()
+                    .ToList()
+            })
+            .Distinct()
+            .ToList();
+
+        return movies;
+    }
+
     public async Task<UserMovieFormatsAndDigitalRetailers> GetUserMovieFormatsAndDigitalRetailersAsync(Guid userId, int movieId, CancellationToken cancellationToken)
     {
         var formats = await dbcontext.UserMovieFormats

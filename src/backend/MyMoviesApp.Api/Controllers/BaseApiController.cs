@@ -7,10 +7,8 @@ namespace MyMoviesApp.Api.Controllers
     [Route("api/[controller]")]
     public class BaseApiController : ControllerBase
     {
-        private IMediator? _mediator;
-
         // This property is available to all derived controllers
-        protected IMediator Mediator => _mediator ??= 
+        protected IMediator Mediator => field ??= 
             HttpContext.RequestServices.GetRequiredService<IMediator>();
     }
 }

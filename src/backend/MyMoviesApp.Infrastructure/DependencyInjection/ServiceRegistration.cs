@@ -38,23 +38,22 @@ public static class ServiceRegistration
 
         services.PostConfigure<TmdbOptions>(options =>
         {
-            // Try to get the bearer token from environment variable first, then fall back to configuration
             var envToken = Environment.GetEnvironmentVariable("TMDB_ACCESS_TOKEN");
             if (!string.IsNullOrWhiteSpace(envToken))
                 options.BearerToken = envToken;
         });
 
         services.AddOptions<TmdbOptions>().ValidateDataAnnotations().ValidateOnStart();
-        
+
+        services.AddTransient<TmdbAuthHandler>();
+
         services.AddHttpClient<ITmdbService, TmdbService>((sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<TmdbOptions>>().Value;
-
             client.BaseAddress = new Uri(options.ApiBaseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", options.BearerToken);
-        });
+        })
+        .AddHttpMessageHandler<TmdbAuthHandler>();
 
         return services;
     }

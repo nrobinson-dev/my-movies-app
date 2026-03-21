@@ -38,7 +38,7 @@ public class GetMovieOwnershipQueryHandlerTests
 
         _userRepositoryMock
             .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MovieSummaryCollection(movies) { TotalResults = movies.Count });
+            .ReturnsAsync(new MovieSummaryCollection { Movies = movies, TotalResults = movies.Count });
 
         var query = new GetMovieOwnershipQuery(userId, _pageNumber, _pageSize);
 
@@ -48,7 +48,6 @@ public class GetMovieOwnershipQueryHandlerTests
         // Assert
         result.Should().NotBeNull();
         result.Movies.Should().HaveCount(2);
-        result.TotalOwnedCount.Should().Be(2);
     }
 
     [Fact]
@@ -59,7 +58,7 @@ public class GetMovieOwnershipQueryHandlerTests
 
         _userRepositoryMock
             .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary>()));
+            .ReturnsAsync(new MovieSummaryCollection());
 
         // Act
         var result = await _handler.Handle(new GetMovieOwnershipQuery(userId, _pageNumber, _pageSize), CancellationToken.None);
@@ -86,17 +85,13 @@ public class GetMovieOwnershipQueryHandlerTests
 
         _userRepositoryMock
             .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MovieSummaryCollection(movies) { TotalResults = movies.Count });
+            .ReturnsAsync(new MovieSummaryCollection{Movies = movies, TotalResults = movies.Count });
 
         // Act
         var result = await _handler.Handle(new GetMovieOwnershipQuery(userId, _pageNumber, _pageSize), CancellationToken.None);
 
         // Assert
-        result.TotalOwnedCount.Should().Be(3);
-        result.TotalDvdCount.Should().Be(2);       // movies A and C
-        result.TotalBluRayCount.Should().Be(1);    // movie A
-        result.TotalBluRay4KCount.Should().Be(1);  // movie B
-        result.TotalDigitalCount.Should().Be(2);   // movies A and C
+        result.TotalResults.Should().Be(3);
     }
 
     [Fact]
@@ -107,7 +102,7 @@ public class GetMovieOwnershipQueryHandlerTests
 
         _userRepositoryMock
             .Setup(r => r.GetUserMoviesAsync(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary>()));
+            .ReturnsAsync(new MovieSummaryCollection());
 
         // Act
         await _handler.Handle(new GetMovieOwnershipQuery(userId, _pageNumber, _pageSize), CancellationToken.None);

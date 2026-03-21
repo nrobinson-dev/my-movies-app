@@ -6,9 +6,9 @@ namespace MyMoviesApp.Domain.Entities;
 /// <summary>
 /// Collection of MovieSummary entities, which can represent TMDB search results or movie ownership.
 /// </summary>
-public class MovieSummaryCollection(List<MovieSummary> movies)
+public class MovieSummaryCollection()
 {
-    public List<MovieSummary> Movies { get; } = movies;
+    public List<MovieSummary> Movies { get; set; } = [];
     public int TotalDvdCount { get; set; } = 0;
     public int TotalBluRayCount { get; set; } = 0;
     public int TotalBluRay4KCount { get; set; } = 0;

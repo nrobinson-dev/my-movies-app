@@ -218,7 +218,7 @@ POST /auth/delete/{userId}
 #### Search Movies
 
 ```
-GET /movies?search={movieName}
+GET /movies?search={movieName}&page={page}&userId={userId}
 ```
 
 **Authorization:** `Bearer {token}`
@@ -240,10 +240,6 @@ GET /movies?search={movieName}
       ]
     }
   ],
-  "totalDvdCount": 1,
-  "totalBluRayCount": 0,
-  "totalBluRay4KCount": 0,
-  "totalDigitalCount": 1, 
   "page": 1, 
   "totalPages": 1,
   "totalResults": 1

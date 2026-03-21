@@ -9,7 +9,7 @@ public class TmdbService(HttpClient httpClient) : ITmdbService
 {
     public async Task<MovieDetail> GetMovieByTmdbMovieIdAsync(int id, CancellationToken ct)
     {
-        var url = string.Format("movie/{0}", id);
+        var url = $"movie/{id}";
         using var responseMessage = await httpClient.GetAsync(url, ct);
         responseMessage.EnsureSuccessStatusCode();
 
@@ -21,16 +21,16 @@ public class TmdbService(HttpClient httpClient) : ITmdbService
     public async Task<MovieSummaryCollection> SearchMoviesAsync(string term, CancellationToken ct, string page = "1")
     {
         if (string.IsNullOrWhiteSpace(term))
-            return new MovieSummaryCollection(new List<MovieSummary>());
+            return new MovieSummaryCollection();
 
-        var url = string.Format("search/movie?query={0}&page={1}", Uri.EscapeDataString(term), page);
+        var url = $"search/movie?query={Uri.EscapeDataString(term)}&page={page}";
         using var responseMessage = await httpClient.GetAsync(url, ct);
         responseMessage.EnsureSuccessStatusCode();
 
         var response = await responseMessage.Content.ReadFromJsonAsync<TmdbSearchMovieResultDto>();
 
         if (response is null)
-            return new MovieSummaryCollection(new List<MovieSummary>());
+            return new MovieSummaryCollection();
 
         return Map(response);
     }
@@ -61,8 +61,9 @@ public class TmdbService(HttpClient httpClient) : ITmdbService
 
     private MovieSummaryCollection Map(TmdbSearchMovieResultDto tmdbSearchMovieResultDto)
     {
-        var result = new MovieSummaryCollection(tmdbSearchMovieResultDto.Results.Select(Map).ToList())
+        var result = new MovieSummaryCollection
         {
+            Movies = tmdbSearchMovieResultDto.Results.Select(Map).ToList(),
             Page = tmdbSearchMovieResultDto.Page,
             TotalPages = tmdbSearchMovieResultDto.TotalPages,
             TotalResults = tmdbSearchMovieResultDto.TotalResults

@@ -4,6 +4,7 @@ using MyMoviesApp.Application.Features.User.Commands;
 using MyMoviesApp.Application.Features.User.Dtos;
 using MyMoviesApp.Application.Features.User.Queries;
 using MediatR;
+using System.Net;
 
 namespace MyMoviesApp.Api.Features.Users;
 
@@ -27,12 +28,22 @@ public static class UsersEndpoints
         
         group.MapGet("{userId}/movies/{tmdbId}", async (Guid userId, int tmdbId, IMediator mediator, CancellationToken cancellationToken) =>
         {
-            var result = await mediator.Send(new GetMovieByTmdbMovieIdQuery(userId, tmdbId), cancellationToken);
-            return Results.Ok(result);
+            try
+            {
+                var result = await mediator.Send(new GetMovieByTmdbMovieIdQuery(userId, tmdbId), cancellationToken);
+                return Results.Ok(result);
+            }
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return Results.Problem(
+                    detail: "The upstream movie service is unavailable. Please try again later.",
+                    statusCode: StatusCodes.Status502BadGateway);
+            }
         })
         .WithTags(nameof(Users))
         .WithName("GetUserMoviesByTmdbMovieId")
         .Produces<MovieDetailDto>()
+        .Produces(StatusCodes.Status502BadGateway)
         .RequireAuthorization();
         
         

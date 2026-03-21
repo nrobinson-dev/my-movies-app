@@ -27,6 +27,16 @@ public interface IUserRepository
     Task<int> SaveUserMovieAsync(Guid userId, SaveMovieSummary saveMovieSummary, CancellationToken cancellationToken);
     
     /// <summary>
+    /// Gets the user's movies that match any of the provided TMDB IDs.
+    /// Used to determine which movies in a search result are already in the user's collection.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="tmdbIds"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<List<MovieSummary>> GetUserMoviesByTmdbIdsAsync(Guid userId, List<int> tmdbIds, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Gets the collection of movie summaries associated with the user.
     /// </summary>
     /// <param name="userId"></param>

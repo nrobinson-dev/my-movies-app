@@ -10,7 +10,7 @@ using MyMoviesApp.Domain.Entities;
 
 namespace MyMoviesApp.Infrastructure.Tests.Services;
 
-[Trait("Category","Mocked HttpClient")]
+[Trait("Category", "Mocked HttpClient")]
 public class TmdbServiceTests
 {
     private readonly Mock<HttpMessageHandler> _httpMessageHandlerMock;
@@ -165,7 +165,7 @@ public class TmdbServiceTests
 
         // Assert
         captured.Should().NotBeNull();
-        result.Should().BeEquivalentTo(new MovieSummaryCollection(new List<MovieSummary>()));
+        result.Should().BeEquivalentTo(new MovieSummaryCollection());
     }
 
 
@@ -176,32 +176,34 @@ public class TmdbServiceTests
     {
         // Arrange
         term = Uri.EscapeDataString(term);
-        
+
         var tmdbResult = new TmdbSearchMovieResultDto
         {
             Results = new List<TmdbSearchMovieDetailDto>
+            {
+                new TmdbSearchMovieDetailDto
                 {
-                    new TmdbSearchMovieDetailDto
-                    {
-                        Id = 1,
-                        Title = "A",
-                        ReleaseDate = "2020-01-01",
-                        PosterPath = "/image.jpg"
-                    }
+                    Id = 1,
+                    Title = "A",
+                    ReleaseDate = "2020-01-01",
+                    PosterPath = "/image.jpg"
                 }
+            }
         };
 
-        var expected = new MovieSummaryCollection(
-            new List<MovieSummary>
+        var expected = new MovieSummaryCollection
+        {
+            Movies = new List<MovieSummary>
             {
-                    new MovieSummary
-                    {
-                        MovieId = 1,
-                        Title = "A",
-                        ReleaseDate = new DateOnly(2020, 1, 1),
-                        PosterPath = "/image.jpg"
-                    }
-            });
+                new MovieSummary
+                {
+                    MovieId = 1,
+                    Title = "A",
+                    ReleaseDate = new DateOnly(2020, 1, 1),
+                    PosterPath = "/image.jpg"
+                }
+            }
+        };
 
         HttpRequestMessage? request = null;
         var client = CreateHttpClientWithResponse(tmdbResult, req => request = req);
@@ -217,5 +219,4 @@ public class TmdbServiceTests
         // Assert
         result.Should().BeEquivalentTo(expected);
     }
-
 }
