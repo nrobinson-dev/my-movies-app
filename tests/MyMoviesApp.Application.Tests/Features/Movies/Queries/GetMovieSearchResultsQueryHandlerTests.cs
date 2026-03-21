@@ -40,14 +40,15 @@ public class GetMovieSearchResultsQueryHandlerTests
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
-
+        var moviesResult = result.Movies.ToList();
+        
         // Assert
         result.Should().NotBeNull();
         result.Movies.Should().HaveCount(2);
-        result.Movies[0].TmdbId.Should().Be(1);
-        result.Movies[0].Title.Should().Be("The Matrix");
-        result.Movies[1].TmdbId.Should().Be(2);
-        result.Movies[1].Title.Should().Be("Inception");
+        moviesResult[0].TmdbId.Should().Be(1);
+        moviesResult[0].Title.Should().Be("The Matrix");
+        moviesResult[1].TmdbId.Should().Be(2);
+        moviesResult[1].Title.Should().Be("Inception");
     }
 
     [Fact]
@@ -65,7 +66,7 @@ public class GetMovieSearchResultsQueryHandlerTests
 
         // Assert
         result.Movies.Should().BeEmpty();
-        result.TotalCount.Should().Be(0);
+        result.TotalOwnedCount.Should().Be(0);
     }
 
     [Fact]
@@ -107,10 +108,10 @@ public class GetMovieSearchResultsQueryHandlerTests
 
         // Act
         var result = await _handler.Handle(new GetMovieSearchResultsQuery("dune"), CancellationToken.None);
-
+        
         // Assert
-        result.Movies[0].Formats.Should().Contain(_bluRay4KFormat);
-        result.Movies[0].DigitalRetailers.Should().Contain(_appleTvRetailer);
+        result.Movies.FirstOrDefault()?.Formats.Should().Contain(_bluRay4KFormat);
+        result.Movies.FirstOrDefault()?.DigitalRetailers.Should().Contain(_appleTvRetailer);
     }
 }
 

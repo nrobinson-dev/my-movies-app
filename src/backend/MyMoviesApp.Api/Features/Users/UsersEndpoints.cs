@@ -15,9 +15,9 @@ public static class UsersEndpoints
             .RequireRateLimiting("user");
         
         
-        group.MapGet("{userId}/movies", async (Guid userId, IMediator mediator, CancellationToken cancellationToken) =>
+        group.MapGet("{userId}/movies", async (Guid userId, IMediator mediator, CancellationToken cancellationToken, int page = 1, int pageSize = 20) =>
         {
-            var result = await mediator.Send(new GetMovieOwnershipQuery(userId), cancellationToken);
+            var result = await mediator.Send(new GetMovieOwnershipQuery(userId, page, pageSize), cancellationToken);
             return Results.Ok(result);
         })
         .WithTags(nameof(Users))

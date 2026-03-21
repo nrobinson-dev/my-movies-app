@@ -5,23 +5,25 @@ namespace MyMoviesApp.Application.Common.Dtos;
 
 public class MovieSummaryCollectionDto
 {
-    public MovieSummaryCollectionDto(IEnumerable<MovieSummaryDto> movieSummaryCollection)
+    public MovieSummaryCollectionDto(IEnumerable<MovieSummaryDto> movies)
     {
-        var summaries = movieSummaryCollection as MovieSummaryDto[] ?? movieSummaryCollection.ToArray();
-        Movies = [..summaries];
-        TotalCount = summaries.Length;
-        TotalDvdCount = summaries.Count(ms => ms.Formats.Any(x => x.Id == (int)Format.Dvd));
-        TotalBluRayCount = summaries.Count(ms => ms.Formats.Any(x => x.Id == (int)Format.BluRay));
-        TotalBluRay4KCount = summaries.Count(ms => ms.Formats.Any(x => x.Id == (int)Format.BluRay4K));
-        TotalDigitalCount = summaries.Count(ms => ms.DigitalRetailers.Any());
+        Movies = movies;
+        TotalOwnedCount = Movies.Count();
+        TotalDvdCount = Movies.Count(m => m.Formats.Any(f => f.Id == (int)Format.Dvd));
+        TotalBluRayCount = Movies.Count(m => m.Formats.Any(f => f.Id == (int)Format.BluRay));
+        TotalBluRay4KCount = Movies.Count(m => m.Formats.Any(f => f.Id == (int)Format.BluRay4K));
+        TotalDigitalCount = Movies.Count(m => m.DigitalRetailers.Count > 0);
     }
 
-    public List<MovieSummaryDto> Movies { get; }
-    public int TotalCount { get; }
+    public IEnumerable<MovieSummaryDto> Movies { get; }
+    public int TotalOwnedCount { get; }
     public int TotalDvdCount { get; }
     public int TotalBluRayCount { get; }
     public int TotalBluRay4KCount { get; }
     public int TotalDigitalCount { get; }
+    public int Page { get; set; } = 0;
+    public int TotalPages { get; set; } = 0;
+    public int TotalResults { get; set; } = 0;
 }
 
 public record MovieSummaryDto(

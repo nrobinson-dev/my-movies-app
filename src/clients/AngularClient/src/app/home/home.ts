@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
   template: `
     @if ((moviesSummaryCollection()?.movies?.length ?? 0) > 0) {
       <h2 class="text-center text-2xl mb-4">My Movies</h2>
-      <p class="mb-4 text-center">Total Movies Owned: {{ moviesSummaryCollection()?.totalCount }} | DVD: {{ moviesSummaryCollection()?.totalDvdCount }} | Blu-ray:
+      <p class="mb-4 text-center">Total Movies Owned: {{ moviesSummaryCollection()?.totalResults }} | DVD: {{ moviesSummaryCollection()?.totalDvdCount }} | Blu-ray:
       {{ moviesSummaryCollection()?.totalBluRayCount }} | Ultra HD Blu-ray: {{ moviesSummaryCollection()?.totalBluRay4KCount }} | Digital:
       {{ moviesSummaryCollection()?.totalDigitalCount }}</p>
 

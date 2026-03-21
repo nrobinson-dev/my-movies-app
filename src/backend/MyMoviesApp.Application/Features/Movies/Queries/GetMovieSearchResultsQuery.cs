@@ -11,7 +11,12 @@ public class GetMovieSearchResultsQueryHandler(ITmdbService tmdbService) : IRequ
     public async Task<MovieSummaryCollectionDto> Handle(GetMovieSearchResultsQuery request, CancellationToken cancellationToken)
     {
         var movieSummaryCollection = await tmdbService.SearchMoviesAsync(request.Term, cancellationToken, request.Page);
-
-        return new MovieSummaryCollectionDto(movieSummaryCollection.Movies.Select(MovieSummaryDto.FromDomain));
+        
+        return new MovieSummaryCollectionDto(movieSummaryCollection.Movies.Select(MovieSummaryDto.FromDomain))
+        {
+            Page = movieSummaryCollection.Page,
+            TotalPages = movieSummaryCollection.TotalPages,
+            TotalResults = movieSummaryCollection.TotalResults,
+        };
     }
 }

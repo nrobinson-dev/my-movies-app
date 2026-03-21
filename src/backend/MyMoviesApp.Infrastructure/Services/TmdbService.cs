@@ -61,7 +61,14 @@ public class TmdbService(HttpClient httpClient) : ITmdbService
 
     private MovieSummaryCollection Map(TmdbSearchMovieResultDto tmdbSearchMovieResultDto)
     {
-        return new MovieSummaryCollection(tmdbSearchMovieResultDto.Results.Select(Map).ToList());
+        var result = new MovieSummaryCollection(tmdbSearchMovieResultDto.Results.Select(Map).ToList())
+        {
+            Page = tmdbSearchMovieResultDto.Page,
+            TotalPages = tmdbSearchMovieResultDto.TotalPages,
+            TotalResults = tmdbSearchMovieResultDto.TotalResults
+        };
+        
+        return result;
     }
 
     private DateOnly? TryParseReleaseDate(string? releaseDate)

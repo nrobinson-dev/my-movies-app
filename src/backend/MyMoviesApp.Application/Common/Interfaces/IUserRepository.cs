@@ -56,9 +56,11 @@ public interface IUserRepository
     /// Gets the collection of movie summaries associated with the user.
     /// </summary>
     /// <param name="userId"></param>
+    /// <param name="page"></param>
+    /// <param name="pageSize"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task<MovieSummaryCollection> GetUserMoviesAsync(Guid userId, CancellationToken cancellationToken);
+    /// <returns></returns>s
+    Task<MovieSummaryCollection> GetUserMoviesAsync(Guid userId, int page, int pageSize, CancellationToken cancellationToken);
     
     /// <summary>
     /// Deletes a movie from the user's collection based on the TMDB movie ID.

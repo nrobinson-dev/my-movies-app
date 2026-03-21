@@ -29,7 +29,7 @@ public class MovieSummaryCollectionDtoTests
 
         var collection = new MovieSummaryCollectionDto(dtos);
 
-        collection.TotalCount.Should().Be(2);
+        collection.TotalOwnedCount.Should().Be(2);
     }
 
     [Fact]
@@ -96,7 +96,7 @@ public class MovieSummaryCollectionDtoTests
     {
         var collection = new MovieSummaryCollectionDto(Enumerable.Empty<MovieSummaryDto>());
 
-        collection.TotalCount.Should().Be(0);
+        collection.TotalOwnedCount.Should().Be(0);
         collection.TotalDvdCount.Should().Be(0);
         collection.TotalBluRayCount.Should().Be(0);
         collection.TotalBluRay4KCount.Should().Be(0);

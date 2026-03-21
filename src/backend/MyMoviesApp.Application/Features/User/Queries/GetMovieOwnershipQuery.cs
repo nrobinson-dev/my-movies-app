@@ -4,20 +4,21 @@ using MyMoviesApp.Application.Common.Interfaces;
 
 namespace MyMoviesApp.Application.Features.User.Queries;
 
-public record GetMovieOwnershipQuery(Guid UserId) : IRequest<MovieSummaryCollectionDto>
+public record GetMovieOwnershipQuery(Guid UserId, int? PageNumber, int? PageSize) : IRequest<MovieSummaryCollectionDto>
 {
-    // TODO: Add pagination
-
-    // public int PageNumber { get; init; } = 1;
-    // public int PageSize { get; init; } = 10;
 }
 
 public class GetMovieOwnershipQueryHandler(IUserRepository userRepository) : IRequestHandler<GetMovieOwnershipQuery, MovieSummaryCollectionDto>
 {
     public async Task<MovieSummaryCollectionDto> Handle(GetMovieOwnershipQuery request, CancellationToken cancellationToken)
     {
-        var movies = await userRepository.GetUserMoviesAsync(request.UserId, cancellationToken);
+        var userMovieCollection = await userRepository.GetUserMoviesAsync(request.UserId, request.PageNumber ?? 1, request.PageSize ?? 20, cancellationToken);
         
-        return new MovieSummaryCollectionDto(movies.Movies.Select(MovieSummaryDto.FromDomain));
+        return new MovieSummaryCollectionDto(userMovieCollection.Movies.Select(MovieSummaryDto.FromDomain))
+        {
+            Page = userMovieCollection.Page,
+            TotalPages = userMovieCollection.TotalPages,
+            TotalResults = userMovieCollection.TotalResults,
+        };
     }
 }

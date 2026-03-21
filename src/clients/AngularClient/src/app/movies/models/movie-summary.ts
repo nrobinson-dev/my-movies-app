@@ -11,9 +11,11 @@ export interface MovieSummary {
 
 export interface MovieSummaryCollection {
     movies: MovieSummary[];
-    totalCount: number;
     totalDvdCount: number;
     totalBluRayCount: number;
     totalBluRay4KCount: number;
     totalDigitalCount: number;
+    page: number;
+    totalPages: number;
+    totalResults: number;
 }

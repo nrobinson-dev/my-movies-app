@@ -46,16 +46,42 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
         return (user, userDb.PasswordHash);
     }
 
-    // TODO: implement pagination and filtering by format/retailer
-    public async Task<MovieSummaryCollection> GetUserMoviesAsync(Guid userId, CancellationToken cancellationToken)
+    // TODO: implement filtering by format/retailer
+    public async Task<MovieSummaryCollection> GetUserMoviesAsync(Guid userId, int page, int pageSize, CancellationToken cancellationToken)
     {
         var userMovies = await dbcontext.UserMovies
             .AsNoTracking()
             .Include(m => m.UserMovieFormats)
             .Include(m => m.UserMovieDigitalRetailers)
+            .Take(pageSize)
+            .Skip((page - 1) * pageSize)
             .Where(m => m.UserId == userId)
+            .OrderBy(m => m.Title)
+            .ToListAsync(cancellationToken);
+        
+        var totalMovies = await dbcontext.UserMovies
+            .AsNoTracking()
+            .Where(m => m.UserId == userId)
+            .CountAsync(cancellationToken);
+        
+        var userMovieIds = await dbcontext.UserMovies
+            .AsNoTracking()
+            .Where(um => um.UserId == userId)
+            .Select(um => um.Id)
             .ToListAsync(cancellationToken);
 
+        var allFormats = await dbcontext.UserMovieFormats
+            .AsNoTracking()
+            .Where(umf => userMovieIds.Contains(umf.UserMovieId))
+            .Select(umf => umf.MovieFormatId)
+            .ToListAsync(cancellationToken);
+
+        var allRetailers = await dbcontext.UserMovieDigitalRetailers
+            .AsNoTracking()
+            .Where(r => userMovieIds.Contains(r.UserMovieId))
+            .Select(r => r.UserMovieId)
+            .ToListAsync(cancellationToken);
+        
         var movies = userMovies.Select(m => new MovieSummary
             {
                 MovieId = m.TmdbId,
@@ -82,7 +108,23 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
             .Distinct()
             .ToList();
 
-        return new MovieSummaryCollection(movies);
+        var totalDvds = allFormats.Count(f => f == (int)Format.Dvd);
+        var totalBluRays = allFormats.Count(f => f == (int)Format.BluRay);
+        var totalBluRay4K = allFormats.Count(f => f == (int)Format.BluRay4K);
+        var totalDigitalCopies = allRetailers.Distinct().Count();
+        var totalPages = (int)Math.Ceiling(totalMovies / (double)pageSize);
+        
+        return new MovieSummaryCollection(movies)
+        {
+            Page = page,
+            TotalPages = totalPages,
+            TotalResults = totalMovies,
+            TotalDvdCount = totalDvds,
+            TotalBluRayCount = totalBluRays,
+            TotalBluRay4KCount = totalBluRay4K,
+            TotalDigitalCount = totalDigitalCopies,
+
+        };
     }
     
     public async Task<UserMovieFormatsAndDigitalRetailers> GetUserMovieFormatsAndDigitalRetailersAsync(Guid userId, int movieId, CancellationToken cancellationToken)

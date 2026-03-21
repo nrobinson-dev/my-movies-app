@@ -17,6 +17,8 @@ public class GetMovieOwnershipQueryHandlerTests
     private readonly UserMovieDigitalRetailer _appleTvRetailer = new() { Id = (int)DigitalRetailer.AppleTv, Name = "Apple TV" };
     private readonly UserMovieDigitalRetailer _moviesAnywhereRetailer = new() { Id = (int)DigitalRetailer.MoviesAnywhere, Name = "Movies Anywhere" };
     private readonly UserMovieDigitalRetailer _youTubeRetailer = new() { Id = (int)DigitalRetailer.YouTube, Name = "YouTube" };
+    private readonly int _pageNumber = 1;
+    private readonly int _pageSize = 20;
     
     public GetMovieOwnershipQueryHandlerTests()
     {
@@ -35,10 +37,10 @@ public class GetMovieOwnershipQueryHandlerTests
         };
 
         _userRepositoryMock
-            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MovieSummaryCollection(movies));
+            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MovieSummaryCollection(movies) { TotalResults = movies.Count });
 
-        var query = new GetMovieOwnershipQuery(userId);
+        var query = new GetMovieOwnershipQuery(userId, _pageNumber, _pageSize);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -46,7 +48,7 @@ public class GetMovieOwnershipQueryHandlerTests
         // Assert
         result.Should().NotBeNull();
         result.Movies.Should().HaveCount(2);
-        result.TotalCount.Should().Be(2);
+        result.TotalOwnedCount.Should().Be(2);
     }
 
     [Fact]
@@ -56,15 +58,15 @@ public class GetMovieOwnershipQueryHandlerTests
         var userId = Guid.NewGuid();
 
         _userRepositoryMock
-            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary>()));
 
         // Act
-        var result = await _handler.Handle(new GetMovieOwnershipQuery(userId), CancellationToken.None);
+        var result = await _handler.Handle(new GetMovieOwnershipQuery(userId, _pageNumber, _pageSize), CancellationToken.None);
 
         // Assert
         result.Movies.Should().BeEmpty();
-        result.TotalCount.Should().Be(0);
+        result.TotalOwnedCount.Should().Be(0);
     }
 
     [Fact]
@@ -83,14 +85,14 @@ public class GetMovieOwnershipQueryHandlerTests
         };
 
         _userRepositoryMock
-            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new MovieSummaryCollection(movies));
+            .Setup(r => r.GetUserMoviesAsync(userId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new MovieSummaryCollection(movies) { TotalResults = movies.Count });
 
         // Act
-        var result = await _handler.Handle(new GetMovieOwnershipQuery(userId), CancellationToken.None);
+        var result = await _handler.Handle(new GetMovieOwnershipQuery(userId, _pageNumber, _pageSize), CancellationToken.None);
 
         // Assert
-        result.TotalCount.Should().Be(3);
+        result.TotalOwnedCount.Should().Be(3);
         result.TotalDvdCount.Should().Be(2);       // movies A and C
         result.TotalBluRayCount.Should().Be(1);    // movie A
         result.TotalBluRay4KCount.Should().Be(1);  // movie B
@@ -104,14 +106,14 @@ public class GetMovieOwnershipQueryHandlerTests
         var userId = Guid.NewGuid();
 
         _userRepositoryMock
-            .Setup(r => r.GetUserMoviesAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .Setup(r => r.GetUserMoviesAsync(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new MovieSummaryCollection(new List<MovieSummary>()));
 
         // Act
-        await _handler.Handle(new GetMovieOwnershipQuery(userId), CancellationToken.None);
+        await _handler.Handle(new GetMovieOwnershipQuery(userId, _pageNumber, _pageSize), CancellationToken.None);
 
         // Assert
-        _userRepositoryMock.Verify(r => r.GetUserMoviesAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+        _userRepositoryMock.Verify(r => r.GetUserMoviesAsync(userId, It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }
 

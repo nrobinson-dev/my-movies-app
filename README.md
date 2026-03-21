@@ -215,11 +215,13 @@ GET /movies?search={movieName}
       ]
     }
   ],
-  "totalCount": 0,
-  "totalDvdCount": 0,
+  "totalDvdCount": 1,
   "totalBluRayCount": 0,
   "totalBluRay4KCount": 0,
-  "totalDigitalCount": 0
+  "totalDigitalCount": 1, 
+  "page": 1, 
+  "totalPages": 1,
+  "totalResults": 1
 }
 ```
 
@@ -227,13 +229,40 @@ GET /movies?search={movieName}
 
 ### User Movies
 
-#### Get All Movies
+#### Get User Movie Ownership
 
 ```
-GET /users/{userId}/movies
+GET /users/{userId}/movies?page={page}&pageSize={pageSize}
 ```
 
 **Authorization:** `Bearer {token}`
+
+**Response**
+```json
+{
+  "movies": [
+    {
+      "tmdbId": 123,
+      "title": "Movie Title",
+      "releaseDate": "0001-01-01",
+      "posterPath": "/asdf.jpg",
+      "formats": [
+        { "id": 1, "name": "Dvd" }
+      ],
+      "digitalRetailers": [
+        { "id": 1, "name": "MoviesAnywhere" }
+      ]
+    }
+  ],
+  "totalDvdCount": 1,
+  "totalBluRayCount": 0,
+  "totalBluRay4KCount": 0,
+  "totalDigitalCount": 1, 
+  "page": 1, 
+  "totalPages": 1,
+  "totalResults": 1
+}
+```
 
 ---
 
