@@ -42,6 +42,7 @@ builder.Services.AddHttpProtection();
 
 var app = builder.Build();
 app.MigrateDb();
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

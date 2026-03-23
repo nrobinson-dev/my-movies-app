@@ -35,15 +35,8 @@ public static class AuthEndpoints
         
         group.MapPost("/login", async (LoginUserCommand command, IMediator mediator, CancellationToken cancellationToken) =>
         {
-            try
-            {
-                var result = await mediator.Send(command, cancellationToken);
-                return Results.Ok(result);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Results.Unauthorized();
-            }
+            var result = await mediator.Send(command, cancellationToken);
+            return Results.Ok(result);
         })
         .DisableAntiforgery()
         .AddEndpointFilter<ValidationFilter<LoginUserCommand>>()

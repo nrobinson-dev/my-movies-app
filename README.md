@@ -248,6 +248,7 @@ GET /movies?search={movieName}&page={page}&userId={userId}
 **Status Codes**
 - `200 OK` — login successful
 - `401 Unauthorized` — invalid credentials
+- `503 Service Unavailable` — TMDB API is down or rate limit exceeded
 
 ---
 
@@ -323,6 +324,8 @@ GET /users/{userId}/movies/{tmdbId}
 **Status Codes**
 - `200 OK` — login successful
 - `401 Unauthorized` — invalid credentials
+- `503 Service Unavailable` — TMDB API is down or rate limit exceeded
+
 ---
 
 #### Add Movie to Collection

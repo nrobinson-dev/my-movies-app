@@ -28,6 +28,8 @@ public static class ServiceRegistration
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
 
         return services;
     }
@@ -53,8 +55,9 @@ public static class ServiceRegistration
             client.BaseAddress = new Uri(options.ApiBaseUrl);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         })
-        .AddHttpMessageHandler<TmdbAuthHandler>();
-
+        .AddHttpMessageHandler<TmdbAuthHandler>()
+        .AddStandardResilienceHandler();
+        
         return services;
     }
     
