@@ -5,7 +5,7 @@ namespace MyMoviesApp.Infrastructure.Dtos;
 public class TmdbMovieDetailResult
 {
     [JsonPropertyName("adult")]
-    public bool Adult { get; set; } = true;
+    public bool Adult { get; set; } = false;
 
     [JsonPropertyName("backdrop_path")]
     public string BackdropPath { get; set; } = string.Empty;
@@ -14,7 +14,7 @@ public class TmdbMovieDetailResult
     public BelongsToCollection BelongsToCollection { get; set; } = new();
 
     [JsonPropertyName("budget")]
-    public int Budget { get; set; } = 0;
+    public long Budget { get; set; } = 0;
 
     [JsonPropertyName("genres")]
     public List<TmdbMovieGenre> Genres { get; set; } = new();
@@ -27,6 +27,9 @@ public class TmdbMovieDetailResult
 
     [JsonPropertyName("imdb_id")]
     public string ImdbId { get; set; } = string.Empty;
+    
+    [JsonPropertyName("origin_country")]
+    public List<string> OriginCountry { get; set; } = new();
 
     [JsonPropertyName("original_language")]
     public string OriginalLanguage { get; set; } = string.Empty;
@@ -53,7 +56,7 @@ public class TmdbMovieDetailResult
     public string ReleaseDate { get; set; } = string.Empty;
 
     [JsonPropertyName("revenue")]
-    public int Revenue { get; set; } = 0;
+    public long Revenue { get; set; } = 0;
 
     [JsonPropertyName("runtime")]
     public int Runtime { get; set; } = 0;

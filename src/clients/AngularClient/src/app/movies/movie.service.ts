@@ -13,13 +13,15 @@ export class MovieService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  getUserMovies(userId: string): Observable<MovieSummaryCollection> {
-    return this.http.get<MovieSummaryCollection>(`${this.baseUrl}/users/${userId}/movies`);
+  getUserMovies(userId: string, pageNumber: number = 1, pageSize: number = 10): Observable<MovieSummaryCollection> {
+    return this.http.get<MovieSummaryCollection>(`${this.baseUrl}/users/${userId}/movies`, {
+      params: { page: pageNumber.toString(), pageSize: pageSize.toString() }
+    });
   }
   
-  getSearchResults(search: string, userId: string = ''): Observable<MovieSummaryCollection> {
+  getSearchResults(search: string, userId: string = '', page: number = 1): Observable<MovieSummaryCollection> {
     return this.http.get<MovieSummaryCollection>(`${this.baseUrl}/movies`, {
-      params: { search, userId }
+      params: { search, userId, page: page.toString() }
     });
   }
 

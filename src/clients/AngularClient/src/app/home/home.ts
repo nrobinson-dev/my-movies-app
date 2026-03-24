@@ -1,12 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MovieService } from '../movies/movie.service';
 import { MovieCard } from '../shared/movie-card/movie-card';
-import { MovieSummaryCollection } from '../movies/models/movie-summary';
+import { MovieSummaryCollection, MovieSummary } from '../movies/models/movie-summary';
 import { RouterLink } from '@angular/router';
+import { LoadMoreButton } from '../shared/load-more-button/load-more-button';
 
 @Component({
   selector: 'home',
-  imports: [MovieCard, RouterLink],
+  imports: [MovieCard, RouterLink, LoadMoreButton],
   template: `
     @if ((moviesSummaryCollection()?.movies?.length ?? 0) > 0) {
       <h2 class="text-center text-2xl mb-4">My Movies</h2>
@@ -35,10 +36,14 @@ import { RouterLink } from '@angular/router';
       </div>
 
       <div class="movie-grid gap-4">
-        @for (movie of moviesSummaryCollection()?.movies || []; track movie.tmdbId) {
+        @for (movie of movies() || []; track movie.tmdbId) {
           <movie-card [movieSummary]="movie"></movie-card>
         }
       </div>
+
+      @if (hasMore()) {
+        <load-more-button (loadMore)="loadMore()"></load-more-button>
+      }
     } @else {
       <p class="text-center pt-10">
         You haven't added any movies yet. Start by
@@ -51,17 +56,40 @@ import { RouterLink } from '@angular/router';
 })
 export class Home {
   movieService = inject(MovieService);
+  currentPage = signal(1);
+  pageSize = signal(20);
+  totalPages = signal(1);
+  hasMore = computed(() => this.currentPage() < this.totalPages());
 
   moviesSummaryCollection = signal<MovieSummaryCollection | null>(null);
+  movies = signal<MovieSummary[]>([]);
 
-  constructor() {
-    this.movieService.getUserMovies(localStorage.getItem('auth_user_id') || '').subscribe({
-      next: (results) => {
-        this.moviesSummaryCollection.set(results);
-      },
-      error: (err) => {
-        console.error('Failed to fetch user movies', err);
-      },
-    });
+  ngOnInit() {
+    this.loadMovies();
+  }
+
+  loadMore() {
+    this.currentPage.set(this.currentPage() + 1);
+    this.loadMovies();
+  }
+
+  loadMovies() {
+    this.movieService
+      .getUserMovies(
+        localStorage.getItem('auth_user_id') || '',
+        this.currentPage(),
+        this.pageSize(),
+      )
+      .subscribe({
+        next: (response) => {
+          this.currentPage.set(response.page);
+          this.totalPages.set(response.totalPages);
+          this.movies.update((current) => [...(current || []), ...(response.movies || [])]);
+          this.moviesSummaryCollection.set(response);
+        },
+        error: (err) => {
+          console.error('Failed to fetch user movies', err);
+        },
+      });
   }
 }

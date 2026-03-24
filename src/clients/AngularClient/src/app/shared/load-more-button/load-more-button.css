@@ -1,0 +1,24 @@
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.btn-load-more {
+  background-color: transparent;
+  color: #007bff;
+  border: 2px solid #007bff;
+  padding: 12px 30px;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-load-more:hover {
+  background-color: #007bff;
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  transform: translateY(-2px);
+}

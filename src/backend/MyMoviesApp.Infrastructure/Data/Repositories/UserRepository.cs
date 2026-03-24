@@ -17,10 +17,10 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
             .AsNoTracking()
             .Include(m => m.UserMovieFormats)
             .Include(m => m.UserMovieDigitalRetailers)
-            .Take(pageSize)
-            .Skip((page - 1) * pageSize)
             .Where(m => m.UserId == userId)
             .OrderBy(m => m.Title)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(cancellationToken);
         
         var totalMovies = await dbcontext.UserMovies
