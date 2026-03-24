@@ -14,7 +14,6 @@ public class TmdbMovieSummaryCollectionDto(IEnumerable<MovieSummaryDto> movies)
 public class MovieSummaryCollectionDto(IEnumerable<MovieSummaryDto> movies)
 {
     public IEnumerable<MovieSummaryDto> Movies { get; } = movies;
-    public int TotalOwnedCount { get; set; } = 0;
     public int TotalDvdCount { get; set; } = 0;
     public int TotalBluRayCount { get; set; } = 0;
     public int TotalBluRay4KCount { get; set; } = 0;

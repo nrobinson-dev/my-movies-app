@@ -65,7 +65,7 @@ public class GetMovieOwnershipQueryHandlerTests
 
         // Assert
         result.Movies.Should().BeEmpty();
-        result.TotalOwnedCount.Should().Be(0);
+        result.TotalResults.Should().Be(0);
     }
 
     [Fact]

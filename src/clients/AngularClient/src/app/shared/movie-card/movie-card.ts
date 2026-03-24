@@ -6,6 +6,7 @@ import { DigitalRetailer, Format } from '../../movies/models/lookup';
 import { MovieSummary } from '../../movies/models/movie-summary';
 import { TMDB_IMAGE_BASE_URL } from '../constants/constants';
 import { RouterLink } from '@angular/router';
+import { PlatformOption } from '../models/platform-option';
 
 @Component({
   selector: 'movie-card',
@@ -84,19 +85,19 @@ export class MovieCard {
   movieSummary = input.required<MovieSummary>();
 
   posterPath = signal<string | null>(null);
-  ownedFormats = signal<{ value: number; label: string; image: string }[]>([]);
-  ownedDigitalRetailers = signal<{ value: number; label: string; image: string }[]>([]);
+  ownedFormats = signal<PlatformOption[]>([]);
+  ownedDigitalRetailers = signal<PlatformOption[]>([]);
 
   filterFormats(
     formats: Format[],
-    FORMAT_OPTIONS: { value: number; label: string; image: string }[],
+    FORMAT_OPTIONS: PlatformOption[],
   ) {
     return FORMAT_OPTIONS.filter((option) => formats.some((f) => f.id === option.value));
   }
 
   filterDigitalRetailers(
     digitalRetailers: DigitalRetailer[],
-    DIGITAL_RETAILER_OPTIONS: { value: number; label: string; image: string }[],
+    DIGITAL_RETAILER_OPTIONS: PlatformOption[],
   ) {
     return DIGITAL_RETAILER_OPTIONS.filter((option) =>
       digitalRetailers.some((r) => r.id === option.value),

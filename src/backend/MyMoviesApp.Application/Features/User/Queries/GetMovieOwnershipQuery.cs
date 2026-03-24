@@ -19,6 +19,10 @@ public class GetMovieOwnershipQueryHandler(IUserRepository userRepository) : IRe
             Page = userMovieCollection.Page,
             TotalPages = userMovieCollection.TotalPages,
             TotalResults = userMovieCollection.TotalResults,
+            TotalDvdCount =  userMovieCollection.TotalDvdCount,
+            TotalBluRayCount = userMovieCollection.TotalBluRayCount,
+            TotalBluRay4KCount =  userMovieCollection.TotalBluRay4KCount,
+            TotalDigitalCount =  userMovieCollection.TotalDigitalCount
         };
     }
 }
