@@ -10,11 +10,31 @@ import { RouterLink } from '@angular/router';
   template: `
     @if ((moviesSummaryCollection()?.movies?.length ?? 0) > 0) {
       <h2 class="text-center text-2xl mb-4">My Movies</h2>
-      <p class="mb-4 text-center">Total Movies Owned: {{ moviesSummaryCollection()?.totalResults }} | DVD: {{ moviesSummaryCollection()?.totalDvdCount }} | Blu-ray:
-      {{ moviesSummaryCollection()?.totalBluRayCount }} | Ultra HD Blu-ray: {{ moviesSummaryCollection()?.totalBluRay4KCount }} | Digital:
-      {{ moviesSummaryCollection()?.totalDigitalCount }}</p>
 
-      <div class="flex flex-wrap gap-7 justify-center">
+      <div class="stats-container">
+        <div class="stat-item">
+          <span class="stat-label">Total Movies</span>
+          <span class="stat-value">{{ moviesSummaryCollection()?.totalResults }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Ultra HD</span>
+          <span class="stat-value">{{ moviesSummaryCollection()?.totalBluRay4KCount }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Blu-ray</span>
+          <span class="stat-value">{{ moviesSummaryCollection()?.totalBluRayCount }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">DVD</span>
+          <span class="stat-value">{{ moviesSummaryCollection()?.totalDvdCount }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Digital</span>
+          <span class="stat-value">{{ moviesSummaryCollection()?.totalDigitalCount }}</span>
+        </div>
+      </div>
+
+      <div class="movie-grid gap-4">
         @for (movie of moviesSummaryCollection()?.movies || []; track movie.tmdbId) {
           <movie-card [movieSummary]="movie"></movie-card>
         }

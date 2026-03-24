@@ -14,39 +14,42 @@ import { PlatformOption } from '../models/platform-option';
   imports: [DatePipe, RouterLink],
   template: `
     <div
-      class="relative movie-card border border-gray-300 shadow-sm rounded-lg overflow-hidden hover:shadow-xl transition"
+      class="movie-card"
     >
-      <div class="py-1 px-2 bg-gray-800 text-white text-center">
+      <div class="movie-card__header">
         <p>
           <a [routerLink]="['/movie', movieSummary().tmdbId]" class="mr-1"
             >{{ movieSummary().title }}
-            <span class="absolute left-0 top-0 w-full h-full z-10"></span>
+            <span class="movie-card__title"></span>
           </a>
-          <span class="text-xs">({{ this.movieSummary().releaseDate | date: 'yyyy' }})</span>
+          <span class="movie-card__release-date">({{ this.movieSummary().releaseDate | date: 'yyyy' }})</span>
         </p>
       </div>
 
-      @if (posterPath()) {
-        <img
-          class="movie-card__poster"
-          [src]="posterPath()"
-          [alt]="this.movieSummary().title + ' poster'"
-        />
-      } @else {
-        <div class="movie-card__placeholder-poster">
+      <div class="movie-card__poster-wrapper">
+        @if (posterPath()) {
           <img
-            src="/images/icons/image.svg"
-            alt="No poster available"
-            class="movie-card__placeholder-icon"
+            class="movie-card__poster"
+            [src]="posterPath()"
+            [alt]="this.movieSummary().title + ' poster'"
           />
-        </div>
-      }
+        } @else {
+          <div class="movie-card__placeholder-poster">
+            <img
+              src="/images/icons/image.svg"
+              alt="No poster available"
+              class="movie-card__placeholder-icon"
+            />
+          </div>
+        }
+      </div>
 
+      <div class="movie-card__ownership-info">
         @if (ownedFormats().length > 0) {
-          <div class="movie-card__formats p-1 bg-gray-800 text-white text-center">
+          <div class="movie-card__formats">
             <p><small>Physical Media:</small></p>
 
-            <div class="flex align-items-center justify-evenly">
+            <div class="movie-card__platform-wrapper">
               @for (format of ownedFormats(); track format.value) {
                 <img
                   [src]="format.image"
@@ -61,22 +64,25 @@ import { PlatformOption } from '../models/platform-option';
         }
 
         @if (ownedDigitalRetailers().length > 0) {
-          <div class="movie-card__digital-retailers p-1 bg-gray-800 text-white text-center">
+          <div class="movie-card__digital-retailers">
             <p class="mb-1"><small>Digital Retailers:</small></p>
 
-            <div class="flex align-items-center justify-evenly pb-2">
+            <div class="movie-card__platform-wrapper">
               @for (retailer of ownedDigitalRetailers(); track retailer.value) {
-                <img
+                <div class="flex items-center justify-center">
+                  <img
                   [src]="retailer.image"
                   [alt]="retailer.label"
                   [class]="retailer.label"
                   [title]="retailer.label"
                   class="movie-card__platform--digital-retailer"
-                />
+                  />
+                </div>
               }
             </div>
           </div>
         }
+      </div>
     </div>
   `,
   styleUrls: ['./movie-card.css'],

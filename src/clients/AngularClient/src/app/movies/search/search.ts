@@ -25,7 +25,7 @@ import { MovieCard } from '../../shared/movie-card/movie-card';
   @if (isSearched()) {
     @if (movies().length > 0) {
       <h2 class="text-center text-2xl mb-4">Search Results</h2>
-      <div class="flex flex-wrap gap-7 justify-center">
+      <div class="movie-grid gap-4">
       @for (movie of movies(); track movie.tmdbId) {
         <movie-card [movieSummary]="movie"></movie-card>
       }

@@ -1,6 +1,29 @@
+@reference "../../../styles.css";
+
 .movie-card {
-  width: 250px;
   max-width: 100%;
+  height: 100%;
+  @apply relative flex flex-col border border-gray-300 shadow-sm rounded-md overflow-hidden hover:shadow-xl transition;
+}
+
+.movie-card__header {
+    @apply py-1 px-2 bg-gray-900 text-white text-center;
+}
+
+.movie-card__title {
+    @apply absolute left-0 top-0 w-full h-full z-10;
+}
+
+.movie-card__release-date {
+    @apply text-xs;
+}
+
+.movie-card__poster-wrapper {
+  @apply flex items-center justify-center bg-gray-900 px-3;
+}
+
+.movie-card__poster {
+  @apply border border-gray-500;
 }
 
 .movie-card__placeholder-poster {
@@ -16,46 +39,53 @@
     position: absolute;
     width: 100px;
     max-width: 90%;
-
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
 }
 
+.movie-card__ownership-info {
+  @apply flex-grow flex flex-col justify-center bg-gray-900 text-white text-center px-3 pb-3;
+}
+
+.movie-card__platform-wrapper {
+  height: 40px;
+  @apply flex items-center justify-evenly border border-gray-500;
+}
 
 .movie-card__platform--format {
-    &.DVD {
-        width: 40px;
-    }
+  &.DVD {
+    width: 40px;
+  }
 
-    &.Blu-ray {
-        width: 40px;
-    }
+  &.Blu-ray {
+    width: 40px;
+  }
 
-    &.Ultra.HD.Blu-ray {
-        width: 70px;
-    }
+  &.Ultra.HD.Blu-ray {
+    width: 70px;
+  }
 }
 
 .movie-card__platform--digital-retailer {
-    &.Movies.Anywhere {
-        width: 30px;
-    }
+  &.Movies.Anywhere {
+    width: 30px;
+  }
 
-    &.Apple.TV {
-        width: 24px;
-    }
+  &.Apple.TV {
+    width: 24px;
+  }
 
-    &.Fandango.at.Home {
-        width: 30px;
-    }
+  &.Fandango.at.Home {
+    width: 30px;
+  }
 
-    &.YouTube {
-        width: 30px;
-    }
+  &.YouTube {
+    width: 30px;
+  }
 
-    &.Amazon.Prime.Video {
-        width: 30px;
-    }
+  &.Amazon.Prime.Video {
+    width: 30px;
+  }
 }
