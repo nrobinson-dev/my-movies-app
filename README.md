@@ -123,7 +123,7 @@ Neither Swagger nor Scalar have been integrated yet. Use a tool such as [Postman
 
 **Base URL**
 ```
-https://localhost:7184/api/v1
+https://localhost:7184/api
 ```
 
 ---
