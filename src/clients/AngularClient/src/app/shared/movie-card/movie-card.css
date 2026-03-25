@@ -45,47 +45,88 @@
   }
 }
 
-.movie-card__ownership-info {
-  @apply flex-grow flex flex-col justify-center bg-gray-900 text-white text-center px-3 pb-3;
+.media-info {
+  @apply flex-grow flex flex-col justify-center bg-gray-900;
+  gap: 12px;
+  padding: 5px 10px 10px 10px;
 }
 
-.movie-card__platform-wrapper {
-  height: 40px;
-  @apply flex items-center justify-evenly border border-gray-500;
+.media-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
 }
 
-.movie-card__platform--format {
+.group-label {
+  font-size: 0.75rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pill-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.media-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+
   &.DVD {
-    width: 40px;
+    color: #efb800;
+    background-color: rgb(239 184 0 / 5%);
+    border-color: #efb800;
   }
 
   &.Blu-ray {
-    width: 40px;
+    color: #0395d5;
+    background-color: rgb(3 149 213 / 5%);
+    border-color: #0395d5;
   }
 
   &.Ultra.HD.Blu-ray {
-    width: 70px;
+    color: #d2d2d2;
+    background-color: rgb(210 210 210 / 5%);
+    border-color: #d2d2d2;
   }
-}
 
-.movie-card__platform--digital-retailer {
   &.Movies.Anywhere {
-    width: 30px;
+    color: #00ccff;
+    background-color: rgb(152 0 210 / 5%);
+    border-color: #9800d2;
   }
 
   &.Apple.TV {
-    width: 24px;
+    color: #fff;
+    background-color: rgb(255 255 255 / 5%);
+    border-color: #ffffff;
   }
 
   &.Fandango.at.Home {
-    width: 30px;
+    color: #ff7200;
+    background-color: rgb(51 120 193 / 5%);
+    border-color: #3378c1;
   }
 
   &.YouTube {
-    width: 30px;
+    color: #CD201F;
+    background-color: rgb(205 32 31 / 5%);
+    border-color: #cd201f;
   }
 
   &.Amazon.Prime.Video {
-    width: 30px;
+    color: #0072f9;
+    background-color: rgb(0 114 249 / 5%);
+    border-color: #0478ff;
   }
 }

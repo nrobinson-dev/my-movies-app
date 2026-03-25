@@ -44,45 +44,32 @@ import { PlatformOption } from '../models/platform-option';
         }
       </div>
 
-      <div class="movie-card__ownership-info">
+      <div class="media-info">
         @if (ownedFormats().length > 0) {
-          <div class="movie-card__formats">
-            <p><small>Physical Media:</small></p>
+          <div class="media-group">
+            <span class="group-label">Physical:</span>
 
-            <div class="movie-card__platform-wrapper">
+            <div class="pill-container">
               @for (format of ownedFormats(); track format.value) {
-                <img
-                  [src]="format.image"
-                  [alt]="format.label"
-                  [class]="format.label"
-                  [title]="format.label"
-                  class="movie-card__platform--format"
-                />
+                <span class="media-pill pill-physical" [class]="format.label">{{format.label}}</span>
               }
             </div>
           </div>
         }
 
         @if (ownedDigitalRetailers().length > 0) {
-          <div class="movie-card__digital-retailers">
-            <p class="mb-1"><small>Digital Retailers:</small></p>
+          <div class="media-group">
+            <span class="group-label">Digital:</span>
 
-            <div class="movie-card__platform-wrapper">
+            <div class="pill-container">
               @for (retailer of ownedDigitalRetailers(); track retailer.value) {
-                <div class="flex items-center justify-center">
-                  <img
-                  [src]="retailer.image"
-                  [alt]="retailer.label"
-                  [class]="retailer.label"
-                  [title]="retailer.label"
-                  class="movie-card__platform--digital-retailer"
-                  />
-                </div>
+                <span class="media-pill pill-digital" [class]="retailer.label">{{retailer.label}}</span>
               }
             </div>
           </div>
         }
       </div>
+      
     </div>
   `,
   styleUrls: ['./movie-card.css'],
