@@ -35,6 +35,7 @@ The Web API is built using a **Clean Architecture** approach (for now, anyway, I
 - **EF Core**
 - **SQLite** — simple local database
 - **MediatR** — request handling
+- **Serilog** — logging
 - **Angular** — front-end framework
 
 ---
@@ -44,7 +45,7 @@ The Web API is built using a **Clean Architecture** approach (for now, anyway, I
 The long-term goal is to evolve this into a full ecosystem:
 
 **Web API**
-- Logging
+- Logging (Complete)
 - Rate limiting (Complete)
 - Swagger / Scalar / OpenAPI documentation
 - Centralized exception handling (Complete)
