@@ -29,6 +29,8 @@ public static class AuthEndpoints
         .AddEndpointFilter<ValidationFilter<CreateUserCommand>>()
         .WithTags(nameof(Auth))
         .WithName("Register")
+        .WithSummary("Register a new user account")
+        .WithDescription("Creates a new user account and returns a JWT access token on success.")
         .Produces<LoginUserResultDto>(StatusCodes.Status201Created)
         .Produces(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status409Conflict);
@@ -43,6 +45,8 @@ public static class AuthEndpoints
         .RequireRateLimiting("login")
         .WithTags(nameof(Auth))
         .WithName("Login")
+        .WithSummary("Log in and receive a JWT")
+        .WithDescription("Authenticates a user with email and password and returns a JWT access token.")
         .Produces<LoginUserResultDto>(StatusCodes.Status200OK)
         .Produces(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status401Unauthorized)
@@ -59,6 +63,8 @@ public static class AuthEndpoints
             })
             .WithTags(nameof(Auth))
             .WithName("DeleteUser")
+            .WithSummary("Delete a user account")
+            .WithDescription("Permanently deletes the authenticated user's account. The caller must match the userId in the route.")
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status403Forbidden)
             .RequireAuthorization();

@@ -36,6 +36,7 @@ The Web API is built using a **Clean Architecture** approach (for now, anyway, I
 - **SQLite** — simple local database
 - **MediatR** — request handling
 - **Serilog** — logging
+- **Scalar** — API documentation
 - **Angular** — front-end framework
 
 ---
@@ -47,7 +48,7 @@ The long-term goal is to evolve this into a full ecosystem:
 **Web API**
 - Logging (Complete)
 - Rate limiting (Complete)
-- Swagger / Scalar / OpenAPI documentation
+- Scalar / OpenAPI documentation (Complete)
 - Centralized exception handling (Complete)
 - Remove MediatR and implement custom request handling
 
@@ -120,7 +121,15 @@ The long-term goal is to evolve this into a full ecosystem:
 
 ## API Reference
 
-Neither Swagger nor Scalar have been integrated yet. Use a tool such as [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` to test the endpoints.
+Interactive API documentation is available via **Scalar** when running in development:
+
+```
+https://localhost:7184/scalar/v1
+```
+
+Endpoints that require authentication show a 🔒 lock icon in Scalar. Click **Authorize** and paste a JWT access token obtained from the `/api/auth/login` endpoint to test them directly in the UI.
+
+You can also use a tool such as [Postman](https://www.postman.com/), [Insomnia](https://insomnia.rest/), or `curl` to test the endpoints.
 
 **Base URL**
 ```

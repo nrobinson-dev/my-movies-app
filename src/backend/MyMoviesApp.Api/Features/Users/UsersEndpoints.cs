@@ -21,6 +21,8 @@ public static class UsersEndpoints
         })
         .WithTags(nameof(Users))
         .WithName("GetUserMovies")
+        .WithSummary("Get a user's movie collection")
+        .WithDescription("Returns a paginated list of movies owned by the specified user.")
         .Produces<MovieSummaryCollectionDto>()
         .RequireAuthorization();
         
@@ -32,6 +34,8 @@ public static class UsersEndpoints
         })
         .WithTags(nameof(Users))
         .WithName("GetUserMoviesByTmdbMovieId")
+        .WithSummary("Get a single user movie by TMDB ID")
+        .WithDescription("Returns full details for one movie in the user's collection, enriched with live TMDB data.")
         .Produces<MovieDetailDto>()
         .Produces(StatusCodes.Status502BadGateway)
         .RequireAuthorization();
@@ -44,6 +48,8 @@ public static class UsersEndpoints
         })
         .WithTags(nameof(Users))
         .WithName("SaveUserMovieOwnership")
+        .WithSummary("Save movie ownership for a user")
+        .WithDescription("Adds or updates a movie in the user's collection with the specified formats and digital retailers.")
         .Produces(StatusCodes.Status200OK)
         .ProducesValidationProblem()
         .AddEndpointFilter<ValidationFilter<SaveUserMovieOwnershipDto>>()
@@ -57,6 +63,8 @@ public static class UsersEndpoints
         })
         .WithTags(nameof(Users))
         .WithName("DeleteUserMovieOwnership")
+        .WithSummary("Delete movie ownership for a user")
+        .WithDescription("Removes the specified movie from the user's collection.")
         .Produces(StatusCodes.Status204NoContent)
         .RequireAuthorization();
     }

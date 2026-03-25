@@ -4,6 +4,9 @@ using MyMoviesApp.Infrastructure.Data;
 using MyMoviesApp.Api.Features.Users;
 using MyMoviesApp.Api.Features.Auth;
 using MyMoviesApp.Api.Extensions;
+using MyMoviesApp.Api.OpenApi;
+using Microsoft.OpenApi;
+using Scalar.AspNetCore;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -22,7 +25,32 @@ try
 
     // Add services to the container.
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-    builder.Services.AddOpenApi();
+    builder.Services.AddOpenApi(options =>
+    {
+        options.AddDocumentTransformer((document, _, _) =>
+        {
+            document.Info = new OpenApiInfo
+            {
+                Title       = "MyMoviesApp API",
+                Version     = "v1",
+                Description = "API for managing personal movie collections and searching TMDB."
+            };
+
+            document.Components ??= new OpenApiComponents();
+            document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
+            document.Components.SecuritySchemes["bearerAuth"] = new OpenApiSecurityScheme
+            {
+                Type         = SecuritySchemeType.Http,
+                Scheme       = "bearer",
+                BearerFormat = "JWT",
+                Description  = "Enter your JWT access token."
+            };
+
+            return Task.CompletedTask;
+        });
+
+        options.AddOperationTransformer<BearerSecuritySchemeTransformer>();
+    });
 
     // --- Layer Registrations ---
     builder.Services.AddApplication();
@@ -61,6 +89,7 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
+        app.MapScalarApiReference();
     }
     else
     {

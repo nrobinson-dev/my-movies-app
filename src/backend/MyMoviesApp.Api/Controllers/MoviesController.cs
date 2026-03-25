@@ -12,6 +12,10 @@ namespace MyMoviesApp.Api.Controllers
     [Route("api/[controller]")]
     public class MoviesController : BaseApiController
     {
+        /// <summary>
+        /// Search for movies by title.
+        /// </summary>
+        /// <remarks>Queries the TMDB API for movies matching the search term and annotates each result with the user's ownership data.</remarks>
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<MovieSummaryCollectionDto>> GetSearchResults([FromQuery] MovieSearchRequest request, CancellationToken cancellationToken)
