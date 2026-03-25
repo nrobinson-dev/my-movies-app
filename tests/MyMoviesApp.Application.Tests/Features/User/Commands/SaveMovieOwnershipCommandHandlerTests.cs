@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Features.User.Commands;
@@ -10,11 +11,12 @@ namespace MyMoviesApp.Application.Tests.Features.User.Commands;
 public class SaveMovieOwnershipCommandHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
+    private readonly Mock<ILogger<SaveMovieOwnershipCommandHandler>> _logger = new();
     private readonly SaveMovieOwnershipCommandHandler _handler;
 
     public SaveMovieOwnershipCommandHandlerTests()
     {
-        _handler = new SaveMovieOwnershipCommandHandler(_userRepositoryMock.Object);
+        _handler = new SaveMovieOwnershipCommandHandler(_userRepositoryMock.Object, _logger.Object);
     }
 
     [Fact]

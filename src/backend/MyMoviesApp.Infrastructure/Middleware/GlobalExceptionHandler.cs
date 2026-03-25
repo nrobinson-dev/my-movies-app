@@ -2,11 +2,12 @@ using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Polly.CircuitBreaker;
 
 namespace MyMoviesApp.Infrastructure.Middleware;
 
-public class GlobalExceptionHandler : IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -15,6 +16,8 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         if (exception is BrokenCircuitException)
         {
+            logger.LogWarning(exception, "Circuit breaker open. TMDB service is unavailable. Path: {Path}", httpContext.Request.Path);
+
             httpContext.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
 
             await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
@@ -29,6 +32,8 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         if (exception is HttpRequestException httpEx && httpEx.StatusCode == HttpStatusCode.Unauthorized)
         {
+            logger.LogWarning(exception, "Upstream TMDB service returned 401 Unauthorized. Path: {Path}", httpContext.Request.Path);
+
             httpContext.Response.StatusCode = StatusCodes.Status502BadGateway;
 
             await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
@@ -43,6 +48,8 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         if (exception is UnauthorizedAccessException)
         {
+            logger.LogWarning("Unauthorized access attempt. Path: {Path}", httpContext.Request.Path);
+
             httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
             await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
@@ -54,6 +61,8 @@ public class GlobalExceptionHandler : IExceptionHandler
 
             return true;
         }
+
+        logger.LogError(exception, "Unhandled exception on {Method} {Path}", httpContext.Request.Method, httpContext.Request.Path);
 
         return false;
     }

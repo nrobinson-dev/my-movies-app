@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using MyMoviesApp.Infrastructure.Services;
 
 namespace MyMoviesApp.Infrastructure.Tests.Services.Integration
@@ -19,11 +20,11 @@ namespace MyMoviesApp.Infrastructure.Tests.Services.Integration
 
             var client = new HttpClient { BaseAddress = new Uri("https://api.themoviedb.org/3/") };
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {key}");
-            _service = new TmdbService(client);
+            _service = new TmdbService(client, NullLogger<TmdbService>.Instance);
 
             var unauthorizedClient = new HttpClient { BaseAddress = new Uri("https://api.themoviedb.org/3/") };
             unauthorizedClient.DefaultRequestHeaders.Add("Authorization", "Bearer invalid-token");
-            _unauthorizedService = new TmdbService(unauthorizedClient);
+            _unauthorizedService = new TmdbService(unauthorizedClient, NullLogger<TmdbService>.Instance);
         }
 
         // ...existing code...

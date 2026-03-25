@@ -1,21 +1,30 @@
 using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Domain.Entities;
 using MyMoviesApp.Infrastructure.Dtos;
 
 namespace MyMoviesApp.Infrastructure.Services;
 
-public class TmdbService(HttpClient httpClient) : ITmdbService
+public class TmdbService(HttpClient httpClient, ILogger<TmdbService> logger) : ITmdbService
 {
     public async Task<MovieDetail> GetMovieByTmdbMovieIdAsync(int id, CancellationToken ct)
     {
         var url = $"movie/{id}";
+        logger.LogDebug("Fetching movie details from TMDB. TmdbId: {TmdbId}", id);
+
         using var responseMessage = await httpClient.GetAsync(url, ct);
         responseMessage.EnsureSuccessStatusCode();
 
-        var response = await responseMessage.Content.ReadFromJsonAsync<TmdbMovieDetailResult>();
+        var response = await responseMessage.Content.ReadFromJsonAsync<TmdbMovieDetailResult>(ct);
 
-        return response is null ? null! : Map(response);
+        if (response is null)
+        {
+            logger.LogWarning("TMDB returned a null or undeserializable response for movie detail. TmdbId: {TmdbId}", id);
+            return null!;
+        }
+
+        return Map(response);
     }
     
     public async Task<MovieSummaryCollection> SearchMoviesAsync(string term, CancellationToken ct, string page = "1")
@@ -24,16 +33,22 @@ public class TmdbService(HttpClient httpClient) : ITmdbService
             return new MovieSummaryCollection();
 
         var url = $"search/movie?query={Uri.EscapeDataString(term)}&page={page}";
+        logger.LogDebug("Searching TMDB movies. Term: {Term}, Page: {Page}", term, page);
+
         using var responseMessage = await httpClient.GetAsync(url, ct);
         responseMessage.EnsureSuccessStatusCode();
 
-        var response = await responseMessage.Content.ReadFromJsonAsync<TmdbSearchMovieResultDto>();
+        var response = await responseMessage.Content.ReadFromJsonAsync<TmdbSearchMovieResultDto>(ct);
 
         if (response is null)
+        {
+            logger.LogWarning("TMDB returned a null or undeserializable response for movie search. Term: {Term}", term);
             return new MovieSummaryCollection();
+        }
 
         return Map(response);
     }
+
 
     private MovieDetail Map(TmdbMovieDetailResult movie)
     {

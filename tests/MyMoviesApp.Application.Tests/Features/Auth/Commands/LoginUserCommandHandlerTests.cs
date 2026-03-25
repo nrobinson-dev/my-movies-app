@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Features.Auth.Commands;
@@ -8,11 +9,12 @@ namespace MyMoviesApp.Application.Tests.Features.Auth.Commands;
 public class LoginUserCommandHandlerTests
 {
     private readonly Mock<IAuthenticationService> _authServiceMock = new();
+    private readonly Mock<ILogger<LoginUserCommandHandler>> _logger = new();
     private readonly LoginUserCommandHandler _handler;
 
     public LoginUserCommandHandlerTests()
     {
-        _handler = new LoginUserCommandHandler(_authServiceMock.Object);
+        _handler = new LoginUserCommandHandler(_authServiceMock.Object, _logger.Object);
     }
 
     [Fact]

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moq.Protected;
 using MyMoviesApp.Infrastructure.Dtos;
@@ -66,7 +67,7 @@ public class TmdbServiceTests
 
         HttpRequestMessage? request = null;
         var client = CreateHttpClientWithResponse(tmdb, req => request = req);
-        var service = new TmdbService(client);
+        var service = new TmdbService(client, NullLogger<TmdbService>.Instance);
 
         // Act
         var result = await service.GetMovieByTmdbMovieIdAsync(123, new CancellationToken());
@@ -91,7 +92,7 @@ public class TmdbServiceTests
         // Arrange
         HttpRequestMessage? request = null;
         var client = CreateHttpClientWithResponse<object?>(null, req => request = req);
-        var service = new TmdbService(client);
+        var service = new TmdbService(client, NullLogger<TmdbService>.Instance);
 
         // Act
         var result = await service.GetMovieByTmdbMovieIdAsync(999, new CancellationToken());
@@ -121,7 +122,7 @@ public class TmdbServiceTests
 
         HttpRequestMessage? request = null;
         var httpClient = CreateHttpClientWithResponse(searchResult, req => request = req);
-        var service = new TmdbService(httpClient);
+        var service = new TmdbService(httpClient, NullLogger<TmdbService>.Instance);
 
         // Act
         var result = await service.SearchMoviesAsync("Matrix", new CancellationToken());
@@ -142,7 +143,7 @@ public class TmdbServiceTests
 
         HttpRequestMessage? captured = null;
         var client = CreateHttpClientWithResponse(tmdbResult, req => captured = req);
-        var service = new TmdbService(client);
+        var service = new TmdbService(client, NullLogger<TmdbService>.Instance);
 
         // Act
         await service.SearchMoviesAsync("term", new CancellationToken());
@@ -158,7 +159,7 @@ public class TmdbServiceTests
         // Arrange
         HttpRequestMessage? captured = null;
         var client = CreateHttpClientWithResponse<object?>(null, req => captured = req);
-        var service = new TmdbService(client);
+        var service = new TmdbService(client, NullLogger<TmdbService>.Instance);
 
         // Act
         var result = await service.SearchMoviesAsync("anything", new CancellationToken());
@@ -207,7 +208,7 @@ public class TmdbServiceTests
 
         HttpRequestMessage? request = null;
         var client = CreateHttpClientWithResponse(tmdbResult, req => request = req);
-        var service = new TmdbService(client);
+        var service = new TmdbService(client, NullLogger<TmdbService>.Instance);
 
         // Act
         var result = await service.SearchMoviesAsync(term, new CancellationToken(), page);

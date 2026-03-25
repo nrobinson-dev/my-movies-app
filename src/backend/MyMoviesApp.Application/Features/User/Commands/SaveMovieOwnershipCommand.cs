@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Logging;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Domain.Enums;
 using MyMoviesApp.Domain.Entities;
@@ -15,7 +16,7 @@ public record SaveMovieOwnershipCommand(
     HashSet<DigitalRetailer> DigitalRetailers
     ) : IRequest<int>;
 
-public class SaveMovieOwnershipCommandHandler(IUserRepository userRepository) : IRequestHandler<SaveMovieOwnershipCommand, int>
+public class SaveMovieOwnershipCommandHandler(IUserRepository userRepository, ILogger<SaveMovieOwnershipCommandHandler> logger) : IRequestHandler<SaveMovieOwnershipCommand, int>
 {
     public async Task<int> Handle(SaveMovieOwnershipCommand request, CancellationToken cancellationToken)
     {
@@ -30,6 +31,8 @@ public class SaveMovieOwnershipCommandHandler(IUserRepository userRepository) : 
         };
         
         var userMovieId = await userRepository.SaveUserMovieAsync(request.UserId, movieSummary, cancellationToken);
+
+        logger.LogInformation("Movie ownership saved. UserId: {UserId}, TmdbId: {TmdbId}, Title: {Title}", request.UserId, request.TmdbId, request.Title);
         
         return userMovieId;
     }
