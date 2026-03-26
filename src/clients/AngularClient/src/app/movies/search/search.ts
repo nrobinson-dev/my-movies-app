@@ -92,6 +92,9 @@ export class Search {
       return;
     }
 
+    this.movies.set([]);
+    this.currentPage.set(1);
+
     this.router.navigate([], { queryParams: { q: this.searchQuery() }, replaceUrl: true });
     this.runSearch(this.searchQuery());
   }
@@ -105,7 +108,7 @@ export class Search {
     this.isSearching.set(true);
     this.isError.set(false);
     this.movieService
-      .getSearchResults(query, localStorage.getItem('auth_user_id') || '', page)
+      .getSearchResults(query, page)
       .subscribe({
         next: (results) => {
           this.movies.update((current) => [...(current || []), ...(results.movies || [])]);

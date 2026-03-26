@@ -56,12 +56,8 @@ public class AuthRepository(MyMoviesAppContext dbcontext) : IAuthRepository
 
     public async Task<int> DeleteUserAsync(Guid userId, CancellationToken cancellationToken)
     {
-        var rowsAffected = await dbcontext.Users
+        return await dbcontext.Users
             .Where(u => u.Id == userId)
             .ExecuteDeleteAsync(cancellationToken);
-        
-        await dbcontext.SaveChangesAsync(cancellationToken);
-        
-        return rowsAffected;
     }
 }

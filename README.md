@@ -303,6 +303,7 @@ GET /users/{userId}/movies?page={page}&pageSize={pageSize}
 **Status Codes**
 - `200 OK` — login successful
 - `401 Unauthorized` — invalid credentials
+- `403 Forbidden` — user can only access their own collection
 
 ---
 
@@ -336,6 +337,7 @@ GET /users/{userId}/movies/{tmdbId}
 **Status Codes**
 - `200 OK` — login successful
 - `401 Unauthorized` — invalid credentials
+- `403 Forbidden` — user can only access their own collection
 - `503 Service Unavailable` — TMDB API is down or rate limit exceeded
 
 ---
@@ -343,7 +345,7 @@ GET /users/{userId}/movies/{tmdbId}
 #### Add Movie to Collection
 
 ```
-POST /users/{userId}/movies/{tmdbId}
+POST /users/{userId}/movies
 ```
 
 **Authorization:** `Bearer {token}`
@@ -366,6 +368,7 @@ POST /users/{userId}/movies/{tmdbId}
 - `200 OK` — login successful
 - `401 Unauthorized` — invalid credentials
 - `400 Bad Request` — invalid request body
+- `403 Forbidden` — user can only modify their own collection
 
 ---
 
@@ -378,5 +381,6 @@ DELETE /users/{userId}/movies/{tmdbId}
 **Authorization:** `Bearer {token}`
 
 **Status Codes**
-- `200 OK` — login successful
+- `204 No Content` — movie successfully deleted
 - `401 Unauthorized` — invalid credentials
+- `403 Forbidden` — user can only modify their own collection

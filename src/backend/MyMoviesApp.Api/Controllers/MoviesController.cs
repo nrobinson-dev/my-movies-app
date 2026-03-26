@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using MyMoviesApp.Api.Models;
 using MyMoviesApp.Application.Features.Movies.Queries;
 using MyMoviesApp.Application.Common.Dtos;
+using System.Security.Claims;
 
 namespace MyMoviesApp.Api.Controllers
 {
@@ -20,7 +21,10 @@ namespace MyMoviesApp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<MovieSummaryCollectionDto>> GetSearchResults([FromQuery] MovieSearchRequest request, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetMovieSearchResultsQuery(request.Search ?? string.Empty, request.UserId, request.Page ?? "1"), cancellationToken);
+            var callerIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Guid? userId = Guid.TryParse(callerIdStr, out var callerGuid) ? callerGuid : null;
+
+            var result = await Mediator.Send(new GetMovieSearchResultsQuery(request.Search ?? string.Empty, userId, request.Page ?? "1"), cancellationToken);
             return Ok(result);
         }
     }

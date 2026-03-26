@@ -18,10 +18,10 @@ export class MovieService {
       params: { page: pageNumber.toString(), pageSize: pageSize.toString() }
     });
   }
-  
-  getSearchResults(search: string, userId: string = '', page: number = 1): Observable<MovieSummaryCollection> {
+
+  getSearchResults(search: string, page: number = 1): Observable<MovieSummaryCollection> {
     return this.http.get<MovieSummaryCollection>(`${this.baseUrl}/movies`, {
-      params: { search, userId, page: page.toString() }
+      params: { search, page: page.toString() }
     });
   }
 
@@ -32,7 +32,7 @@ export class MovieService {
   saveMovieOwnership(userId: string, movieData: SaveMovieRequest) {
     return this.http.post(`${this.baseUrl}/users/${userId}/movies`, movieData);
   }
-  
+
   deleteMovieOwnership(userId: string, movieId: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/users/${userId}/movies/${movieId}`);
   }
