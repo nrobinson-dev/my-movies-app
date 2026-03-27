@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Common.Models;
-using MyMoviesApp.Domain.Entities;
-using MyMoviesApp.Infrastructure.Data;
 using MyMoviesApp.Infrastructure.Data.Models;
 using DomainFormat = MyMoviesApp.Domain.Enums.Format;
 using DomainDigitalRetailer = MyMoviesApp.Domain.Enums.DigitalRetailer;
