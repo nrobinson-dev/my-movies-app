@@ -1,11 +1,10 @@
 using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using MyMoviesApp.Domain.Exceptions;
 using Polly.CircuitBreaker;
 
-namespace MyMoviesApp.Infrastructure.Middleware;
+namespace MyMoviesApp.Api.Middleware;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
@@ -14,6 +13,22 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         Exception exception,
         CancellationToken cancellationToken)
     {
+        if (exception is DuplicateEmailException)
+        {
+            logger.LogWarning("Duplicate email registration attempt. Path: {Path}", httpContext.Request.Path);
+
+            httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+
+            await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
+            {
+                Status = StatusCodes.Status409Conflict,
+                Title = "Conflict",
+                Detail = exception.Message
+            }, cancellationToken);
+
+            return true;
+        }
+
         if (exception is BrokenCircuitException)
         {
             logger.LogWarning(exception, "Circuit breaker open. TMDB service is unavailable. Path: {Path}", httpContext.Request.Path);
@@ -67,3 +82,4 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         return false;
     }
 }
+

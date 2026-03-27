@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Options;
 using MyMoviesApp.Domain.Entities;
 using MyMoviesApp.Infrastructure.Configuration;
-using MyMoviesApp.Infrastructure.Middleware;
+using MyMoviesApp.Infrastructure.Services;
 
 namespace MyMoviesApp.Infrastructure.Tests.Services;
 

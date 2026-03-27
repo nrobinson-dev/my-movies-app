@@ -1,5 +1,5 @@
+using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Domain.Entities;
-using MyMoviesApp.Domain.Enums;
 
 namespace MyMoviesApp.Application.Common.Dtos;
 
@@ -29,9 +29,9 @@ public class MovieSummaryDto
     public string Title { get; set; } = string.Empty;
     public DateOnly ReleaseDate { get; set; }
     public string PosterPath { get; set; } = string.Empty;
-    public List<UserMovieFormat> Formats { get; set; } = new();
-    public List<UserMovieDigitalRetailer> DigitalRetailers { get; set; } = new();
-    
+    public List<UserMovieFormatItem> Formats { get; set; } = new();
+    public List<UserMovieDigitalRetailerItem> DigitalRetailers { get; set; } = new();
+
     public static MovieSummaryDto FromDomain(MovieSummary m) =>
         new MovieSummaryDto
         {
@@ -39,8 +39,12 @@ public class MovieSummaryDto
             Title = m.Title,
             ReleaseDate = m.ReleaseDate,
             PosterPath = m.PosterPath,
-            Formats = m.Formats,
+            Formats = m.Formats
+                .Select(f => new UserMovieFormatItem { Id = (int)f, Name = f.ToString() })
+                .ToList(),
             DigitalRetailers = m.DigitalRetailers
+                .Select(r => new UserMovieDigitalRetailerItem { Id = (int)r, Name = r.ToString() })
+                .ToList()
         };
 }
 

@@ -1,6 +1,6 @@
 namespace MyMoviesApp.Infrastructure.Data.Models;
 
-public class DigitalRetailer
+public class DigitalRetailerDb
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

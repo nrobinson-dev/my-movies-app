@@ -8,7 +8,7 @@ public class MyMoviesAppContext(DbContextOptions<MyMoviesAppContext> options) : 
     public DbSet<UserDb> Users => Set<UserDb>();
     public DbSet<UserMovie> UserMovies => Set<UserMovie>();
     public DbSet<MovieFormat> MovieFormats => Set<MovieFormat>();
-    public DbSet<DigitalRetailer> DigitalRetailers => Set<DigitalRetailer>();
+    public DbSet<DigitalRetailerDb> DigitalRetailers => Set<DigitalRetailerDb>();
     public DbSet<UserMovieFormat> UserMovieFormats => Set<UserMovieFormat>();
     public DbSet<UserMovieDigitalRetailer> UserMovieDigitalRetailers => Set<UserMovieDigitalRetailer>();
 
@@ -65,7 +65,7 @@ public class MyMoviesAppContext(DbContextOptions<MyMoviesAppContext> options) : 
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity
-                .HasOne<DigitalRetailer>()
+                .HasOne<DigitalRetailerDb>()
                 .WithMany()
                 .HasForeignKey(userMovieDigitalRetailer => userMovieDigitalRetailer.DigitalRetailerId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -103,7 +103,7 @@ public class MyMoviesAppContext(DbContextOptions<MyMoviesAppContext> options) : 
             throw new InvalidOperationException("MovieFormat records are lookup data and cannot be deleted.");
         }
 
-        if (ChangeTracker.Entries<DigitalRetailer>().Any(entry => entry.State == EntityState.Deleted))
+        if (ChangeTracker.Entries<DigitalRetailerDb>().Any(entry => entry.State == EntityState.Deleted))
         {
             throw new InvalidOperationException("DigitalRetailer records are lookup data and cannot be deleted.");
         }

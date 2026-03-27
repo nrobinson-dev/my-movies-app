@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using MyMoviesApp.Application.Common.Interfaces;
+using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Domain.Enums;
-using MyMoviesApp.Domain.Entities;
 
 namespace MyMoviesApp.Application.Features.User.Commands;
 

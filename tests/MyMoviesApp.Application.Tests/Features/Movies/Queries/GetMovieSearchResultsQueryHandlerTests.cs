@@ -2,6 +2,7 @@ using FluentAssertions;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Features.Movies.Queries;
+using MyMoviesApp.Application.Tests.Common;
 using MyMoviesApp.Domain.Entities;
 
 namespace MyMoviesApp.Application.Tests.Features.Movies.Queries;
@@ -11,12 +12,6 @@ public class GetMovieSearchResultsQueryHandlerTests
     private readonly Mock<ITmdbService> _tmdbServiceMock = new();
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
     private readonly GetMovieSearchResultsQueryHandler _handler;
-    private readonly UserMovieFormat _dvdFormat = new() { Id = (int)Domain.Enums.Format.Dvd, Name = "DVD" };
-    private readonly UserMovieFormat _bluRayFormat = new() { Id = (int)Domain.Enums.Format.BluRay, Name = "Blu-ray" };
-    private readonly UserMovieFormat _bluRay4KFormat = new() { Id = (int)Domain.Enums.Format.BluRay4K, Name = "Blu-ray 4K" };
-    private readonly UserMovieDigitalRetailer _appleTvRetailer = new() { Id = (int)Domain.Enums.DigitalRetailer.AppleTv, Name = "Apple TV" };
-    private readonly UserMovieDigitalRetailer _moviesAnywhereRetailer = new() { Id = (int)Domain.Enums.DigitalRetailer.MoviesAnywhere, Name = "Movies Anywhere" };
-    private readonly UserMovieDigitalRetailer _youTubeRetailer = new() { Id = (int)Domain.Enums.DigitalRetailer.YouTube, Name = "YouTube" };
     
     public GetMovieSearchResultsQueryHandlerTests()
     {
@@ -32,7 +27,7 @@ public class GetMovieSearchResultsQueryHandlerTests
             new() { MovieId = 1, Title = "The Matrix", ReleaseDate = new DateOnly(1999, 3, 31), PosterPath = "/matrix.jpg" },
             new() { MovieId = 2, Title = "Inception",  ReleaseDate = new DateOnly(2010, 7, 16), PosterPath = "/inception.jpg" }
         };
-
+        
         _tmdbServiceMock
             .Setup(s => s.SearchMoviesAsync("matrix", It.IsAny<CancellationToken>(), "1"))
             .ReturnsAsync(new MovieSummaryCollection{Movies = movies});
@@ -92,26 +87,43 @@ public class GetMovieSearchResultsQueryHandlerTests
     public async Task Handle_Should_MapFormatsAndDigitalRetailers()
     {
         // Arrange
+        var userId = Guid.NewGuid();
         var movie = new MovieSummary
         {
             MovieId = 10,
             Title = "Dune",
             ReleaseDate = new DateOnly(2021, 10, 22),
+            PosterPath = "/dune.jpg"
+        };
+
+        var userMovie = new MovieSummary
+        {
+            MovieId = 10,
+            Title = "Dune",
+            ReleaseDate = new DateOnly(2021, 10, 22),
             PosterPath = "/dune.jpg",
-            Formats = [_bluRay4KFormat],
-            DigitalRetailers = [_appleTvRetailer]
+            Formats = [TestConstants.Formats.BluRay4K],
+            DigitalRetailers = [TestConstants.Retailers.AppleTv]
         };
 
         _tmdbServiceMock
             .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
-            .ReturnsAsync(new MovieSummaryCollection(){Movies = new List<MovieSummary>{movie}});
+            .ReturnsAsync(new MovieSummaryCollection { Movies = new List<MovieSummary> { movie } });
+
+        _userRepositoryMock
+            .Setup(r => r.GetUserMoviesByTmdbIdsAsync(userId, It.IsAny<List<int>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<MovieSummary> { userMovie });
+
+        var query = new GetMovieSearchResultsQuery("dune", userId, TestConstants.Pagination.DefaultPageNumber.ToString());
 
         // Act
-        var result = await _handler.Handle(new GetMovieSearchResultsQuery("dune", null, "1"), CancellationToken.None);
-        
+        var result = await _handler.Handle(query, CancellationToken.None);
+
         // Assert
-        result.Movies.FirstOrDefault()?.Formats.Should().Contain(_bluRay4KFormat);
-        result.Movies.FirstOrDefault()?.DigitalRetailers.Should().Contain(_appleTvRetailer);
+        var resultMovie = result.Movies.FirstOrDefault();
+        resultMovie.Should().NotBeNull();
+        resultMovie!.Formats.Should().Contain(TestConstants.Formats.BluRay4KItem);
+        resultMovie.DigitalRetailers.Should().Contain(TestConstants.Retailers.AppleTvItem);
     }
 }
 

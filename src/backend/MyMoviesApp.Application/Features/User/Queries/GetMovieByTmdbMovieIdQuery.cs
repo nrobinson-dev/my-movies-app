@@ -1,5 +1,6 @@
 using MediatR;
 using MyMoviesApp.Application.Common.Interfaces;
+using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Application.Features.Movies.Dtos;
 
 namespace MyMoviesApp.Application.Features.User.Queries;
@@ -17,8 +18,12 @@ public class GetMovieByTmdbMovieIdQueryHandler(IUserRepository userRepository, I
 
         return new MovieDetailDto(movieDetailTask.Result)
         {
-            Formats = formatsAndRetailersTask.Result.Formats,
+            Formats = formatsAndRetailersTask.Result.Formats
+                .Select(f => new UserMovieFormatItem { Id = f.Id, Name = f.Name })
+                .ToList(),
             DigitalRetailers = formatsAndRetailersTask.Result.DigitalRetailers
+                .Select(r => new UserMovieDigitalRetailerItem { Id = r.Id, Name = r.Name })
+                .ToList()
         };
     }
 }

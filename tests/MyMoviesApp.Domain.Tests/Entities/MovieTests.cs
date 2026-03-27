@@ -13,10 +13,11 @@ namespace MyMoviesApp.Domain.Tests.Entities
         private readonly string _title = "The Matrix";
         private readonly DateOnly _releaseDate = DateOnly.Parse("1999-03-31");
         private readonly string _posterPath = "/poster.jpg";
-        private readonly UserMovieFormat _dvdFormat = new() { Id = (int)Format.Dvd, Name = "DVD" };
-        private readonly UserMovieFormat _bluRayFormat = new() { Id = (int)Format.BluRay, Name = "Blu-ray" };
-        private readonly UserMovieDigitalRetailer _appleTvRetailer = new() { Id = (int)DigitalRetailer.AppleTv, Name = "Apple TV" };
-        private readonly UserMovieDigitalRetailer _moviesAnywhereRetailer = new() { Id = (int)DigitalRetailer.MoviesAnywhere, Name = "Movies Anywhere" };
+        
+        private readonly Format _dvdFormat = Format.Dvd;
+        private readonly Format _bluRayFormat = Format.BluRay;
+        private readonly DigitalRetailer _appleTvRetailer = DigitalRetailer.AppleTv;
+        private readonly DigitalRetailer _moviesAnywhereRetailer = DigitalRetailer.MoviesAnywhere;
         
         [Fact]
         public void MovieSummary_Ctor_AssignsAllProperties()
@@ -41,7 +42,11 @@ namespace MyMoviesApp.Domain.Tests.Entities
         public void MovieSummary_Should_AllowFormats()
         {
             // Arrange
-            var formats = new List<UserMovieFormat> { _dvdFormat, _bluRayFormat };
+            var formats = new List<Format>
+            {
+                _dvdFormat, 
+                _bluRayFormat
+            };
 
             // Act
             var entity = new MovieSummary
@@ -62,7 +67,11 @@ namespace MyMoviesApp.Domain.Tests.Entities
         public void MovieSummary_Should_AllowDigitalRetailers()
         {
             // Arrange
-            var digitalRetailers = new List<UserMovieDigitalRetailer> { _moviesAnywhereRetailer, _appleTvRetailer };
+            var digitalRetailers = new List<DigitalRetailer>
+            {
+                _moviesAnywhereRetailer, 
+                _appleTvRetailer
+            };
 
             // Act
             var entity = new MovieSummary

@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations;
 using MyMoviesApp.Domain.Enums;
 
 namespace MyMoviesApp.Domain.Entities;
@@ -20,47 +19,10 @@ public class MovieSummaryCollection()
 
 public class MovieSummary
 {
-    [Range(1, int.MaxValue)]
     public int MovieId { get; set; }
-    [RegularExpression(@"^\S.*\S$")]
     public string Title { get; set; } = string.Empty;
     public DateOnly ReleaseDate { get; set; }
-    [RegularExpression(@"^\/.*\.jpg$")]
-    public string PosterPath { get; set; } = string.Empty;
-    public List<UserMovieFormat> Formats { get; set; } = [];
-    public List<UserMovieDigitalRetailer> DigitalRetailers { get; set; } = [];
-};
-
-public class SaveMovieSummary
-{
-    [Range(1, int.MaxValue)]
-    public int MovieId { get; set; }
-    [RegularExpression(@"^\S.*\S$")]
-    public string Title { get; set; } = string.Empty;
-    public DateOnly ReleaseDate { get; set; }
-    [RegularExpression(@"^\/.*\.jpg$")]
     public string PosterPath { get; set; } = string.Empty;
     public List<Format> Formats { get; set; } = [];
     public List<DigitalRetailer> DigitalRetailers { get; set; } = [];
 };
-
-/// <summary>
-/// Specifically for the GetUserMovieByMovieId endpoint, which will then be added to the MovieDetailDto.
-/// </summary>
-public class UserMovieFormatsAndDigitalRetailers
-{
-    public List<UserMovieFormat> Formats { get; set; } = new();
-    public List<UserMovieDigitalRetailer> DigitalRetailers { get; set; } = new();
-}
-
-public class UserMovieFormat
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-}
-
-public class UserMovieDigitalRetailer
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-}

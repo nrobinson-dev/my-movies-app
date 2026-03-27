@@ -4,6 +4,7 @@ using MyMoviesApp.Infrastructure.Data;
 using MyMoviesApp.Api.Features.Users;
 using MyMoviesApp.Api.Features.Auth;
 using MyMoviesApp.Api.Extensions;
+using MyMoviesApp.Api.Middleware;
 using MyMoviesApp.Api.OpenApi;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
@@ -56,6 +57,8 @@ try
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddMyMoviesAppDb(builder.Configuration);
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
 
     builder.Services.AddControllers();
     // builder.Services.AddControllers(options =>

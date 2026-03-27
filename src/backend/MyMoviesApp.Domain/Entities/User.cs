@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace MyMoviesApp.Domain.Entities;
 
 /// <summary>
@@ -8,8 +6,5 @@ namespace MyMoviesApp.Domain.Entities;
 public class User(Guid id, string email)
 {
     public Guid Id { get; } = id;
-    
-    [Required]
-    [EmailAddress]
     public string Email { get; } = email;
 }

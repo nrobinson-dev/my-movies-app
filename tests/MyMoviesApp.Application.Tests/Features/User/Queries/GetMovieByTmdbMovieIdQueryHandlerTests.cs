@@ -1,9 +1,10 @@
 using FluentAssertions;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
+using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Application.Features.User.Queries;
+using MyMoviesApp.Application.Tests.Common;
 using MyMoviesApp.Domain.Entities;
-using MyMoviesApp.Domain.Enums;
 
 namespace MyMoviesApp.Application.Tests.Features.User.Queries;
 
@@ -12,9 +13,6 @@ public class GetMovieByTmdbMovieIdQueryHandlerTests
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
     private readonly Mock<ITmdbService> _tmdbServiceMock = new();
     private readonly GetMovieByTmdbMovieIdQueryHandler _handler;
-    private readonly UserMovieFormat _bluRayFormat = new() { Id = (int)Format.BluRay, Name = "Blu-ray" };
-    private readonly UserMovieFormat _bluRay4KFormat = new() { Id = (int)Format.BluRay4K, Name = "Blu-ray 4K" };
-    private readonly UserMovieDigitalRetailer _moviesAnywhereRetailer = new() { Id = (int)DigitalRetailer.MoviesAnywhere, Name = "Movies Anywhere" };
     
     public GetMovieByTmdbMovieIdQueryHandlerTests()
     {
@@ -29,14 +27,19 @@ public class GetMovieByTmdbMovieIdQueryHandlerTests
         var movieId = 123;
 
         var movieDetail = new MovieDetail(
-            movieId, "The Matrix", new DateOnly(1999, 3, 31),
-            136, "/matrix.jpg", "/matrix-backdrop.jpg",
-            "Free your mind.", "A computer hacker learns the truth.");
+            movieId, 
+            "The Matrix", 
+            new DateOnly(1999, 3, 31),
+            136, 
+            "/matrix.jpg", 
+            "/matrix-backdrop.jpg",
+            "Free your mind.", 
+            "A computer hacker learns the truth.");
 
         var formatsAndRetailers = new UserMovieFormatsAndDigitalRetailers
         {
-            Formats = [_bluRayFormat, _bluRay4KFormat],
-            DigitalRetailers = [_moviesAnywhereRetailer]
+            Formats = [TestConstants.Formats.BluRayItem, TestConstants.Formats.BluRay4KItem],
+            DigitalRetailers = [TestConstants.Retailers.MoviesAnywhereItem]
         };
 
         _tmdbServiceMock
@@ -62,8 +65,8 @@ public class GetMovieByTmdbMovieIdQueryHandlerTests
         result.BackdropPath.Should().Be("/matrix-backdrop.jpg");
         result.Tagline.Should().Be("Free your mind.");
         result.Overview.Should().Be("A computer hacker learns the truth.");
-        result.Formats.Should().Contain(_bluRayFormat).And.Contain(_bluRay4KFormat);
-        result.DigitalRetailers.Should().Contain(_moviesAnywhereRetailer);
+        result.Formats.Should().Contain(TestConstants.Formats.BluRayItem).And.Contain(TestConstants.Formats.BluRay4KItem);
+        result.DigitalRetailers.Should().Contain(TestConstants.Retailers.MoviesAnywhereItem);
     }
 
     [Fact]

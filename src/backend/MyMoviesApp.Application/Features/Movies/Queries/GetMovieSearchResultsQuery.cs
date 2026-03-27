@@ -1,6 +1,7 @@
 using MediatR;
 using MyMoviesApp.Application.Common.Dtos;
 using MyMoviesApp.Application.Common.Interfaces;
+using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Domain.Entities;
 
 namespace MyMoviesApp.Application.Features.Movies.Queries;
@@ -22,7 +23,7 @@ public class GetMovieSearchResultsQueryHandler(ITmdbService tmdbService, IUserRe
             userMoviesDictionary = userMovies.ToDictionary(um => um.MovieId);
         }
 
-        var dtos = movieSummaryCollection.Movies.Select(m => EnrichDto(MovieSummaryDto.FromDomain(m), userMoviesDictionary));
+        var dtos = movieSummaryCollection.Movies.Select(m => Map(MovieSummaryDto.FromDomain(m), userMoviesDictionary));
 
         return new TmdbMovieSummaryCollectionDto(dtos)
         {
@@ -32,12 +33,16 @@ public class GetMovieSearchResultsQueryHandler(ITmdbService tmdbService, IUserRe
         };
     }
 
-    private static MovieSummaryDto EnrichDto(MovieSummaryDto dto, Dictionary<int, MovieSummary>? userMoviesDictionary)
+    private static MovieSummaryDto Map(MovieSummaryDto dto, Dictionary<int, MovieSummary>? userMoviesDictionary)
     {
         if (userMoviesDictionary is not null && userMoviesDictionary.TryGetValue(dto.TmdbId, out var userMovie))
         {
-            dto.Formats = userMovie.Formats;
-            dto.DigitalRetailers = userMovie.DigitalRetailers;
+            dto.Formats = userMovie.Formats
+                .Select(f => new UserMovieFormatItem { Id = (int)f, Name = f.ToString() })
+                .ToList();
+            dto.DigitalRetailers = userMovie.DigitalRetailers
+                .Select(r => new UserMovieDigitalRetailerItem { Id = (int)r, Name = r.ToString() })
+                .ToList();
         }
         return dto;
     }

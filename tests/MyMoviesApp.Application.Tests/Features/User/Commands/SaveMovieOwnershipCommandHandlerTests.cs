@@ -2,8 +2,9 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
+using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Application.Features.User.Commands;
-using MyMoviesApp.Domain.Entities;
+using MyMoviesApp.Application.Tests.Common;
 using MyMoviesApp.Domain.Enums;
 
 namespace MyMoviesApp.Application.Tests.Features.User.Commands;
@@ -34,8 +35,8 @@ public class SaveMovieOwnershipCommandHandlerTests
             Title: "The Matrix",
             ReleaseDate: new DateOnly(1999, 3, 31),
             PosterPath: "/matrix.jpg",
-            Formats: new HashSet<Format> { Format.BluRay },
-            DigitalRetailers: new HashSet<DigitalRetailer> { DigitalRetailer.MoviesAnywhere });
+            Formats: new HashSet<Format> { TestConstants.Formats.BluRay },
+            DigitalRetailers: new HashSet<DigitalRetailer> { TestConstants.Retailers.MoviesAnywhere });
 
         // Act
         var result = await _handler.Handle(command, CancellationToken.None);
@@ -62,8 +63,8 @@ public class SaveMovieOwnershipCommandHandlerTests
             Title: "Inception",
             ReleaseDate: new DateOnly(2010, 7, 16),
             PosterPath: "/inception.jpg",
-            Formats: new HashSet<Format> { Format.BluRay4K, Format.Dvd },
-            DigitalRetailers: new HashSet<DigitalRetailer> { DigitalRetailer.AppleTv, DigitalRetailer.YouTube });
+            Formats: new HashSet<Format> { TestConstants.Formats.BluRay4K, TestConstants.Formats.Dvd },
+            DigitalRetailers: new HashSet<DigitalRetailer> { TestConstants.Retailers.AppleTv, TestConstants.Retailers.YouTube });
 
         // Act
         await _handler.Handle(command, CancellationToken.None);
@@ -74,8 +75,8 @@ public class SaveMovieOwnershipCommandHandlerTests
         capturedSummary.Title.Should().Be("Inception");
         capturedSummary.ReleaseDate.Should().Be(new DateOnly(2010, 7, 16));
         capturedSummary.PosterPath.Should().Be("/inception.jpg");
-        capturedSummary.Formats.Should().Contain(Format.BluRay4K).And.Contain(Format.Dvd);
-        capturedSummary.DigitalRetailers.Should().Contain(DigitalRetailer.AppleTv).And.Contain(DigitalRetailer.YouTube);
+        capturedSummary.Formats.Should().Contain(TestConstants.Formats.BluRay4K).And.Contain(TestConstants.Formats.Dvd);
+        capturedSummary.DigitalRetailers.Should().Contain(TestConstants.Retailers.AppleTv).And.Contain(TestConstants.Retailers.YouTube);
     }
 
     [Fact]

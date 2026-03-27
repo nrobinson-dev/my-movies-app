@@ -1,5 +1,5 @@
+using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Domain.Entities;
-using MyMoviesApp.Domain.Enums;
 
 namespace MyMoviesApp.Application.Features.Movies.Dtos;
 
@@ -13,6 +13,6 @@ public class MovieDetailDto(MovieDetail movieDetail)
     public string BackdropPath { get; init; } = movieDetail.BackdropPath;
     public string Tagline { get; init; } = movieDetail.Tagline;
     public string Overview { get; init; } = movieDetail.Overview;
-    public List<UserMovieFormat> Formats { get; set; } = new();
-    public List<UserMovieDigitalRetailer> DigitalRetailers { get; set; } = new();
+    public List<UserMovieFormatItem> Formats { get; set; } = new();
+    public List<UserMovieDigitalRetailerItem> DigitalRetailers { get; set; } = new();
 }

@@ -11,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Infrastructure.Configuration;
 using MyMoviesApp.Infrastructure.Data;
-using MyMoviesApp.Infrastructure.Middleware;
 using MyMoviesApp.Infrastructure.Services;
 using MyMoviesApp.Infrastructure.Data.Repositories;
 
@@ -28,8 +27,6 @@ public static class ServiceRegistration
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
-        services.AddExceptionHandler<GlobalExceptionHandler>();
-        services.AddProblemDetails();
 
         return services;
     }

@@ -1,7 +1,6 @@
 using MyMoviesApp.Application.Features.Auth.Commands;
 using MyMoviesApp.Application.Features.Auth.Dtos;
 using MediatR;
-using MyMoviesApp.Domain.Exceptions;
 using System.Security.Claims;
 
 namespace MyMoviesApp.Api.Features.Auth;
@@ -15,15 +14,8 @@ public static class AuthEndpoints
 
         group.MapPost("/register", async (CreateUserCommand command, IMediator mediator, CancellationToken cancellationToken) =>
         {
-            try
-            {
-                var result = await mediator.Send(command, cancellationToken);
-                return Results.Created($"/api/v1/auth/register", result);
-            }
-            catch (DuplicateEmailException ex)
-            {
-                return Results.Conflict(new { ex.Message });
-            }
+            var result = await mediator.Send(command, cancellationToken);
+            return Results.Created($"/api/v1/auth/register", result);
         })
         .DisableAntiforgery()
         .AddEndpointFilter<ValidationFilter<CreateUserCommand>>()

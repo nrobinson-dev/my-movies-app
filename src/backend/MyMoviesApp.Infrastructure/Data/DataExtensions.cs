@@ -30,14 +30,14 @@ public static class DataExtensions
         var dbContext = services.GetRequiredService<MyMoviesAppContext>();
         dbContext.Database.Migrate();
 
-        if (!dbContext.Set<DigitalRetailer>().Any())
+        if (!dbContext.Set<DigitalRetailerDb>().Any())
         {
-            dbContext.Set<DigitalRetailer>().AddRange(
-                new DigitalRetailer { Name = "MoviesAnywhere" },
-                new DigitalRetailer { Name = "AppleTV" },
-                new DigitalRetailer { Name = "Fandango At Home" },
-                new DigitalRetailer { Name = "YouTube" },
-                new DigitalRetailer { Name = "Amazon Prime" }
+            dbContext.Set<DigitalRetailerDb>().AddRange(
+                new DigitalRetailerDb { Name = "MoviesAnywhere" },
+                new DigitalRetailerDb { Name = "AppleTV" },
+                new DigitalRetailerDb { Name = "Fandango At Home" },
+                new DigitalRetailerDb { Name = "YouTube" },
+                new DigitalRetailerDb { Name = "Amazon Prime" }
             );
         }
 

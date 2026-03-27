@@ -1,3 +1,4 @@
+using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Domain.Entities;
 
 namespace MyMoviesApp.Application.Common.Interfaces;
@@ -20,10 +21,6 @@ public interface IUserRepository
     /// <summary>
     /// Saves a movie summary to the user's collection.
     /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="saveMovieSummary"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
     Task<int> SaveUserMovieAsync(Guid userId, SaveMovieSummary saveMovieSummary, CancellationToken cancellationToken);
     
     /// <summary>

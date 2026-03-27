@@ -7,7 +7,7 @@ using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Domain.Entities;
 using MyMoviesApp.Infrastructure.Configuration;
 
-namespace MyMoviesApp.Infrastructure.Middleware;
+namespace MyMoviesApp.Infrastructure.Services;
 
 public class JwtTokenGenerator(IOptions<JwtOptions> jwtOptions) : IJwtTokenGenerator
 {
@@ -43,3 +43,4 @@ public class JwtTokenGenerator(IOptions<JwtOptions> jwtOptions) : IJwtTokenGener
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
+
