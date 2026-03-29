@@ -27,7 +27,7 @@ public class TmdbService(HttpClient httpClient, ILogger<TmdbService> logger) : I
         return Map(response);
     }
     
-    public async Task<MovieSummaryCollection> SearchMoviesAsync(string term, CancellationToken ct, string page = "1")
+    public async Task<MovieSummaryCollection> SearchMoviesAsync(string term, CancellationToken ct, int page = 1)
     {
         if (string.IsNullOrWhiteSpace(term))
             return new MovieSummaryCollection();

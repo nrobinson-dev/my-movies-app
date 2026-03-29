@@ -9,20 +9,24 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
   selector: 'search',
   imports: [MovieCard, LoadMoreButton],
   template: `
-    <h2 class="text-center text-2xl mb-4">Search the Movie Database</h2>
+    <h1 class="page-title">Search the Movie Database</h1>
     <form
       (submit)="performSearch($event)"
-      class="flex align-items-center gap-2 mb-4 max-w-96 mx-auto"
+      class="search-form"
     >
+      <label for="search-field" class="hidden">Search for movies:</label>
       <input
+        id="search-field"
+        class="search-field"
         type="text"
         placeholder="Search for movies..."
-        class="flex-grow border rounded py-2 px-3"
+        tabindex="4"
         [value]="searchQuery()"
         (input)="setSearchQuery($event)"
       />
       <button
-        class="transition cursor-pointer bg-blue-500 text-white rounded py-2 px-4 hover:bg-blue-600"
+        class="search-button"
+        tabindex="5"
         (click)="performSearch($event)"
         [disabled]="isSearching()"
       >
@@ -30,19 +34,19 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
       </button>
     </form>
 
+    @if (isSearching()) {
+      <h2 class="result-title">Loading search results...</h2>
+    }
+
     @if (isError()) {
-      <h2 class="text-center pt-10 text-xl mb-4 text-red-500">
+      <h2 class="result-title result-title--error">
         An error occurred while searching. Please try again.
       </h2>
     }
 
-    @if (isSearching()) {
-      <h1 class="text-center pt-10 text-3xl mb-4">Loading search results...</h1>
-    }
-
     @if (isSearched()) {
       @if (movies().length > 0) {
-        <h2 class="text-center text-2xl mb-4">Search Results</h2>
+        <h2 class="result-title">Search Results</h2>
         <div class="movie-grid gap-4">
           @for (movie of movies(); track movie.tmdbId) {
             <movie-card [movieSummary]="movie"></movie-card>
@@ -52,7 +56,7 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
           <load-more-button (loadMore)="loadMore()"></load-more-button>
         }
       } @else {
-        <h2 class="text-center pt-10 text-xl mb-4">
+        <h2 class="result-title">
           No movies found matching "{{ searchQuery() }}". Try a different search term?
         </h2>
       }

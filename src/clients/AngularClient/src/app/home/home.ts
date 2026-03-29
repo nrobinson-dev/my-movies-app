@@ -10,7 +10,7 @@ import { LoadMoreButton } from '../shared/load-more-button/load-more-button';
   imports: [MovieCard, RouterLink, LoadMoreButton],
   template: `
     @if ((moviesSummaryCollection()?.movies?.length ?? 0) > 0) {
-      <h2 class="text-center text-2xl mb-4">My Movies</h2>
+      <h1 class="text-center text-2xl mb-4">My Movies</h1>
 
       <div class="stats-container">
         <div class="stat-item">

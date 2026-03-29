@@ -4,7 +4,7 @@ import { FORMAT_OPTIONS } from '../constants/format-options';
 import { DIGITAL_RETAILER_OPTIONS } from '../constants/digital-retailer-options';
 import { DigitalRetailer, Format } from '../../movies/models/lookup';
 import { MovieSummary } from '../../movies/models/movie-summary';
-import { TMDB_IMAGE_BASE_URL } from '../constants/constants';
+import { TMDB_IMAGE_POSTER_SMALL_BASE_URL } from '../constants/constants';
 import { RouterLink } from '@angular/router';
 import { PlatformOption } from '../models/platform-option';
 
@@ -100,7 +100,7 @@ export class MovieCard {
   ngOnInit() {
     this.posterPath.set(
       this.movieSummary().posterPath
-        ? `${TMDB_IMAGE_BASE_URL}${this.movieSummary().posterPath}`
+        ? `${TMDB_IMAGE_POSTER_SMALL_BASE_URL}${this.movieSummary().posterPath}`
         : null,
     );
     this.ownedFormats.set(this.filterFormats(this.movieSummary().formats, FORMAT_OPTIONS));

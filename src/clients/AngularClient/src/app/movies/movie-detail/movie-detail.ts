@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MovieService } from '../movie.service';
 import { MovieDetail as MovieDetailModel } from '../models/movie-detail';
 import { DatePipe, Location } from '@angular/common';
-import { TMDB_IMAGE_BASE_URL } from '../../shared/constants/constants';
+import { TMDB_IMAGE_POSTER_SMALL_BASE_URL, TMDB_IMAGE_BACKDROP_BASE_URL } from '../../shared/constants/constants';
 import { FORMAT_OPTIONS } from '../../shared/constants/format-options';
 import { DIGITAL_RETAILER_OPTIONS } from '../../shared/constants/digital-retailer-options';
 import { DigitalRetailer, Format } from '../models/lookup';
@@ -30,6 +30,7 @@ export class MovieDetail {
   ownedDigitalRetailers = signal<PlatformOption[]>([]);
   saveMovieRequest = {} as SaveMovieRequest;
   messageResult = signal<{ message: string; type: 'success' | 'error' } | null>(null);
+  isReleaseDateInFuture = signal(false);
 
   ngOnInit() {
     const movieId = this.route.snapshot.paramMap.get('movieId');
@@ -39,15 +40,25 @@ export class MovieDetail {
         .getMovieById(localStorage.getItem('auth_user_id') || '', movieId)
         .subscribe({
           next: (detail) => {
+            if (!detail) {
+              this.notFound.set(true);
+              return;
+            }
+
             this.movieDetail.set(detail);
 
             this.initImage(this.posterUrl, detail.posterPath);
-            this.initImage(this.backgroundImageUrl, detail.backdropPath);
+            this.initImage(this.backgroundImageUrl, detail.backdropPath, true);
+            console.log("backgroundImageUrl", this.backgroundImageUrl());
 
             this.ownedFormats.set(this.filterPlatformOwnership(detail.formats, FORMAT_OPTIONS));
             this.ownedDigitalRetailers.set(
               this.filterPlatformOwnership(detail.digitalRetailers, DIGITAL_RETAILER_OPTIONS),
             );
+
+            const releaseDate = new Date(detail.releaseDate);
+            const today = new Date();
+            this.isReleaseDateInFuture.set(releaseDate > today);
           },
           error: (err) => {
             console.error('Failed to fetch movie detail', err);
@@ -57,9 +68,9 @@ export class MovieDetail {
     }
   }
 
-  initImage(imageUrlSignal: any, imagePath: string | null) {
+  initImage(imageUrlSignal: any, imagePath: string | null, isBackdrop: boolean = false) {
     if (imagePath) {
-      imageUrlSignal.set(TMDB_IMAGE_BASE_URL + imagePath);
+      imageUrlSignal.set((isBackdrop ? TMDB_IMAGE_BACKDROP_BASE_URL : TMDB_IMAGE_POSTER_SMALL_BASE_URL) + imagePath);
     } else {
       imageUrlSignal.set('');
     }

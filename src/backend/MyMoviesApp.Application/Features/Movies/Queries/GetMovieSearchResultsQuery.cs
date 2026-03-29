@@ -6,13 +6,13 @@ using MyMoviesApp.Domain.Entities;
 
 namespace MyMoviesApp.Application.Features.Movies.Queries;
 
-public record GetMovieSearchResultsQuery(string Term, Guid? UserId, string Page = "1") : IRequest<TmdbMovieSummaryCollectionDto>;
+public record GetMovieSearchResultsQuery(string Term, Guid? UserId, int Page = 1) : IRequest<TmdbMovieSummaryCollectionDto>;
 
 public class GetMovieSearchResultsQueryHandler(ITmdbService tmdbService, IUserRepository userRepository) : IRequestHandler<GetMovieSearchResultsQuery, TmdbMovieSummaryCollectionDto>
 {
     public async Task<TmdbMovieSummaryCollectionDto> Handle(GetMovieSearchResultsQuery request, CancellationToken cancellationToken)
     {
-        var movieSummaryCollection = await tmdbService.SearchMoviesAsync(request.Term, cancellationToken, request.Page);
+        var movieSummaryCollection = await tmdbService.SearchMoviesAsync(request.Term.ToLower().Trim(), cancellationToken, request.Page);
 
         Dictionary<int, MovieSummary>? userMoviesDictionary = null;
 

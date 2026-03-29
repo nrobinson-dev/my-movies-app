@@ -1,11 +1,25 @@
-a.active {
-    border-bottom-color: var(--color-blue-900);
+@reference "../styles.css";
+
+header {
+    @apply bg-gray-300 fixed top-0 left-0 right-0 z-50 shadow-md;
 }
 
-.movie-grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    justify-content: start;
-    align-items: stretch;
+nav {
+    @apply container flex flex-row items-center mx-auto px-4;
+    
+    .nav-link {
+        @apply block transition border-b-2 border-l-1 border-r-1 border-l-white border-r-white border-b-transparent p-4 hover:bg-blue-900 hover:text-white;
+    }
+
+    .nav-link.active {
+        border-bottom-color: var(--color-blue-900);
+    }
+
+    .logout-link {
+        @apply ml-auto px-2 hover:underline cursor-pointer;
+    }
+}
+
+.welcome-title {
+    @apply flex-grow text-center p-2 text-2xl text-gray-700 mr-4;
 }

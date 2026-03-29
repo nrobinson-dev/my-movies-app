@@ -26,5 +26,5 @@ public interface ITmdbService
     /// <param name="cancellationToken"></param>
     /// <param name="page"></param>
     /// <returns></returns>
-    Task<MovieSummaryCollection> SearchMoviesAsync(string term, CancellationToken cancellationToken, string page = "1");
+    Task<MovieSummaryCollection> SearchMoviesAsync(string term, CancellationToken cancellationToken, int page = 1);
 }

@@ -29,10 +29,10 @@ public class GetMovieSearchResultsQueryHandlerTests
         };
         
         _tmdbServiceMock
-            .Setup(s => s.SearchMoviesAsync("matrix", It.IsAny<CancellationToken>(), "1"))
+            .Setup(s => s.SearchMoviesAsync("matrix", It.IsAny<CancellationToken>(), 1))
             .ReturnsAsync(new MovieSummaryCollection{Movies = movies});
 
-        var query = new GetMovieSearchResultsQuery("matrix", null, "1");
+        var query = new GetMovieSearchResultsQuery("matrix", null, 1);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -52,10 +52,10 @@ public class GetMovieSearchResultsQueryHandlerTests
     {
         // Arrange
         _tmdbServiceMock
-            .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
+            .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<int>()))
             .ReturnsAsync(new MovieSummaryCollection());
 
-        var query = new GetMovieSearchResultsQuery("unknown movie", null, "1");
+        var query = new GetMovieSearchResultsQuery("unknown movie", null, 1);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -69,17 +69,17 @@ public class GetMovieSearchResultsQueryHandlerTests
     {
         // Arrange
         _tmdbServiceMock
-            .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
+            .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<int>()))
             .ReturnsAsync(new MovieSummaryCollection());
 
-        var query = new GetMovieSearchResultsQuery("action", null, Page: "3");
+        var query = new GetMovieSearchResultsQuery("action", null, Page: 3);
 
         // Act
         await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         _tmdbServiceMock.Verify(
-            s => s.SearchMoviesAsync("action", It.IsAny<CancellationToken>(), "3"),
+            s => s.SearchMoviesAsync("action", It.IsAny<CancellationToken>(), 3),
             Times.Once);
     }
 
@@ -107,14 +107,14 @@ public class GetMovieSearchResultsQueryHandlerTests
         };
 
         _tmdbServiceMock
-            .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<string>()))
+            .Setup(s => s.SearchMoviesAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<int>()))
             .ReturnsAsync(new MovieSummaryCollection { Movies = new List<MovieSummary> { movie } });
 
         _userRepositoryMock
             .Setup(r => r.GetUserMoviesByTmdbIdsAsync(userId, It.IsAny<List<int>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<MovieSummary> { userMovie });
 
-        var query = new GetMovieSearchResultsQuery("dune", userId, TestConstants.Pagination.DefaultPageNumber.ToString());
+        var query = new GetMovieSearchResultsQuery("dune", userId);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);

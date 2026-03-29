@@ -7,14 +7,22 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
   selector: 'register',
   imports: [RouterLink],
   template: `
-    <h2 class="text-center text-2xl mb-4">Create Account</h2>
+  <div class="auth-wrapper">
+    <h2 class="page-title">Create Account</h2>
     <div class="flex justify-center">
       <form
         (submit)="register()"
-        class="flex flex-col justify-stretch w-96 p-6 bg-white rounded-lg shadow-md border border-gray-300"
+        class="auth-form"
       >
         <label for="email">Email:</label>
-        <input id="email" type="email" required autocomplete="email username" class="border rounded p-1 mb-4" (input)="setEmail($event)"/>
+        <input id="email" 
+          type="email" 
+          required 
+          autocomplete="email username" 
+          class="auth-form__field" 
+          (input)="setEmail($event)"
+          tabindex="1"
+        />
 
         <label for="password">Password:</label>
         <input
@@ -22,29 +30,32 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           type="password"
           required
           autocomplete="new-password"
-          class="border rounded p-1 mb-4"
+          class="auth-form__field"
           minlength="8"
+          tabindex="2"
           (input)="setPassword($event)"
         />
 
         <button
           type="submit"
           [disabled]="!isFormValid() || isProcessing()"
+          tabindex="3"
           class="{{
-            !isFormValid() || isProcessing() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600 cursor-pointer'
-          }} transition mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+            !isFormValid() || isProcessing() ? 'auth-form__submit--disabled' : 'auth-form__submit--enabled'
+          }} auth-form__submit"
         >
           Register
         </button>
         @if (registerError()) {
-          <p class="text-center mt-4 text-red-500">Registration failed. Please try again.</p>
+          <p class="auth-form__error-message">Registration failed. Please try again.</p>
         }
       </form>
     </div>
     <p class="text-center mt-4">
       Already have an account?
-      <a routerLink="/login" class="text-blue-500 hover:underline">Login</a>
+      <a routerLink="/login" tabindex="4" class="link">Login</a>
     </p>
+  </div>
   `,
   styleUrls: ['./register.css'],
 })

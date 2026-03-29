@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MyMoviesApp.Application.Common.Interfaces;
@@ -13,6 +15,7 @@ using MyMoviesApp.Infrastructure.Configuration;
 using MyMoviesApp.Infrastructure.Data;
 using MyMoviesApp.Infrastructure.Services;
 using MyMoviesApp.Infrastructure.Data.Repositories;
+using StackExchange.Redis;
 
 namespace MyMoviesApp.Infrastructure.DependencyInjection;
 
@@ -20,6 +23,7 @@ public static class ServiceRegistration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddRedisConfiguration(configuration);
         services.AddTmdbServices(configuration);
         services.AddSecurityInfrastructure(configuration);
         services.AddMyMoviesAppDb(configuration);
@@ -28,6 +32,27 @@ public static class ServiceRegistration
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
+        return services;
+    }
+
+    private static IServiceCollection AddRedisConfiguration(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var redisConfig = configuration.GetConnectionString("Redis");
+        if (!string.IsNullOrWhiteSpace(redisConfig))
+        {
+            services.AddStackExchangeRedisCache(options =>
+            {
+                var configOptions = ConfigurationOptions.Parse(redisConfig);
+                configOptions.AbortOnConnectFail = false;
+                configOptions.ConnectTimeout = 3000;
+                configOptions.SyncTimeout = 3000;
+
+                options.ConfigurationOptions = configOptions;
+                options.InstanceName = "MyMoviesApp_";
+            });
+        }
+        
         return services;
     }
 
@@ -46,7 +71,7 @@ public static class ServiceRegistration
 
         services.AddTransient<TmdbAuthHandler>();
 
-        services.AddHttpClient<ITmdbService, TmdbService>((sp, client) =>
+        services.AddHttpClient<TmdbService>((sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<TmdbOptions>>().Value;
             client.BaseAddress = new Uri(options.ApiBaseUrl);
@@ -54,6 +79,14 @@ public static class ServiceRegistration
         })
         .AddHttpMessageHandler<TmdbAuthHandler>()
         .AddStandardResilienceHandler();
+
+        services.AddScoped<ITmdbService>(sp =>
+        {
+            var innerService = sp.GetRequiredService<TmdbService>();
+            var cache = sp.GetRequiredService<IDistributedCache>();
+            var logger = sp.GetRequiredService<ILogger<CachedTmdbService>>();
+            return new CachedTmdbService(innerService, cache, logger);
+        });
         
         return services;
     }

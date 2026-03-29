@@ -37,7 +37,8 @@ The Web API is built using a **Clean Architecture** approach (for now, anyway, I
 - **MediatR** — request handling
 - **Serilog** — logging
 - **Scalar** — API documentation
-- **Angular** — front-end framework
+- **Redis** — Caching TMDB API responses
+- **Angular v21** — front-end framework
 
 ---
 
@@ -61,7 +62,7 @@ The long-term goal is to evolve this into a full ecosystem:
 **Infrastructure**
 - PostgreSQL database
 - Email service for account creation and password resets
-- Caching strategy for TMDB API responses
+- Caching strategy for TMDB API responses (Complete)
 - OpenTelemetry for logging and monitoring
 - Docker containerization
 

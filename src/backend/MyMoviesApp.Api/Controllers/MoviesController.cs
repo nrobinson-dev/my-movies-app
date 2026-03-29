@@ -24,7 +24,9 @@ namespace MyMoviesApp.Api.Controllers
             var callerIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Guid? userId = Guid.TryParse(callerIdStr, out var callerGuid) ? callerGuid : null;
 
-            var result = await Mediator.Send(new GetMovieSearchResultsQuery(request.Search ?? string.Empty, userId, request.Page ?? "1"), cancellationToken);
+            var query = new GetMovieSearchResultsQuery(request.Search ?? string.Empty, userId, request.Page ?? 1);
+            
+            var result = await Mediator.Send(query, cancellationToken);
             return Ok(result);
         }
     }

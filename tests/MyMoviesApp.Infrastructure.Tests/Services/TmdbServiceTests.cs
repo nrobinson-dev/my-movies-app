@@ -171,9 +171,9 @@ public class TmdbServiceTests
 
 
     [Theory]
-    [InlineData("foo bar", "1")]
-    [InlineData("other", "2")]
-    public async Task SearchMoviesAsync_CallsExpectedEndpointAndReturnsMapped(string term, string page)
+    [InlineData("foo bar", 1)]
+    [InlineData("other", 2)]
+    public async Task SearchMoviesAsync_CallsExpectedEndpointAndReturnsMapped(string term, int page)
     {
         // Arrange
         term = Uri.EscapeDataString(term);

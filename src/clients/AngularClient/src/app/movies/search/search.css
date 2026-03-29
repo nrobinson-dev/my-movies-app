@@ -1,0 +1,25 @@
+@reference "../../../styles.css";
+
+.page-title {
+    @apply text-center text-3xl mb-4;
+}
+
+.search-form {
+    @apply flex items-center gap-2 mb-4 max-w-96 mx-auto;
+}
+
+.search-field {
+     @apply flex-grow self-stretch border rounded py-2 px-3;
+}
+
+.search-button {
+    @apply transition self-stretch cursor-pointer bg-blue-500 text-white rounded py-2 px-4 hover:bg-blue-600;
+}
+
+.result-title {
+    @apply text-center pt-10 text-2xl mb-4;
+}
+
+.result-title--error {
+    @apply text-red-500;
+}

@@ -6,15 +6,21 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
 @Component({
   selector: 'login',
   imports: [RouterLink],
-  template: ` 
-  <h2 class="text-center text-2xl mb-4">Login</h2>
+  template: `
+  <div class="auth-wrapper">
+    <h2 class="page-title">Login</h2>
     <div class="flex justify-center">
-      <form
-        (submit)="login($event)"
-        class="flex flex-col justify-stretch w-96 p-6 bg-white rounded-lg shadow-md border border-gray-300"
-      >
+      <form (submit)="login($event)" class="auth-form">
         <label for="email">Email:</label>
-        <input id="email" type="email" required autocomplete="email username" class="border rounded p-1 mb-4" (input)="setEmail($event)"/>
+        <input
+          id="email"
+          type="email"
+          required
+          autocomplete="email username"
+          class="auth-form__field"
+          tabindex="1"
+          (input)="setEmail($event)"
+        />
 
         <label for="password">Password:</label>
         <input
@@ -22,29 +28,34 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           type="password"
           required
           autocomplete="current-password"
-          class="border rounded p-1 mb-4"
+          class="auth-form__field"
           minlength="8"
+          tabindex="2"
           (input)="setPassword($event)"
         />
 
         <button
           type="submit"
           [disabled]="!isFormValid() || isProcessing()"
+          tabindex="3"
           class="{{
-            !isFormValid() || isProcessing() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600 cursor-pointer'
-          }} transition mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+            !isFormValid() || isProcessing()
+              ? 'auth-form__submit--disabled'
+              : 'auth-form__submit--enabled'
+          }} auth-form__submit"
         >
           Login
         </button>
         @if (loginError()) {
-          <p class="text-center mt-4 text-red-500">Login failed. Please try again.</p>
+          <p class="auth-form__error-message">Login failed. Please try again.</p>
         }
       </form>
     </div>
     <p class="text-center mt-4">
       Don't have an account?
-      <a routerLink="/register" class="text-blue-500 hover:underline">Register here</a>
+      <a routerLink="/register" tabindex="4" class="link">Register&nbsp;here</a>
     </p>
+  </div>
   `,
   styleUrls: ['./login.css'],
 })
@@ -69,11 +80,11 @@ export class Login {
   isEmailValid() {
     return EMAIL_REGEX.test(this.email.trim());
   }
-  
+
   isPasswordValid() {
     return this.password.trim().length >= 8;
   }
-  
+
   validateForm() {
     this.isFormValid.set(this.isEmailValid() && this.isPasswordValid());
   }
@@ -87,7 +98,7 @@ export class Login {
 
     this.email = this.email.trim();
     this.password = this.password.trim();
-    
+
     this.isProcessing.set(true);
     this.authService.login(this.email, this.password).subscribe({
       next: () => {

@@ -2,10 +2,60 @@
 
 @import 'tailwindcss';
 
+body {
+    @apply flex flex-col min-h-screen;
+}
+
+main {
+    @apply px-4 mt-20 mb-4 flex-grow;
+}
+
+footer {
+    @apply text-center py-2 px-4 text-xs text-gray-500;
+}
+
+.link {
+    @apply text-blue-500 hover:underline;
+}
+
+.page-title {
+    @apply text-center text-3xl mb-4;
+}
+
+.auth-wrapper {
+    @apply flex flex-col items-center justify-center;
+    min-height: 70vh;
+}
+
+.auth-form {
+    @apply flex flex-col justify-stretch w-96 p-6 bg-white rounded-lg shadow-md border border-gray-300;
+    max-width: 100vw;
+
+    .auth-form__field {
+        @apply border rounded p-1 mb-4;
+    }
+
+    .auth-form__submit {
+        @apply transition mt-4 bg-blue-500 text-white px-4 py-2 rounded-md;
+    }
+
+    .auth-form__submit--enabled {
+        @apply hover:bg-blue-600 cursor-pointer;
+    }
+
+    .auth-form__submit--disabled {
+        @apply opacity-50 cursor-not-allowed;
+    }
+
+    .auth-form__error-message {
+        @apply text-center mt-4 text-red-500;
+    }
+}
+
 .movie-grid {
     display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(min(250px, 32%), 1fr));
     justify-content: start;
     align-items: stretch;
 }
