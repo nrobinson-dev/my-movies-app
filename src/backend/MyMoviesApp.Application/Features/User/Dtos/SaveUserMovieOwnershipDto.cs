@@ -9,13 +9,14 @@ public class SaveUserMovieOwnershipDto
     [Required][Range(1, int.MaxValue)]
     public int TmdbId { get; init; } = 0;
 
-    [Required][MinLength(1)]
+    [Required]
+    [StringLength(200, MinimumLength = 1)]
     public string Title { get; init; } = string.Empty;
 
     [Required]
     public DateOnly ReleaseDate { get; init; } = DateOnly.MinValue;
 
-    [Required][RegularExpression(@"^\/.*\.jpg$")]
+    [RegularExpression(@"^\/.*\.jpg$")]
     public string PosterPath { get; init; } = string.Empty;
 
     [Required]

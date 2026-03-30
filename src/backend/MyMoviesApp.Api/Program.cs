@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using MyMoviesApp.Infrastructure.DependencyInjection;
 using MyMoviesApp.Application;
 using MyMoviesApp.Infrastructure.Data;
@@ -60,11 +61,21 @@ try
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
 
-    builder.Services.AddControllers();
-    // builder.Services.AddControllers(options =>
-    // {
-    //     options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
-    // });
+    builder.Services.AddControllers()
+        .ConfigureApiBehaviorOptions(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+                var errors = context.ModelState
+                    .Where(x => x.Value?.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray() ?? []
+                    );
+
+                return new BadRequestObjectResult(new { errors });
+            };
+        });
 
     builder.Services.AddCors(options =>
     {

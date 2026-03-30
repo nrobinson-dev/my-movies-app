@@ -20,7 +20,9 @@ import { PlatformOption } from '../models/platform-option';
         <p>
           <a [routerLink]="['/movie', movieSummary().tmdbId]" class="mr-1"
             >{{ movieSummary().title }}
-            <span class="movie-card__title"></span>
+            <span class="movie-card__link" aria-hidden="true">
+<!-- This is intentionally left blank and is meant to make the full movie-card clickable without wrapping the entire card with a link. -->
+            </span>
           </a>
           <span class="movie-card__release-date">({{ this.movieSummary().releaseDate | date: 'yyyy' }})</span>
         </p>

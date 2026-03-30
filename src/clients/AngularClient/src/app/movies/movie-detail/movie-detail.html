@@ -9,8 +9,8 @@
     <div class="movie-detail-container">
         <div class="overlay "></div>
 
-        <button (click)="location.back()" class="back-button">
-            <img src="/images/icons/arrow_back.svg" alt="Back" title="Go back" />
+        <button (click)="location.back()" class="back-button" aria-label="Go back">
+            <img src="/images/icons/arrow_back.svg" alt="" aria-hidden="true" />
         </button>
 
         <div class="movie-detail">
@@ -28,62 +28,71 @@
 
                 @if (!isReleaseDateInFuture()) {
                 <div class="ownership-controls">
-                    <p class="mb-1">Physical Media:</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        @for (format of ownedFormats(); track format.value) {
-                        <button class="platform-button" [class]="
-                              format.isOwned
-                                ? 'platform-button--owned'
-                                : ''
-                            " 
-                            (click)="togglePlatformOwnership(format.value, ownedFormats)"
-                            tabindex="format.value"
-                            >
-                            <span class="platform" [style]="{ backgroundImage: 'url(' + format.image + ')' }"
-                                [class]="format.label" [attr.alt]="format.label" [attr.title]="format.label"></span>
-                        </button>
-                        }
+                    <div role="group" aria-labelledby="physical-media-label">
+                        <p class="mb-1" id="physical-media-label">Physical Media:</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @for (format of ownedFormats(); track format.value) {
+                            <button class="platform-button" [class]="
+                                  format.isOwned
+                                    ? 'platform-button--owned'
+                                    : ''
+                                "
+                                [attr.aria-pressed]="format.isOwned"
+                                [attr.aria-label]="format.label"
+                                (click)="togglePlatformOwnership(format.value, ownedFormats)"
+                                >
+                                <span class="platform" [style]="{ backgroundImage: 'url(' + format.image + ')' }"
+                                    [class]="format.label" aria-hidden="true"></span>
+                            </button>
+                            }
+                        </div>
                     </div>
 
-                    <p class="mb-1">Digital Retailers:</p>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                        @for (digitalRetailer of ownedDigitalRetailers(); track digitalRetailer.value) {
-                        <button class="platform-button platform-button--retailer" [class]="
-                            digitalRetailer.isOwned
-                                ? 'platform-button--owned'
-                                : ''
-                            "
-                            (click)="
-                              togglePlatformOwnership(digitalRetailer.value, ownedDigitalRetailers)
-                            "
-                            tabindex="digitalRetailer.value"
-                            >
-                            <span class="platform" [style]="{ backgroundImage: 'url(' + digitalRetailer.image + ')' }"
-                                [class]="digitalRetailer.label" [attr.alt]="digitalRetailer.label"
-                                [attr.title]="digitalRetailer.label"></span>
-                        </button>
-                        }
+                    <div role="group" aria-labelledby="digital-retailers-label">
+                        <p class="mb-1" id="digital-retailers-label">Digital Retailers:</p>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            @for (digitalRetailer of ownedDigitalRetailers(); track digitalRetailer.value) {
+                            <button class="platform-button platform-button--retailer" [class]="
+                                digitalRetailer.isOwned
+                                    ? 'platform-button--owned'
+                                    : ''
+                                "
+                                [attr.aria-pressed]="digitalRetailer.isOwned"
+                                [attr.aria-label]="digitalRetailer.label"
+                                (click)="
+                                  togglePlatformOwnership(digitalRetailer.value, ownedDigitalRetailers)
+                                "
+                                >
+                                <span class="platform" [style]="{ backgroundImage: 'url(' + digitalRetailer.image + ')' }"
+                                    [class]="digitalRetailer.label" aria-hidden="true"></span>
+                            </button>
+                            }
+                        </div>
                     </div>
 
                     <div class="button-row">
                         <button class="submit" (click)="saveOwnership()">
-                            <img src="/images/icons/save.svg" alt="Save icon" class="w-6 h-6 inline" />
+                            <img src="/images/icons/save.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
                             <span>Save Ownership</span>
                         </button>
 
                         <button class="delete" (click)="deleteMovieOwnership()">
-                            <img src="/images/icons/delete.svg" alt="Delete icon" class="w-6 h-6 inline" />
+                            <img src="/images/icons/delete.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
                             <span>Delete Ownership</span>
                         </button>
                     </div>
                 </div>
                 }
-                <div class="movie-info">
-                    <p class="mb-2"><strong>Release Date:</strong> {{ movieDetail()?.releaseDate | date }}</p>
-                    <p class="mb-2"><strong>Runtime:</strong> {{ movieDetail()?.runtime }} minutes</p>
-                    <p class="mb-2"><strong>Tagline:</strong> {{ movieDetail()?.tagline }}</p>
-                    <p class="mb-2"><strong>Overview:</strong> {{ movieDetail()?.overview }}</p>
-                </div>
+                <dl class="movie-info">
+                    <dt class="mb-2"><strong>Release Date</strong></dt>
+                    <dd class="mb-2">{{ movieDetail()?.releaseDate | date }}</dd>
+                    <dt class="mb-2"><strong>Runtime</strong></dt>
+                    <dd class="mb-2">{{ movieDetail()?.runtime }} minutes</dd>
+                    <dt class="mb-2"><strong>Tagline</strong></dt>
+                    <dd class="mb-2">{{ movieDetail()?.tagline }}</dd>
+                    <dt class="mb-2"><strong>Overview</strong></dt>
+                    <dd class="mb-2">{{ movieDetail()?.overview }}</dd>
+                </dl>
             </div>
         </div>
     </div>
@@ -91,7 +100,7 @@
 }
 
 @if (messageResult()) {
-<div class="toast" [class]="messageResult()!.type === 'success' ? 'bg-green-600' : 'bg-red-600'">
+<div role="alert" aria-live="assertive" class="toast" [class]="messageResult()!.type === 'success' ? 'bg-green-600' : 'bg-red-600'">
     {{ messageResult()!.message }}
 </div>
 }

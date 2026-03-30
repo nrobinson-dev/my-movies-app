@@ -9,46 +9,118 @@ import { LoadMoreButton } from '../shared/load-more-button/load-more-button';
   selector: 'home',
   imports: [MovieCard, RouterLink, LoadMoreButton],
   template: `
-    @if ((moviesSummaryCollection()?.movies?.length ?? 0) > 0) {
-      <h1 class="text-center text-2xl mb-4">My Movies</h1>
+    @defer (when !isLoading()) {
+      <section aria-live="polite" aria-label="Movie collection">
+      @if (isError()) {
+        <p role="alert" class="text-center pt-10">
+          Something went wrong loading your movies.
+          <button class="underline text-blue-500" (click)="refresh()">Please refresh the page.</button>
+        </p>
+      } @else if (movies().length > 0) {
+        <h1 class="text-center text-2xl mb-4">My Movies</h1>
 
-      <div class="stats-container">
-        <div class="stat-item">
-          <span class="stat-label">Total Movies</span>
-          <span class="stat-value">{{ moviesSummaryCollection()?.totalResults }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Ultra HD</span>
-          <span class="stat-value">{{ moviesSummaryCollection()?.totalBluRay4KCount }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Blu-ray</span>
-          <span class="stat-value">{{ moviesSummaryCollection()?.totalBluRayCount }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">DVD</span>
-          <span class="stat-value">{{ moviesSummaryCollection()?.totalDvdCount }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">Digital</span>
-          <span class="stat-value">{{ moviesSummaryCollection()?.totalDigitalCount }}</span>
-        </div>
-      </div>
+        <dl class="stats-container">
+          <div class="stat-item">
+            <dt class="stat-label">Total Movies</dt>
+            <dd class="stat-value">{{ moviesSummaryCollection()?.totalResults }}</dd>
+          </div>
+          <div class="stat-item">
+            <dt class="stat-label">Ultra HD</dt>
+            <dd class="stat-value">{{ moviesSummaryCollection()?.totalBluRay4KCount }}</dd>
+          </div>
+          <div class="stat-item">
+            <dt class="stat-label">Blu-ray</dt>
+            <dd class="stat-value">{{ moviesSummaryCollection()?.totalBluRayCount }}</dd>
+          </div>
+          <div class="stat-item">
+            <dt class="stat-label">DVD</dt>
+            <dd class="stat-value">{{ moviesSummaryCollection()?.totalDvdCount }}</dd>
+          </div>
+          <div class="stat-item">
+            <dt class="stat-label">Digital</dt>
+            <dd class="stat-value">{{ moviesSummaryCollection()?.totalDigitalCount }}</dd>
+          </div>
+        </dl>
 
-      <div class="movie-grid gap-4">
-        @for (movie of movies() || []; track movie.tmdbId) {
-          <movie-card [movieSummary]="movie"></movie-card>
+        <ul class="movie-grid gap-4" aria-label="Your movie collection">
+          @for (movie of movies() || []; track movie.tmdbId) {
+            <li>
+              <movie-card [movieSummary]="movie"></movie-card>
+            </li>
+          }
+        </ul>
+
+        @if (hasMore()) {
+          <load-more-button (loadMore)="loadMore()"></load-more-button>
         }
-      </div>
-
-      @if (hasMore()) {
-        <load-more-button (loadMore)="loadMore()"></load-more-button>
+      } @else {
+        <p class="text-center pt-10">
+          You haven't added any movies yet. Start by
+          <a routerLink="/search" class="hover:underline text-blue-500">searching</a> for the movies
+          you own and adding them to your collection!
+        </p>
       }
-    } @else {
-      <p class="text-center pt-10">
-        You haven't added any movies yet. Start by
-        <a routerLink="/search" class="hover:underline text-blue-500">searching</a> for the movies
-        you own and adding them to your collection!
+      </section>
+    } @placeholder {
+      <p role="status" class="text-center text-2xl mb-4">Loading your movies...</p>
+      <div class="movie-grid gap-4" aria-hidden="true">
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+      </div>
+    } @loading (minimum 500ms) {
+      <p role="status" class="text-center text-2xl mb-4">Loading your movies...</p>
+      <div class="movie-grid gap-4" aria-hidden="true">
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+
+        <div class="placeholder-movie-card">
+          <div class="placeholder-movie-card__title"></div>
+          <div class="placeholder-movie-card__poster"></div>
+        </div>
+      </div>
+    } @error {
+      <p role="alert" class="text-center pt-10">
+        Failed to load the page.
+        <button class="underline text-blue-500" (click)="refresh()">Please refresh the page.</button>
       </p>
     }
   `,
@@ -63,6 +135,8 @@ export class Home {
 
   moviesSummaryCollection = signal<MovieSummaryCollection | null>(null);
   movies = signal<MovieSummary[]>([]);
+  isLoading = signal(true);
+  isError = signal(false);
 
   ngOnInit() {
     this.loadMovies();
@@ -86,10 +160,17 @@ export class Home {
           this.totalPages.set(response.totalPages);
           this.movies.update((current) => [...(current || []), ...(response.movies || [])]);
           this.moviesSummaryCollection.set(response);
+          this.isLoading.set(false);
         },
         error: (err) => {
           console.error('Failed to fetch user movies', err);
+          this.isError.set(true);
+          this.isLoading.set(false);
         },
       });
+  }
+
+  refresh() {
+    this.loadMovies();
   }
 }

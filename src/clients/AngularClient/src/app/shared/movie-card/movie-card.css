@@ -10,7 +10,7 @@
     @apply py-1 px-2 bg-gray-900 text-white text-center;
 }
 
-.movie-card__title {
+.movie-card__link {
     @apply absolute left-0 top-0 w-full h-full z-10;
 }
 

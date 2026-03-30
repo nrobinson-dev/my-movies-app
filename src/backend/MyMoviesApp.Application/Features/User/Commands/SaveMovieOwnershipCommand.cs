@@ -3,13 +3,14 @@ using Microsoft.Extensions.Logging;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyMoviesApp.Application.Features.User.Commands;
 
 public record SaveMovieOwnershipCommand(
     Guid UserId,
-    int TmdbId,
-    string Title,
+    [property: Range(1, int.MaxValue)] int TmdbId,
+    [property: Required(AllowEmptyStrings = false)][property: StringLength(200, MinimumLength = 1)] string Title,
     DateOnly ReleaseDate,
     string PosterPath,
     HashSet<Format> Formats,

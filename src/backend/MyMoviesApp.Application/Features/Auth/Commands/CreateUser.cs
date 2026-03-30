@@ -7,8 +7,8 @@ using MyMoviesApp.Application.Features.Auth.Dtos;
 namespace MyMoviesApp.Application.Features.Auth.Commands;
 
 public record CreateUserCommand(
-    [property: Required][property: EmailAddress] string? Email,
-    [property: Required][property: MinLength(8)] string? Password
+    [property: Required][property: EmailAddress] string Email,
+    [property: Required][property: MinLength(8)] string Password
 ) : IRequest<LoginUserResultDto>;
 
 public class CreateUserCommandHandler(IAuthenticationService authenticationService, ILogger<CreateUserCommandHandler> logger) : IRequestHandler<CreateUserCommand, LoginUserResultDto>

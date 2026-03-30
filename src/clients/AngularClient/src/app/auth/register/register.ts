@@ -8,11 +8,13 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
   imports: [RouterLink],
   template: `
   <div class="auth-wrapper">
-    <h2 class="page-title">Create Account</h2>
+    <h2 id="register-title" class="page-title">Create Account</h2>
     <div class="flex justify-center">
       <form
-        (submit)="register()"
+        (submit)="register($event)"
         class="auth-form"
+        novalidate
+        aria-labelledby="register-title"
       >
         <label for="email">Email:</label>
         <input id="email" 
@@ -20,8 +22,9 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           required 
           autocomplete="email username" 
           class="auth-form__field" 
+          aria-required="true"
+          [attr.aria-invalid]="emailTouched() && !isEmailValid()"
           (input)="setEmail($event)"
-          tabindex="1"
         />
 
         <label for="password">Password:</label>
@@ -32,14 +35,16 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           autocomplete="new-password"
           class="auth-form__field"
           minlength="8"
-          tabindex="2"
+          aria-required="true"
+          aria-describedby="password-hint"
+          [attr.aria-invalid]="passwordTouched() && !isPasswordValid()"
           (input)="setPassword($event)"
         />
+        <p id="password-hint" class="auth-form__hint">Must be at least 8 characters</p>
 
         <button
           type="submit"
           [disabled]="!isFormValid() || isProcessing()"
-          tabindex="3"
           class="{{
             !isFormValid() || isProcessing() ? 'auth-form__submit--disabled' : 'auth-form__submit--enabled'
           }} auth-form__submit"
@@ -47,13 +52,13 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           Register
         </button>
         @if (registerError()) {
-          <p class="auth-form__error-message">Registration failed. Please try again.</p>
+          <p id="register-error" role="alert" class="auth-form__error-message">Registration failed. Please try again.</p>
         }
       </form>
     </div>
     <p class="text-center mt-4">
       Already have an account?
-      <a routerLink="/login" tabindex="4" class="link">Login</a>
+      <a routerLink="/login" class="link">Login</a>
     </p>
   </div>
   `,
@@ -66,13 +71,17 @@ export class Register {
   isProcessing = signal(false);
   isFormValid = signal(false);
   registerError = signal(false);
+  emailTouched = signal(false);
+  passwordTouched = signal(false);
 
   setEmail(event: Event) {
+    this.emailTouched.set(true);
     this.email = (event.target as HTMLInputElement).value;
     this.validateForm();
   }
 
   setPassword(event: Event) {
+    this.passwordTouched.set(true);
     this.password = (event.target as HTMLInputElement).value;
     this.validateForm();
   }
@@ -89,7 +98,8 @@ export class Register {
     this.isFormValid.set(this.isEmailValid() && this.isPasswordValid());
   }
 
-  register() {
+  register(event?: Event) {
+    event?.preventDefault();
     if (!this.isFormValid() || this.isProcessing()) {
       return;
     }

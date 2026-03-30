@@ -155,5 +155,28 @@ describe('Home', () => {
       expect(() => component.ngOnInit()).not.toThrow();
       expect(component.movies().length).toBe(0);
     });
+
+    it('should set isError to true and isLoading to false on error', () => {
+      movieService.getUserMovies = vi.fn().mockReturnValue(
+        throwError(() => new Error('Network error')),
+      );
+
+      component.ngOnInit();
+
+      expect(component.isError()).toBe(true);
+      expect(component.isLoading()).toBe(false);
+    });
+  });
+
+  describe('isLoading', () => {
+    it('should start as true', () => {
+      expect(component.isLoading()).toBe(true);
+    });
+
+    it('should be false after successful fetch', () => {
+      component.ngOnInit();
+
+      expect(component.isLoading()).toBe(false);
+    });
   });
 });

@@ -8,9 +8,9 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
   imports: [RouterLink],
   template: `
   <div class="auth-wrapper">
-    <h2 class="page-title">Login</h2>
+    <h2 id="login-title" class="page-title">Login</h2>
     <div class="flex justify-center">
-      <form (submit)="login($event)" class="auth-form">
+      <form (submit)="login($event)" class="auth-form" novalidate aria-labelledby="login-title">
         <label for="email">Email:</label>
         <input
           id="email"
@@ -18,7 +18,8 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           required
           autocomplete="email username"
           class="auth-form__field"
-          tabindex="1"
+          aria-required="true"
+          [attr.aria-invalid]="emailTouched() && !isEmailValid()"
           (input)="setEmail($event)"
         />
 
@@ -30,14 +31,16 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           autocomplete="current-password"
           class="auth-form__field"
           minlength="8"
-          tabindex="2"
+          aria-required="true"
+          aria-describedby="password-hint"
+          [attr.aria-invalid]="passwordTouched() && !isPasswordValid()"
           (input)="setPassword($event)"
         />
+        <p id="password-hint" class="auth-form__hint">Must be at least 8 characters</p>
 
         <button
           type="submit"
           [disabled]="!isFormValid() || isProcessing()"
-          tabindex="3"
           class="{{
             !isFormValid() || isProcessing()
               ? 'auth-form__submit--disabled'
@@ -47,13 +50,13 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           Login
         </button>
         @if (loginError()) {
-          <p class="auth-form__error-message">Login failed. Please try again.</p>
+          <p id="login-error" role="alert" class="auth-form__error-message">Login failed. Please try again.</p>
         }
       </form>
     </div>
     <p class="text-center mt-4">
       Don't have an account?
-      <a routerLink="/register" tabindex="4" class="link">Register&nbsp;here</a>
+      <a routerLink="/register" class="link">Register&nbsp;here</a>
     </p>
   </div>
   `,
@@ -66,13 +69,17 @@ export class Login {
   isProcessing = signal(false);
   isFormValid = signal(false);
   loginError = signal(false);
+  emailTouched = signal(false);
+  passwordTouched = signal(false);
 
   setEmail(event: Event) {
+    this.emailTouched.set(true);
     this.email = (event.target as HTMLInputElement).value;
     this.validateForm();
   }
 
   setPassword(event: Event) {
+    this.passwordTouched.set(true);
     this.password = (event.target as HTMLInputElement).value;
     this.validateForm();
   }

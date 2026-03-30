@@ -6,7 +6,7 @@ import { Component, output } from '@angular/core';
   standalone: true,
   template: `
     <div class="load-more-container">
-      <button (click)="loadMore.emit()" class="btn-load-more">Load More</button>
+      <button (click)="loadMore.emit()" class="btn-load-more" aria-label="Load more movies">Load More</button>
     </div>
   `,
   styleUrl: './load-more-button.css',

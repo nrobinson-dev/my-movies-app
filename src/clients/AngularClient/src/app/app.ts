@@ -6,35 +6,45 @@ import { AuthService } from './auth/auth.service';
   selector: 'app-root',
   imports: [RouterOutlet, RouterLinkActive, RouterLink],
   template: `
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:shadow-lg focus:rounded"
+    >
+      Skip to main content
+    </a>
+
     <header>
-      <nav>
+      <nav aria-label="Main navigation">
         <img src="/images/angular-icon.svg" alt="Angular Logo" class="h-10 mr-4 my-2" />
 
-        @if(isAuthenticated()) {
+        @if (isAuthenticated()) {
           <a
             routerLink="/"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact: true}"
+            [routerLinkActiveOptions]="{ exact: true }"
             class="nav-link"
-            tabindex="1"
             >My Movies</a
           >
-          <a
-            routerLink="/search"
-            routerLinkActive="active"
-            class="nav-link"
-            tabindex="2"
-            >Search</a
-          >
-          <button (click)="auth.logout()" class="logout-link" tabindex="3">Logout</button>
-        }
-        @else {
+          <a routerLink="/search" routerLinkActive="active" class="nav-link">Search</a>
+          <button (click)="auth.logout()" class="logout-link">Logout</button>
+        } @else {
           <h1 class="welcome-title">Welcome to My Movies App!</h1>
         }
       </nav>
     </header>
 
-    <router-outlet class="grow" />
+    <div class="main-wrapper">
+      <main id="main-content">
+        <router-outlet />
+      </main>
+
+      <footer>
+        <p>
+          This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise
+          approved by TMDB.
+        </p>
+      </footer>
+    </div>
   `,
   styleUrls: ['./app.css'],
 })

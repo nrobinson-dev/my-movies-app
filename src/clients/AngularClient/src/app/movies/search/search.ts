@@ -14,19 +14,18 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
       (submit)="performSearch($event)"
       class="search-form"
     >
-      <label for="search-field" class="hidden">Search for movies:</label>
+      <label for="search-field" class="sr-only">Search for movies:</label>
       <input
         id="search-field"
         class="search-field"
         type="text"
         placeholder="Search for movies..."
-        tabindex="4"
         [value]="searchQuery()"
         (input)="setSearchQuery($event)"
       />
       <button
+        type="submit"
         class="search-button"
-        tabindex="5"
         (click)="performSearch($event)"
         [disabled]="isSearching()"
       >
@@ -35,30 +34,32 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
     </form>
 
     @if (isSearching()) {
-      <h2 class="result-title">Loading search results...</h2>
+      <p role="status" class="result-title">Loading search results...</p>
     }
 
     @if (isError()) {
-      <h2 class="result-title result-title--error">
+      <p role="alert" class="result-title result-title--error">
         An error occurred while searching. Please try again.
-      </h2>
+      </p>
     }
 
     @if (isSearched()) {
       @if (movies().length > 0) {
         <h2 class="result-title">Search Results</h2>
-        <div class="movie-grid gap-4">
+        <ul class="movie-grid gap-4" aria-label="Search results">
           @for (movie of movies(); track movie.tmdbId) {
-            <movie-card [movieSummary]="movie"></movie-card>
+            <li>
+              <movie-card [movieSummary]="movie"></movie-card>
+            </li>
           }
-        </div>
+        </ul>
         @if (hasMore()) {
           <load-more-button (loadMore)="loadMore()"></load-more-button>
         }
       } @else {
-        <h2 class="result-title">
+        <p role="status" class="result-title">
           No movies found matching "{{ searchQuery() }}". Try a different search term?
-        </h2>
+        </p>
       }
     }
   `,
