@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   register(email: string, password: string) {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/create`, { email, password }).pipe(
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/register`, { email, password }).pipe(
       tap({ next: response => this.storeSession(response) })
     );
   }
@@ -37,6 +37,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_ID_KEY);
+    localStorage.removeItem(TOKEN_EXPIRATION_KEY);
     localStorage.removeItem('redirectUrl');
     
     this.isAuthenticated.set(false);
