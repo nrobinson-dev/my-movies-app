@@ -15,10 +15,10 @@ public static class AuthEndpoints
         group.MapPost("/register", async (CreateUserCommand command, IMediator mediator, CancellationToken cancellationToken) =>
         {
             var result = await mediator.Send(command, cancellationToken);
-            return Results.Created($"/api/v1/auth/register", result);
+            return Results.Created($"/api/auth/register", result);
         })
         .DisableAntiforgery()
-        .AddEndpointFilter<ValidationFilter<CreateUserCommand>>()
+        //.AddEndpointFilter<ValidationFilter<CreateUserCommand>>()
         .WithTags(nameof(Auth))
         .WithName("Register")
         .WithSummary("Register a new user account")
@@ -33,7 +33,7 @@ public static class AuthEndpoints
             return Results.Ok(result);
         })
         .DisableAntiforgery()
-        .AddEndpointFilter<ValidationFilter<LoginUserCommand>>()
+        //.AddEndpointFilter<ValidationFilter<LoginUserCommand>>()
         .RequireRateLimiting("login")
         .WithTags(nameof(Auth))
         .WithName("Login")
