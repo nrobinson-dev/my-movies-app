@@ -60,6 +60,7 @@ try
     builder.Services.AddMyMoviesAppDb(builder.Configuration);
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
+    builder.Services.AddHealthChecks();
 
     builder.Services.AddControllers()
         .ConfigureApiBehaviorOptions(options =>
@@ -123,6 +124,8 @@ try
     app.MapAuthEndpoints();
     app.MapUsersEndpoints();
     app.MapControllers();
+    app.MapHealthChecks("/health");
+    app.MapPost("/test-post", () => Results.Ok("Post works!"));
 
     await app.RunAsync();
 }
