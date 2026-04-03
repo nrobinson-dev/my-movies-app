@@ -36,7 +36,7 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           [attr.aria-invalid]="passwordTouched() && !isPasswordValid()"
           (input)="setPassword($event)"
         />
-        <p id="password-hint" class="auth-form__hint">Must be at least 8 characters</p>
+        <small id="password-hint" class="auth-form__hint">Password must be at least 8 characters.</small>
 
         <button
           type="submit"

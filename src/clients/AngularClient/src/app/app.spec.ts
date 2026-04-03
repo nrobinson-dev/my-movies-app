@@ -36,7 +36,7 @@ describe('App', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.querySelector('h1')?.textContent).toContain('Welcome to My Movies App');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Welcome to FlickDocket');
   });
 
   it('should show nav links when authenticated', async () => {

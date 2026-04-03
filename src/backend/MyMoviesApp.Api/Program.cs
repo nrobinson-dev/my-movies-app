@@ -82,15 +82,14 @@ try
     {
         options.AddPolicy("MultiClientPolicy", policy =>
         {
-            policy.WithOrigins(
-                    "http://localhost:4200", // Angular
-                    "https://localhost:4200" // Angular (HTTPS)
-                    //"http://localhost:5173" // React & Vue (Vite)
-                    //"https://localhost:7001" // Blazor
-                )
+            var origins = builder.Configuration
+                .GetSection("AllowedOrigins")
+                .Get<string[]>() ?? [];
+            
+            policy.WithOrigins(origins)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowCredentials(); // Essential for cookies/anti-forgery
+                .AllowCredentials();
         });
     });
 
