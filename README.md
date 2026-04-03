@@ -24,6 +24,16 @@ MyMoviesApp lets you keep track of movie ownership across physical and digital f
 
 ---
 
+## Live Demo
+
+**[FlickDocket Live Demo - Angular App](https://brave-mud-06345141e.2.azurestaticapps.net/)**
+
+Explore the app without local setup. Create an account, search for movies on TMDB, and start tracking your movie collection.
+
+> **Note:** The API is hosted on Azure's free tier and may take up to 1 minute to respond on the first request after inactivity (cold start). Subsequent requests will be much faster. Saved data may be periodically cleared in the demo environment.
+
+---
+
 ## Why This Project Exists
 
 As a full-stack software engineer, this project demonstrates my ability to design and implement a modern backend system as well as front-end frameworks.
@@ -60,8 +70,8 @@ The long-term goal is to evolve this into a full ecosystem:
 - Blazor
 
 **Infrastructure**
-- PostgreSQL database
 - Email service for account creation and password resets
+- PostgreSQL database
 - Caching strategy for TMDB API responses (Complete)
 - OpenTelemetry for logging and monitoring
 - Docker containerization
@@ -117,6 +127,17 @@ The long-term goal is to evolve this into a full ecosystem:
    dotnet run --project src/backend/MyMoviesApp.Api
    ```
 
+---
+
+## Deployment
+
+This project is deployed on **Azure** using **GitHub Actions** for CI/CD:
+
+- **Web API:** Azure App Service (.NET 10 runtime, free tier)
+- **Angular Client:** Azure Static Web Apps
+- **CI/CD Pipeline:** GitHub Actions automatically builds and deploys on push to `main`
+
+See `.github/workflows/` for the workflow configuration.
 
 ---
 
