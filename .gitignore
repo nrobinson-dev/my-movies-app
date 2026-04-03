@@ -34,7 +34,6 @@ artifacts/
 ScaffoldingReadMe.txt
 
 # App Settings
-appsettings.json
 appsettings.Development.json
 
 # NuGet Packages
