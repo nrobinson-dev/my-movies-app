@@ -1,8 +1,8 @@
-# MyMoviesApp
+# FlickDocket
 
 A passion and portfolio project that integrates with the [The Movie Database (TMDB) API](https://www.themoviedb.org/) to allow users to track their personal movie collections.
 
-> **Note:** This repository represents the Minimum Viable Product (MVP). It is early in development and currently missing some production features.
+> **Note:** This repository represents the Minimum Viable Product (MVP) and is still in early development.
 
 ---
 
