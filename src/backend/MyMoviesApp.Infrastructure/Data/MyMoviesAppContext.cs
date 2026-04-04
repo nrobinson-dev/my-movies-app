@@ -6,8 +6,8 @@ namespace MyMoviesApp.Infrastructure.Data;
 public class MyMoviesAppContext(DbContextOptions<MyMoviesAppContext> options) : DbContext(options)
 {
     public DbSet<UserDb> Users => Set<UserDb>();
-    public DbSet<UserMovie> UserMovies => Set<UserMovie>();
-    public DbSet<MovieFormat> MovieFormats => Set<MovieFormat>();
+    public DbSet<UserMovieDb> UserMovies => Set<UserMovieDb>();
+    public DbSet<MovieFormatDb> MovieFormats => Set<MovieFormatDb>();
     public DbSet<DigitalRetailerDb> DigitalRetailers => Set<DigitalRetailerDb>();
     public DbSet<UserMovieFormat> UserMovieFormats => Set<UserMovieFormat>();
     public DbSet<UserMovieDigitalRetailer> UserMovieDigitalRetailers => Set<UserMovieDigitalRetailer>();
@@ -19,10 +19,15 @@ public class MyMoviesAppContext(DbContextOptions<MyMoviesAppContext> options) : 
         modelBuilder.Entity<UserDb>(entity =>
         {
             entity.HasKey(user => user.Id);
+            
+            entity.Property(user => user.Email)
+                .IsRequired()
+                .HasMaxLength(256);
+            
             entity.HasIndex(user => user.Email).IsUnique();
         });
 
-        modelBuilder.Entity<UserMovie>(entity =>
+        modelBuilder.Entity<UserMovieDb>(entity =>
         {
             entity.HasKey(userMovie => userMovie.Id);
 
@@ -42,13 +47,13 @@ public class MyMoviesAppContext(DbContextOptions<MyMoviesAppContext> options) : 
             entity.HasKey(userMovieFormat => new { userMovieFormat.UserMovieId, userMovieFormat.MovieFormatId });
 
             entity
-                .HasOne<UserMovie>()
+                .HasOne<UserMovieDb>()
                 .WithMany(um => um.UserMovieFormats)
                 .HasForeignKey(userMovieFormat => userMovieFormat.UserMovieId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity
-                .HasOne<MovieFormat>()
+                .HasOne<MovieFormatDb>()
                 .WithMany()
                 .HasForeignKey(userMovieFormat => userMovieFormat.MovieFormatId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -59,7 +64,7 @@ public class MyMoviesAppContext(DbContextOptions<MyMoviesAppContext> options) : 
             entity.HasKey(userMovieDigitalRetailer => new { userMovieDigitalRetailer.UserMovieId, userMovieDigitalRetailer.DigitalRetailerId });
 
             entity
-                .HasOne<UserMovie>()
+                .HasOne<UserMovieDb>()
                 .WithMany(um => um.UserMovieDigitalRetailers)
                 .HasForeignKey(userMovieDigitalRetailer => userMovieDigitalRetailer.UserMovieId)
                 .OnDelete(DeleteBehavior.Cascade);
@@ -98,7 +103,7 @@ public class MyMoviesAppContext(DbContextOptions<MyMoviesAppContext> options) : 
 
     private void PreventLookupDeletes()
     {
-        if (ChangeTracker.Entries<MovieFormat>().Any(entry => entry.State == EntityState.Deleted))
+        if (ChangeTracker.Entries<MovieFormatDb>().Any(entry => entry.State == EntityState.Deleted))
         {
             throw new InvalidOperationException("MovieFormat records are lookup data and cannot be deleted.");
         }

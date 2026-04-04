@@ -159,7 +159,7 @@ public class UserRepository(MyMoviesAppContext dbcontext) : IUserRepository
             }
             else
             {
-                movie = new UserMovie
+                movie = new UserMovieDb
                 {
                     UserId = userId,
                     TmdbId = movieSummary.MovieId,

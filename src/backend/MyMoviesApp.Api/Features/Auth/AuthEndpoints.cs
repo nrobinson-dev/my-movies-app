@@ -18,7 +18,7 @@ public static class AuthEndpoints
             return Results.Created($"/api/auth/register", result);
         })
         .DisableAntiforgery()
-        //.AddEndpointFilter<ValidationFilter<CreateUserCommand>>()
+        .AddEndpointFilter<ValidationFilter<CreateUserCommand>>()
         .WithTags(nameof(Auth))
         .WithName("Register")
         .WithSummary("Register a new user account")
@@ -33,7 +33,7 @@ public static class AuthEndpoints
             return Results.Ok(result);
         })
         .DisableAntiforgery()
-        //.AddEndpointFilter<ValidationFilter<LoginUserCommand>>()
+        .AddEndpointFilter<ValidationFilter<LoginUserCommand>>()
         .RequireRateLimiting("login")
         .WithTags(nameof(Auth))
         .WithName("Login")

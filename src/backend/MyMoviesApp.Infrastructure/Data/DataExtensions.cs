@@ -41,12 +41,12 @@ public static class DataExtensions
             );
         }
 
-        if (!dbContext.Set<MovieFormat>().Any())
+        if (!dbContext.Set<MovieFormatDb>().Any())
         {
-            dbContext.Set<MovieFormat>().AddRange(
-                new MovieFormat { Name = "DVD" },
-                new MovieFormat { Name = "Blu-Ray" },
-                new MovieFormat { Name = "4K Blu-Ray" }
+            dbContext.Set<MovieFormatDb>().AddRange(
+                new MovieFormatDb { Name = "DVD" },
+                new MovieFormatDb { Name = "Blu-Ray" },
+                new MovieFormatDb { Name = "4K Blu-Ray" }
             );
         }
 

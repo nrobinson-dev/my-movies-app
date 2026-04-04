@@ -1,6 +1,7 @@
 # FlickDocket
 
-A passion and portfolio project that integrates with the [The Movie Database (TMDB) API](https://www.themoviedb.org/) to allow users to track their personal movie collections.
+A passion project and a portfolio piece that integrates with [The Movie Database (TMDB) API](https://www.themoviedb.org/) 
+to allow users to track their personal movie ownership.
 
 > **Note:** This repository represents the Minimum Viable Product (MVP) and is still in early development.
 
@@ -8,7 +9,7 @@ A passion and portfolio project that integrates with the [The Movie Database (TM
 
 ## Overview
 
-MyMoviesApp lets you keep track of movie ownership across physical and digital formats.
+FlickDocket lets you keep track of your movie ownership across physical and digital formats.
 
 **Physical Formats**
 - DVD
@@ -30,15 +31,19 @@ MyMoviesApp lets you keep track of movie ownership across physical and digital f
 
 Explore the app without local setup. Create an account, search for movies on TMDB, and start tracking your movie collection.
 
-> **Note:** The API is hosted on Azure's free tier and may take up to 1 minute to respond on the first request after inactivity (cold start). Subsequent requests will be much faster. Saved data may be periodically cleared in the demo environment.
+> **Note:** The API is hosted on Azure's free tier and may take up to 1 minute to respond on the first request after 
+> inactivity (cold start). Subsequent requests will be much faster. Saved data may be periodically cleared in the demo 
+> environment.
 
 ---
 
 ## Why This Project Exists
 
-As a full-stack software engineer, this project demonstrates my ability to design and implement a modern backend system as well as front-end frameworks.
+As a full-stack software engineer, this project demonstrates my ability to design and implement a modern backend system 
+as well as front-end frameworks.
 
-The Web API is built using a **Clean Architecture** approach (for now, anyway, I'll probably change it to a **Vertical Slice** architecture at some point). Most endpoints are implemented using **Minimal APIs**, with one controller-based endpoint included to demonstrate familiarity with both approaches.
+The Web API is built using a **Clean Architecture**. Most endpoints are implemented using **Minimal APIs**, with one 
+controller-based endpoint included to demonstrate familiarity with both approaches.
 
 **Current technology choices** (intended for quick setup and development):
 - **.NET Core 10**
@@ -47,8 +52,9 @@ The Web API is built using a **Clean Architecture** approach (for now, anyway, I
 - **MediatR** — request handling
 - **Serilog** — logging
 - **Scalar** — API documentation
-- **Redis** — Caching TMDB API responses
+- **Redis cloud** — Caching TMDB API responses
 - **Angular v21** — front-end framework
+- **Azure** — cloud hosting and deployment via GitHub Actions
 
 ---
 

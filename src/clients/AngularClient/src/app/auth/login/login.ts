@@ -23,20 +23,30 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           (input)="setEmail($event)"
         />
 
-        <label for="password">Password:</label>
-        <input
-          id="password"
-          type="password"
-          required
-          autocomplete="current-password"
-          class="auth-form__field"
-          minlength="8"
-          aria-required="true"
-          aria-describedby="password-hint"
-          [attr.aria-invalid]="passwordTouched() && !isPasswordValid()"
-          (input)="setPassword($event)"
-        />
-        <small id="password-hint" class="auth-form__hint">Password must be at least 8 characters.</small>
+        <div class="password-container flex flex-col">
+          <label for="password">Password:</label>
+          <div class="input-wrapper flex items-start">
+            <input
+              id="password"
+              [type]="isPasswordVisible() ? 'text' : 'password'"
+              required
+              autocomplete="new-password"
+              class="auth-form__field grow"
+              minlength="8"
+              aria-required="true"
+              aria-label="Password input field"
+              [attr.aria-invalid]="passwordTouched() && !isPasswordValid()"
+              (input)="setPassword($event)"
+            />
+            <button 
+              type="button" 
+              (click)="togglePasswordVisibility()"
+              aria-label="Password visibility toggler."
+              class="btn-password-toggler">
+              {{ isPasswordVisible() ? 'Hide' : 'Show' }}
+            </button>
+          </div>
+        </div>
 
         <button
           type="submit"
@@ -71,6 +81,7 @@ export class Login {
   loginError = signal(false);
   emailTouched = signal(false);
   passwordTouched = signal(false);
+  isPasswordVisible = signal(false);
 
   setEmail(event: Event) {
     this.emailTouched.set(true);
@@ -86,6 +97,10 @@ export class Login {
 
   isEmailValid() {
     return EMAIL_REGEX.test(this.email.trim());
+  }
+
+  togglePasswordVisibility() {
+    this.isPasswordVisible.update(v => !v);
   }
 
   isPasswordValid() {

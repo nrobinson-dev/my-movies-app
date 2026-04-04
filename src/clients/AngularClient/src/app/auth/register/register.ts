@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { RouterLink } from '@angular/router';
 import { EMAIL_REGEX } from '../../shared/constants/constants';
@@ -23,24 +23,42 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           autocomplete="email username" 
           class="auth-form__field" 
           aria-required="true"
+          maxlength="254"
           [attr.aria-invalid]="emailTouched() && !isEmailValid()"
           (input)="setEmail($event)"
         />
 
-        <label for="password">Password:</label>
-        <input
-          id="password"
-          type="password"
-          required
-          autocomplete="new-password"
-          class="auth-form__field"
-          minlength="8"
-          aria-required="true"
-          aria-describedby="password-hint"
-          [attr.aria-invalid]="passwordTouched() && !isPasswordValid()"
-          (input)="setPassword($event)"
-        />
-        <small id="password-hint" class="auth-form__hint">Password must be at least 8 characters.</small>
+        <div class="password-container flex flex-col">
+          <label for="password">Password:</label>
+          <div class="input-wrapper flex items-start">
+            <input
+              id="password"
+              [type]="isPasswordVisible() ? 'text' : 'password'"
+              required
+              autocomplete="new-password"
+              class="auth-form__field grow"
+              minlength="8"
+              aria-required="true"
+              aria-describedby="password-criteria"
+              [attr.aria-invalid]="passwordTouched() && !isPasswordValid()"
+              (input)="setPassword($event)"
+            />
+            <button 
+              type="button" 
+              (click)="togglePasswordVisibility()"
+              aria-label="Password visibility toggler."
+              class="btn-password-toggler">
+              {{ isPasswordVisible() ? 'Hide' : 'Show' }}
+            </button>
+          </div>
+        </div>
+
+        <div id="password-criteria">
+          <p><small id="password-criteria-uppercase" [class]="passwordUppercaseHintClass()" class="auth-form__hint">Password has at least one uppercase letter.</small></p>
+          <p><small id="password-criteria-lowercase" [class]="passwordLowercaseHintClass()" class="auth-form__hint">Password has at least one lowercase letter.</small></p>
+          <p><small id="password-criteria-number" [class]="passwordNumberHintClass()" class="auth-form__hint">Password has at least one number.</small></p>
+          <p><small id="password-criteria-length" [class]="passwordMinCharacterHintClass()" class="auth-form__hint">Password has at least 8 characters.</small></p>
+        </div>
 
         <button
           type="submit"
@@ -66,37 +84,65 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
 })
 export class Register {
   authService = inject(AuthService);
-  email = '';
-  password = '';
+  email = signal('');
+  password = signal('');
+
   isProcessing = signal(false);
-  isFormValid = signal(false);
   registerError = signal(false);
   emailTouched = signal(false);
   passwordTouched = signal(false);
+  isPasswordVisible = signal(false);
+
+  isEmailValid = computed(() => EMAIL_REGEX.test(this.email().trim()));
+
+  passwordCriteria = computed(() => {
+    const p = this.password().trim();
+    return {
+      hasMinLength: p.length >= 8,
+      hasUppercase: /[A-Z]/.test(p),
+      hasLowercase: /[a-z]/.test(p),
+      hasNumber: /[0-9]/.test(p),
+    };
+  });
+
+  togglePasswordVisibility() {
+    this.isPasswordVisible.update(v => !v);
+  }
+
+  isPasswordValid = computed(() => {
+    const c = this.passwordCriteria();
+    return c.hasMinLength && c.hasUppercase && c.hasLowercase && c.hasNumber;
+  });
+
+  isFormValid = computed(() => this.isEmailValid() && this.isPasswordValid());
+
+  passwordMinCharacterHintClass = computed(() => 
+    !this.passwordTouched() ? '' : 
+    this.passwordCriteria().hasMinLength ? 'auth-form__hint--valid' : 'auth-form__hint--invalid'
+  );
+  passwordUppercaseHintClass = computed(() => 
+    !this.passwordTouched() ? '' : 
+    this.passwordCriteria().hasUppercase ? 'auth-form__hint--valid' : 'auth-form__hint--invalid'
+  );
+  passwordLowercaseHintClass = computed(() => 
+    !this.passwordTouched() ? '' : 
+    this.passwordCriteria().hasLowercase ? 'auth-form__hint--valid' : 'auth-form__hint--invalid'
+  );
+  passwordNumberHintClass = computed(() => 
+    !this.passwordTouched() ? '' : 
+    this.passwordCriteria().hasNumber ? 'auth-form__hint--valid' : 'auth-form__hint--invalid'
+  );
 
   setEmail(event: Event) {
     this.emailTouched.set(true);
-    this.email = (event.target as HTMLInputElement).value;
-    this.validateForm();
+    this.email.set((event.target as HTMLInputElement).value);
   }
 
   setPassword(event: Event) {
     this.passwordTouched.set(true);
-    this.password = (event.target as HTMLInputElement).value;
-    this.validateForm();
+    this.password.set((event.target as HTMLInputElement).value);
   }
 
-  isEmailValid() {
-    return EMAIL_REGEX.test(this.email.trim());
-  }
-  
-  isPasswordValid() {
-    return this.password.trim().length >= 8;
-  }
-  
-  validateForm() {
-    this.isFormValid.set(this.isEmailValid() && this.isPasswordValid());
-  }
 
   register(event?: Event) {
     event?.preventDefault();
@@ -104,11 +150,8 @@ export class Register {
       return;
     }
 
-    this.email = this.email.trim();
-    this.password = this.password.trim();
-
     this.isProcessing.set(true);
-    this.authService.register(this.email, this.password).subscribe({
+    this.authService.register(this.email().trim(), this.password().trim()).subscribe({
       next: () => {
         const redirectUrl = localStorage.getItem('redirectUrl') || '/';
         localStorage.removeItem('redirectUrl');

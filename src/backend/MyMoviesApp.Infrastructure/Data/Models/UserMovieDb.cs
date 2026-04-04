@@ -1,6 +1,6 @@
 namespace MyMoviesApp.Infrastructure.Data.Models;
 
-public class UserMovie
+public class UserMovieDb
 {
     public int Id { get; set; }
     public Guid UserId { get; set; }

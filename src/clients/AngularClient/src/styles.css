@@ -52,6 +52,19 @@ footer {
     }
 }
 
+.auth-form__hint--valid {
+    @apply text-green-600;
+};
+
+.auth-form__hint--invalid {
+    @apply text-red-600;
+};
+
+.btn-password-toggler {
+    height: 34px;
+    @apply transition bg-blue-500 text-white px-3 rounded ml-2 self-start hover:bg-blue-600 cursor-pointer;
+}
+
 .movie-grid {
     display: grid;
     gap: 10px;

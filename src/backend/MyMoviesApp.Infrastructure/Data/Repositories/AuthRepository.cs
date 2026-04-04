@@ -22,16 +22,7 @@ public class AuthRepository(MyMoviesAppContext dbcontext) : IAuthRepository
         
         return await dbcontext.SaveChangesAsync(cancellationToken);
     }
-
-    public async Task<User?> GetAuthenticatedUserAsync(string userName, string passwordHash, CancellationToken cancellationToken)
-    {
-        var userDb = await dbcontext.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email == userName && u.PasswordHash == passwordHash, cancellationToken);
-        
-        return userDb is null ? null : new User(userDb.Id, userDb.Email);
-    }
-
+    
     public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var userDb = await dbcontext.Users
