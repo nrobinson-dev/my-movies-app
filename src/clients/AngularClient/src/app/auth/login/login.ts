@@ -19,6 +19,8 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           autocomplete="email username"
           class="auth-form__field"
           aria-required="true"
+          aria-label="Email input field"
+          value="demo@demo.com"
           [attr.aria-invalid]="emailTouched() && !isEmailValid()"
           (input)="setEmail($event)"
         />
@@ -35,6 +37,7 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
               minlength="8"
               aria-required="true"
               aria-label="Password input field"
+              value="Abcd!234"
               [attr.aria-invalid]="passwordTouched() && !isPasswordValid()"
               (input)="setPassword($event)"
             />
@@ -57,7 +60,11 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
               : 'auth-form__submit--enabled'
           }} auth-form__submit"
         >
+        @if (isProcessing()) {
+          Loading...
+        } @else {
           Login
+        }
         </button>
         @if (loginError()) {
           <p id="login-error" role="alert" class="auth-form__error-message">Login failed. Please try again.</p>
@@ -74,8 +81,8 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
 })
 export class Login {
   authService = inject(AuthService);
-  email = '';
-  password = '';
+  email = 'demo@demo.com';
+  password = 'Abcd!234';
   isProcessing = signal(false);
   isFormValid = signal(false);
   loginError = signal(false);
@@ -105,6 +112,10 @@ export class Login {
 
   isPasswordValid() {
     return this.password.trim().length >= 8;
+  }
+
+  ngOnInit() {
+    this.validateForm();
   }
 
   validateForm() {

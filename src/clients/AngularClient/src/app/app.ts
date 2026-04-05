@@ -28,7 +28,7 @@ import { AuthService } from './auth/auth.service';
           <a routerLink="/search" routerLinkActive="active" class="nav-link">Search</a>
           <button (click)="auth.logout()" class="logout-link">Logout</button>
         } @else {
-          <h1 class="welcome-title">Welcome to FlickDocket!</h1>
+          <h1 class="welcome-title">Welcome to FlickList!</h1>
         }
       </nav>
     </header>

@@ -1,106 +1,154 @@
-@if (notFound()) {
-<h1 class="page-title">
-    Movie not found. It may have been removed from the Movie Database.
-</h1>
-}
-
-@if (movieDetail()) {
-<div [style.background-image]="'url(' + backgroundImageUrl() + ')'" class="movie-detail-wrapper">
-    <div class="movie-detail-container">
-        <div class="overlay "></div>
-
-        <button (click)="location.back()" class="back-button" aria-label="Go back">
-            <img src="/images/icons/arrow_back.svg" alt="" aria-hidden="true" />
-        </button>
-
-        <div class="movie-detail">
-            <h1 class="movie-detail__title">
-                {{ movieDetail()?.title }}
-            </h1>
-
-            <div class="eye-candy" [class]="isReleaseDateInFuture() ? 'future-release' : 'released'">
-                @if (movieDetail()?.posterPath) {
-                <div class="movie-poster">
-                    <img class="movie-card__poster" [src]="posterUrl()" [alt]="movieDetail()?.title + ' poster'"
-                        class="movie-poster__image" />
-                </div>
-                }
-
-                @if (!isReleaseDateInFuture()) {
-                <div class="ownership-controls">
-                    <div role="group" aria-labelledby="physical-media-label">
-                        <p class="mb-1" id="physical-media-label">Physical Media:</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            @for (format of ownedFormats(); track format.value) {
-                            <button class="platform-button" [class]="
-                                  format.isOwned
-                                    ? 'platform-button--owned'
-                                    : ''
-                                "
-                                [attr.aria-pressed]="format.isOwned"
-                                [attr.aria-label]="format.label"
-                                (click)="togglePlatformOwnership(format.value, ownedFormats)"
-                                >
-                                <span class="platform" [style]="{ backgroundImage: 'url(' + format.image + ')' }"
-                                    [class]="format.label" aria-hidden="true"></span>
+@defer (when !isLoading()) {
+    @if (notFound()) {
+    <h1 class="page-title">
+        Movie not found. It may have been removed from the Movie Database.
+    </h1>
+    }
+    
+    @if (movieDetail()) {
+    <div class="movie-detail-wrapper">
+    <div class="background-layer" [style.background-image]="'url(' + backgroundImageUrl() + ')'"></div>
+        <div class="movie-detail-container">
+            <div class="overlay "></div>
+    
+            <button (click)="location.back()" class="back-button" aria-label="Go back">
+                <img src="/images/icons/arrow_back.svg" alt="" aria-hidden="true" />
+            </button>
+    
+            <div class="movie-detail">
+                <h1 class="movie-detail__title">
+                    {{ movieDetail()?.title }}
+                </h1>
+    
+                <div class="eye-candy" [class]="isReleaseDateInFuture() ? 'future-release' : 'released'">
+                    @if (movieDetail()?.posterPath) {
+                    <div class="movie-poster">
+                        <img class="movie-card__poster" [src]="posterUrl()" [alt]="movieDetail()?.title + ' poster'"
+                            class="movie-poster__image" />
+                    </div>
+                    }
+    
+                    @if (!isReleaseDateInFuture()) {
+                    <div class="ownership-controls">
+                        <div role="group" aria-labelledby="physical-media-label">
+                            <p class="mb-1" id="physical-media-label">Physical Media:</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                @for (format of ownedFormats(); track format.value) {
+                                <button class="platform-button" 
+                                    [class]="
+                                      format.isOwned
+                                        ? 'platform-button--owned'
+                                        : ''
+                                    "
+                                    [attr.aria-pressed]="format.isOwned"
+                                    [attr.aria-label]="format.label"
+                                    (click)="togglePlatformOwnership(format.value, ownedFormats)"
+                                    >
+                                    <span class="platform" [style]="{ backgroundImage: 'url(' + format.image + ')' }"
+                                        [class]="format.label" aria-hidden="true"></span>
+                                </button>
+                                }
+                            </div>
+                        </div>
+    
+                        <div role="group" aria-labelledby="digital-retailers-label">
+                            <p class="mb-1" id="digital-retailers-label">Digital Retailers:</p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                @for (digitalRetailer of ownedDigitalRetailers(); track digitalRetailer.value) {
+                                <button class="platform-button platform-button--retailer" [class]="
+                                    digitalRetailer.isOwned
+                                        ? 'platform-button--owned'
+                                        : ''
+                                    "
+                                    [attr.aria-pressed]="digitalRetailer.isOwned"
+                                    [attr.aria-label]="digitalRetailer.label"
+                                    (click)="
+                                      togglePlatformOwnership(digitalRetailer.value, ownedDigitalRetailers)
+                                    "
+                                    >
+                                    <span class="platform" [style]="{ backgroundImage: 'url(' + digitalRetailer.image + ')' }"
+                                        [class]="digitalRetailer.label" aria-hidden="true"></span>
+                                </button>
+                                }
+                            </div>
+                        </div>
+    
+                        <div class="button-row">
+                            <button class="submit" (click)="saveOwnership()">
+                                <img src="/images/icons/save.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
+                                <span>Save Ownership</span>
                             </button>
-                            }
+    
+                            <button class="delete" (click)="deleteMovieOwnership()">
+                                <img src="/images/icons/delete.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
+                                <span>Delete Ownership</span>
+                            </button>
                         </div>
                     </div>
-
-                    <div role="group" aria-labelledby="digital-retailers-label">
-                        <p class="mb-1" id="digital-retailers-label">Digital Retailers:</p>
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            @for (digitalRetailer of ownedDigitalRetailers(); track digitalRetailer.value) {
-                            <button class="platform-button platform-button--retailer" [class]="
-                                digitalRetailer.isOwned
-                                    ? 'platform-button--owned'
-                                    : ''
-                                "
-                                [attr.aria-pressed]="digitalRetailer.isOwned"
-                                [attr.aria-label]="digitalRetailer.label"
-                                (click)="
-                                  togglePlatformOwnership(digitalRetailer.value, ownedDigitalRetailers)
-                                "
-                                >
-                                <span class="platform" [style]="{ backgroundImage: 'url(' + digitalRetailer.image + ')' }"
-                                    [class]="digitalRetailer.label" aria-hidden="true"></span>
-                            </button>
-                            }
-                        </div>
-                    </div>
-
-                    <div class="button-row">
-                        <button class="submit" (click)="saveOwnership()">
-                            <img src="/images/icons/save.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
-                            <span>Save Ownership</span>
-                        </button>
-
-                        <button class="delete" (click)="deleteMovieOwnership()">
-                            <img src="/images/icons/delete.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
-                            <span>Delete Ownership</span>
-                        </button>
-                    </div>
+                    }
+                    <dl class="movie-info">
+                        <dt class="mb-2"><strong>Release Date</strong></dt>
+                        <dd class="mb-2">{{ movieDetail()?.releaseDate | date }}</dd>
+                        <dt class="mb-2"><strong>Runtime</strong></dt>
+                        <dd class="mb-2">{{ movieDetail()?.runtime }} minutes</dd>
+                        <dt class="mb-2"><strong>Tagline</strong></dt>
+                        <dd class="mb-2">{{ movieDetail()?.tagline }}</dd>
+                        <dt class="mb-2"><strong>Overview</strong></dt>
+                        <dd class="mb-2">{{ movieDetail()?.overview }}</dd>
+                    </dl>
                 </div>
-                }
-                <dl class="movie-info">
-                    <dt class="mb-2"><strong>Release Date</strong></dt>
-                    <dd class="mb-2">{{ movieDetail()?.releaseDate | date }}</dd>
-                    <dt class="mb-2"><strong>Runtime</strong></dt>
-                    <dd class="mb-2">{{ movieDetail()?.runtime }} minutes</dd>
-                    <dt class="mb-2"><strong>Tagline</strong></dt>
-                    <dd class="mb-2">{{ movieDetail()?.tagline }}</dd>
-                    <dt class="mb-2"><strong>Overview</strong></dt>
-                    <dd class="mb-2">{{ movieDetail()?.overview }}</dd>
-                </dl>
             </div>
         </div>
     </div>
-</div>
-}
+    }
+    
+    @if (messageResult()) {
+    <div role="alert" aria-live="assertive" class="toast" [class]="messageResult()!.type === 'success' ? 'bg-green-600' : 'bg-red-600'">
+        {{ messageResult()!.message }}
+    </div>
+    }
+} @placeholder {
+    <p role="status" class="text-center text-2xl mb-4">Getting movie details...</p>
 
-@if (messageResult()) {
-<div role="alert" aria-live="assertive" class="toast" [class]="messageResult()!.type === 'success' ? 'bg-green-600' : 'bg-red-600'">
-    {{ messageResult()!.message }}
-</div>
+    <div class="movie-detail-wrapper" aria-hidden="true">
+        <div class="movie-detail-container movie-detail-container--placeholder">
+            <div class="movie-detail movie-detail--placeholder">
+                <div class="movie-detail-title-placeholder"></div>
+                <div class="eye-candy">
+                    <div class="movie-poster">
+                        <div class="movie-poster-image-placeholder"></div>
+                    </div>
+
+                    <div class="ownership-controls mt-8">
+                        <div>
+                            <div class="label-placeholder"></div>
+                            <div class="flex flex-row gap-2 mb-4">
+                                <div class="grow platform-button-placeholder"></div>
+                                <div class="grow platform-button-placeholder"></div>
+                                <div class="grow platform-button-placeholder"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="label-placeholder"></div>
+                            <div class="flex flex-row gap-2 mb-4">
+                                <div class="grow platform-button-placeholder"></div>
+                                <div class="grow platform-button-placeholder"></div>
+                                <div class="grow platform-button-placeholder"></div>
+                                <div class="grow platform-button-placeholder"></div>
+                                <div class="grow platform-button-placeholder"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                </div>
+                <div class="movie-info mt-4">
+                    <div class="label-placeholder"></div>
+                    <div class="value-placeholder"></div>
+                    <div class="label-placeholder"></div>
+                    <div class="text-area-placeholder"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 }

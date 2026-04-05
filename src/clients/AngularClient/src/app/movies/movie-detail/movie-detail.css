@@ -2,7 +2,11 @@
 
 .movie-detail-wrapper {
     min-height: 85vh;
-    @apply relative bg-cover bg-top flex items-center justify-center;
+    @apply relative bg-cover bg-top flex items-center justify-center -mx-4 -mt-6;
+}
+
+.background-layer {
+    @apply absolute top-0 left-0 w-full h-full bg-cover bg-center;
 }
 
 .overlay {
@@ -10,8 +14,9 @@
 }
 
 .movie-detail-container {
-    @apply relative z-10 backdrop-blur-xs text-white p-10 pt-4 max-w-3xl mx-auto rounded-lg shadow-md overflow-hidden;
+    @apply relative z-10 backdrop-blur-xs text-white p-6 pt-4 max-w-3xl mx-auto rounded-lg shadow-md overflow-hidden;
 }
+
 
 .movie-detail {
     @apply relative z-20;
@@ -24,9 +29,6 @@
 .back-button {
     @apply cursor-pointer absolute z-20 top-4 left-4 border border-1 border-gray-400 bg-gray-500 rounded-full p-1 transition hover:bg-blue-500;
 }
-
-
-
 
 .eye-candy {
     display: flex;
@@ -58,7 +60,7 @@
 
 
 .platform-button {
-    @apply bg-black border border-2 rounded-lg py-1 px-3 transition cursor-pointer flex items-center border-gray-500 hover:border-blue-500;
+    @apply bg-black border border-2 rounded-lg py-1 px-3 transition cursor-pointer grow flex items-center justify-center border-gray-500 hover:border-blue-500;
 }
 
 .platform-button--retailer {
@@ -66,7 +68,7 @@
 }
 
 .platform-button--owned {
-   @apply border-green-500 hover:border-green-500;
+    @apply border-green-500 hover:border-green-500;
 }
 
 .platform {
@@ -110,4 +112,57 @@
 
 .toast {
     @apply fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white text-sm transition
+}
+
+.movie-detail-container--placeholder {
+    @apply relative max-w-3xl mx-auto rounded-lg;
+    animation: placeholder-glow 2.5s infinite ease-in-out;
+    background: #bfbfbf;
+}
+
+.movie-detail-title-placeholder {
+    background: #858585;
+    border-radius: 4px;
+    height: 30px;
+    width: 200px;
+    margin: auto;
+}
+
+.label-placeholder {
+    background: #858585;
+    border-radius: 4px;
+    height: 25px;
+    width: 120px;
+    margin-bottom: 8px;
+}
+
+.value-placeholder {
+    background: #858585;
+    border-radius: 4px;
+    height: 20px;
+    width: 80px;
+    margin-bottom: 10px;
+}
+
+.text-area-placeholder {
+    background: #858585;
+    margin-top: 10px;
+    border-radius: 4px;
+    height: 80px;
+    max-width: 100%;
+    width: 1000px;
+}
+
+.movie-poster-image-placeholder {
+    background: #858585;
+    width: 155px;
+    padding-bottom: 150%;
+    border-radius: 8px;
+    margin-top: 7px;
+}
+
+.platform-button-placeholder {
+    background: #858585;
+    border-radius: 8px;
+    height: 50px;
 }

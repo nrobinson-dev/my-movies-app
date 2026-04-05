@@ -1,4 +1,4 @@
-# FlickDocket
+# FlickList
 
 A passion project and a portfolio piece that integrates with [The Movie Database (TMDB) API](https://www.themoviedb.org/) 
 to allow users to track their personal movie ownership.
@@ -9,7 +9,7 @@ to allow users to track their personal movie ownership.
 
 ## Overview
 
-FlickDocket lets you keep track of your movie ownership across physical and digital formats.
+FlickList lets you keep track of your movie ownership across physical and digital formats.
 
 **Physical Formats**
 - DVD
@@ -27,9 +27,10 @@ FlickDocket lets you keep track of your movie ownership across physical and digi
 
 ## Live Demo
 
-**[FlickDocket Live Demo - Angular App](https://brave-mud-06345141e.2.azurestaticapps.net/)**
+**[FlickList Live Demo - Angular App](https://brave-mud-06345141e.2.azurestaticapps.net/)**
 
-Explore the app without local setup. Create an account, search for movies on TMDB, and start tracking your movie collection.
+Explore the app without local setup. Use the provided demo account or create a new account, search for movies on TMDB, 
+and start tracking your movie collection.
 
 > **Note:** The API is hosted on Azure's free tier and may take up to 1 minute to respond on the first request after 
 > inactivity (cold start). Subsequent requests will be much faster. Saved data may be periodically cleared in the demo 

@@ -21,6 +21,7 @@ export class MovieDetail {
   private movieService = inject(MovieService);
   protected location = inject(Location);
 
+  isLoading = signal(true);
   movieDetail = signal<MovieDetailModel | null>(null);
   notFound = signal(false);
   backgroundImageUrl = signal<string>('');
@@ -59,10 +60,12 @@ export class MovieDetail {
             const releaseDate = new Date(detail.releaseDate);
             const today = new Date();
             this.isReleaseDateInFuture.set(releaseDate > today);
+            this.isLoading.set(false);
           },
           error: (err) => {
             console.error('Failed to fetch movie detail', err);
             this.notFound.set(true);
+            this.isLoading.set(false);
           },
         });
     }

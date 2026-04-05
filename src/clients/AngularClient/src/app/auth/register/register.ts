@@ -67,7 +67,11 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
             !isFormValid() || isProcessing() ? 'auth-form__submit--disabled' : 'auth-form__submit--enabled'
           }} auth-form__submit"
         >
+        @if (isProcessing()) {
+          Registerring...
+        } @else {
           Register
+        }
         </button>
         @if (registerError()) {
           <p id="register-error" role="alert" class="auth-form__error-message">Registration failed. Please try again.</p>
