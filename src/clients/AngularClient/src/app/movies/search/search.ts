@@ -9,7 +9,7 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
   selector: 'search',
   imports: [MovieCard, LoadMoreButton],
   template: `
-    <h1 class="page-title">Search the Movie Database</h1>
+    <h1 class="page-title">Discover Movies</h1>
     <form
       (submit)="performSearch($event)"
       class="search-form"
@@ -19,7 +19,7 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
         id="search-field"
         class="search-field"
         type="text"
-        placeholder="Search for movies..."
+        placeholder="Search..."
         [value]="searchQuery()"
         (input)="setSearchQuery($event)"
       />

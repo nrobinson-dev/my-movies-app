@@ -15,17 +15,15 @@ import { AuthService } from './auth/auth.service';
 
     <header>
       <nav aria-label="Main navigation">
-        <img src="/images/angular-icon.svg" alt="Angular Logo" class="h-10 mr-4 my-2" />
-
         @if (isAuthenticated()) {
           <a
             routerLink="/"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
             class="nav-link"
-            >My Movies</a
+            >My Collection</a
           >
-          <a routerLink="/search" routerLinkActive="active" class="nav-link">Search</a>
+          <a routerLink="/search" routerLinkActive="active" class="nav-link">Discover</a>
           <button (click)="auth.logout()" class="logout-link">Logout</button>
         } @else {
           <h1 class="welcome-title">Welcome to FlickList!</h1>

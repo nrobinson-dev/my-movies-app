@@ -54,11 +54,18 @@ import { LoadMoreButton } from '../shared/load-more-button/load-more-button';
           <load-more-button (loadMore)="loadMore()"></load-more-button>
         }
       } @else {
-        <p class="text-center pt-10">
-          You haven't added any movies yet. Start by
-          <a routerLink="/search" class="hover:underline text-blue-500">searching</a> for the movies
-          you own and adding them to your collection!
-        </p>
+        <div class="flex flex-row items-center min-h-[80vh]">
+          <div class="flex flex-col items-center text-center max-w-lg mx-auto">
+            <div class="stacks"></div>
+
+            <h3 class="text-center text-4xl mb-4">Your collection awaits</h3>
+            
+            <p class="pt-2 pb-6">Start building your personal movie library. Search for films
+              you love and add them to your collection.</p>
+              
+            <a routerLink="/search" class="button-link"><img src="/images/icons/search.svg" alt="Search icon"/> Discover Movies</a>
+          </div>
+        </div>
       }
       </section>
     } @placeholder {

@@ -1,18 +1,18 @@
 @reference "../styles.css";
 
 header {
-    @apply bg-gray-300 fixed top-0 left-0 right-0 z-50 shadow-md;
+    @apply bg-gray-950 fixed top-0 left-0 right-0 z-50 shadow-md;
 }
 
 nav {
     @apply container flex flex-row items-center mx-auto px-4;
     
     .nav-link {
-        @apply block transition border-b-2 border-l-1 border-r-1 border-l-white border-r-white border-b-transparent p-4 hover:bg-blue-900 hover:text-white;
+        @apply block transition border-b-3 border-l-1 border-r-1 border-l-gray-800 border-r-gray-800 border-b-transparent py-2 px-4 hover:bg-rose-950;
     }
 
     .nav-link.active {
-        border-bottom-color: var(--color-blue-900);
+        @apply bg-rose-950;
     }
 
     .logout-link {
@@ -21,5 +21,5 @@ nav {
 }
 
 .welcome-title {
-    @apply flex-grow text-center p-2 text-2xl text-gray-700 mr-4;
+    @apply flex-grow text-center p-2 text-2xl text-gray-100 mr-4;
 }

@@ -17,7 +17,6 @@
     @apply relative z-10 backdrop-blur-xs text-white p-6 pt-4 max-w-3xl mx-auto rounded-lg shadow-md overflow-hidden;
 }
 
-
 .movie-detail {
     @apply relative z-20;
 }
@@ -57,7 +56,6 @@
     flex-grow: 1;
     @apply mb-4;
 }
-
 
 .platform-button {
     @apply bg-black border border-2 rounded-lg py-1 px-3 transition cursor-pointer grow flex items-center justify-center border-gray-500 hover:border-blue-500;
@@ -113,6 +111,7 @@
 .toast {
     @apply fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white text-sm transition
 }
+
 
 .movie-detail-container--placeholder {
     @apply relative max-w-3xl mx-auto rounded-lg;
