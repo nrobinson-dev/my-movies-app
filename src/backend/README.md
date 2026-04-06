@@ -1,4 +1,4 @@
-## Getting Started with the Backend
+## Getting Started with the Web API
 
 ### Prerequisites
 

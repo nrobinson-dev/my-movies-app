@@ -1,7 +1,7 @@
 # FlickList
 
 A passion project and a portfolio piece that integrates with [The Movie Database (TMDB) API](https://www.themoviedb.org/) 
-to allow users to track their personal movie ownership.
+to allow users to track their personal movie collection.
 
 > **Note:** This repository represents the Minimum Viable Product (MVP) and is still in early development.
 
@@ -9,7 +9,7 @@ to allow users to track their personal movie ownership.
 
 ## Overview
 
-FlickList lets you keep track of your movie ownership across physical and digital formats.
+FlickList lets you keep track of your movie collection across physical and digital formats.
 
 **Physical Formats**
 - DVD
@@ -40,8 +40,8 @@ and start tracking your movie collection.
 
 ## Why This Project Exists
 
-As a full-stack software engineer, this project demonstrates my ability to design and implement a modern backend system 
-as well as front-end frameworks.
+As a full-stack software engineer, this project demonstrates my ability to design and implement a modern server-side system 
+as well as client-side frameworks.
 
 The Web API is built using a **Clean Architecture**. Most endpoints are implemented using **Minimal APIs**, with one 
 controller-based endpoint included to demonstrate familiarity with both approaches.
@@ -54,7 +54,7 @@ controller-based endpoint included to demonstrate familiarity with both approach
 - **Serilog** — logging
 - **Scalar** — API documentation
 - **Redis cloud** — Caching TMDB API responses
-- **Angular v21** — front-end framework
+- **Angular v21** — client-side framework
 - **Azure** — cloud hosting and deployment via GitHub Actions
 
 ---
@@ -70,7 +70,7 @@ The long-term goal is to evolve this into a full ecosystem:
 - Centralized exception handling (Complete)
 - Remove MediatR and implement custom request handling
 
-**Web Applications** — multiple front-end implementations of the same API:
+**Web Applications** — multiple client-side implementations of the same API:
 - Angular (MVP complete)
 - React
 - Vue
