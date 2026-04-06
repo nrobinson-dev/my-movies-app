@@ -2,7 +2,7 @@
 
 .movie-detail-wrapper {
     min-height: 85vh;
-    @apply relative bg-cover bg-top flex items-center justify-center -mx-4 -mt-6;
+    @apply relative bg-cover bg-top flex items-center justify-center -mx-4 -mt-9;
 }
 
 .background-layer {
@@ -22,26 +22,16 @@
 }
 
 .movie-detail__title {
-    @apply text-center text-3xl mb-4 px-4 grow;
+    @apply text-center text-3xl mb-4 mx-10 grow;
 }
 
 .back-button {
-    @apply cursor-pointer absolute z-20 top-4 left-4 border border-1 border-gray-400 bg-gray-500 rounded-full p-1 transition hover:bg-blue-500;
+    @apply cursor-pointer absolute z-30 top-4 left-4 border border-1 border-gray-400 bg-gray-500 rounded-full p-1 transition hover:bg-blue-500;
 }
 
 .eye-candy {
     display: flex;
     gap: 1rem;
-}
-
-@media (max-width: 580px) {
-    .eye-candy.future-release {
-        flex-flow: wrap;
-    }
-}
-
-.eye-candy.released {
-    flex-flow: wrap;
 }
 
 .movie-poster {
@@ -50,6 +40,10 @@
 
 .movie-poster__image {
     width: 155px;
+}
+
+.movie-info {
+    flex-grow: 1;
 }
 
 .ownership-controls {
@@ -92,8 +86,7 @@
 }
 
 .button-row {
-    @apply flex gap-4;
-    flex-flow: wrap;
+    @apply flex justify-end;
 
     button {
         @apply flex items-center gap-1 border border-1 text-white pr-4 pl-3 py-2 rounded transition cursor-pointer;
@@ -101,10 +94,6 @@
 
     button.submit {
         @apply border-blue-500 bg-blue-600 hover:bg-blue-500;
-    }
-
-    button.delete {
-        @apply border-gray-400 bg-gray-500 hover:bg-red-500;
     }
 }
 
@@ -148,7 +137,7 @@
     margin-top: 10px;
     border-radius: 4px;
     height: 80px;
-    max-width: 100%;
+    max-width: 40%;
     width: 1000px;
 }
 

@@ -83,6 +83,11 @@ footer {
   100% { opacity: 1; }
 }
 
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .placeholder-movie-card {
     animation: placeholder-glow 2.5s infinite ease-in-out;
     background: #939393;
@@ -105,4 +110,10 @@ footer {
     padding-bottom: 150%;
     border-radius: 8px;
     margin-top: 7px;
+}
+
+.fade-in {
+    animation: fade-in 0.5s ease-in forwards;
+    animation-delay: 0.5s;
+    opacity: 0;
 }

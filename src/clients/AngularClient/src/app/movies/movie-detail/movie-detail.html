@@ -27,11 +27,23 @@
                             class="movie-poster__image" />
                     </div>
                     }
-    
+
+                    <dl class="movie-info">
+                        <dt class="mb-2"><strong>Tagline</strong></dt>
+                        <dd class="mb-2">{{ movieDetail()?.tagline }}</dd>
+                        <dt class="mb-2"><strong>Overview</strong></dt>
+                        <dd class="mb-2">{{ movieDetail()?.overview }}</dd>
+                        <dt class="mb-2"><strong>Release Date</strong></dt>
+                        <dd class="mb-2">{{ movieDetail()?.releaseDate | date }}</dd>
+                        <dt class="mb-2"><strong>Runtime</strong></dt>
+                        <dd class="mb-2">{{ movieDetail()?.runtime }} minutes</dd>
+                    </dl>
+                </div>
+
                     @if (!isReleaseDateInFuture()) {
                     <div class="ownership-controls">
+                        <p class="mb-1" id="physical-media-label"><small>I own this movie on (click to toggle)</small>:</p>
                         <div role="group" aria-labelledby="physical-media-label">
-                            <p class="mb-1" id="physical-media-label">Physical Media:</p>
                             <div class="flex flex-wrap gap-2 mb-4">
                                 @for (format of ownedFormats(); track format.value) {
                                 <button class="platform-button" 
@@ -52,7 +64,6 @@
                         </div>
     
                         <div role="group" aria-labelledby="digital-retailers-label">
-                            <p class="mb-1" id="digital-retailers-label">Digital Retailers:</p>
                             <div class="flex flex-wrap gap-2 mb-4">
                                 @for (digitalRetailer of ownedDigitalRetailers(); track digitalRetailer.value) {
                                 <button class="platform-button platform-button--retailer" [class]="
@@ -76,27 +87,13 @@
                         <div class="button-row">
                             <button class="submit" (click)="saveOwnership()">
                                 <img src="/images/icons/save.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
-                                <span>Save Ownership</span>
-                            </button>
-    
-                            <button class="delete" (click)="deleteMovieOwnership()">
-                                <img src="/images/icons/delete.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
-                                <span>Delete Ownership</span>
+                                <span>Save To Collection</span>
                             </button>
                         </div>
                     </div>
                     }
-                    <dl class="movie-info">
-                        <dt class="mb-2"><strong>Release Date</strong></dt>
-                        <dd class="mb-2">{{ movieDetail()?.releaseDate | date }}</dd>
-                        <dt class="mb-2"><strong>Runtime</strong></dt>
-                        <dd class="mb-2">{{ movieDetail()?.runtime }} minutes</dd>
-                        <dt class="mb-2"><strong>Tagline</strong></dt>
-                        <dd class="mb-2">{{ movieDetail()?.tagline }}</dd>
-                        <dt class="mb-2"><strong>Overview</strong></dt>
-                        <dd class="mb-2">{{ movieDetail()?.overview }}</dd>
-                    </dl>
-                </div>
+                    
+                <p><small><a href="#" class="hover:underline" (click)="deleteMovieOwnership()">Remove from my collection</a></small></p>
             </div>
         </div>
     </div>
@@ -108,45 +105,46 @@
     </div>
     }
 } @placeholder {
-    <p role="status" class="text-center text-2xl mb-4">Getting movie details...</p>
+    <div class="fade-in">
 
-    <div class="movie-detail-wrapper" aria-hidden="true">
-        <div class="movie-detail-container movie-detail-container--placeholder">
-            <div class="movie-detail movie-detail--placeholder">
-                <div class="movie-detail-title-placeholder"></div>
-                <div class="eye-candy">
-                    <div class="movie-poster">
-                        <div class="movie-poster-image-placeholder"></div>
-                    </div>
-
-                    <div class="ownership-controls mt-8">
-                        <div>
-                            <div class="label-placeholder"></div>
-                            <div class="flex flex-row gap-2 mb-4">
-                                <div class="grow platform-button-placeholder"></div>
-                                <div class="grow platform-button-placeholder"></div>
-                                <div class="grow platform-button-placeholder"></div>
-                            </div>
+        <p role="status" class="text-center text-2xl mb-4">Getting movie details...</p>
+        
+        <div class="movie-detail-wrapper" aria-hidden="true">
+            <div class="movie-detail-container movie-detail-container--placeholder">
+                <div class="movie-detail movie-detail--placeholder">
+                    <div class="movie-detail-title-placeholder"></div>
+                    <div class="eye-candy">
+                        <div class="movie-poster">
+                            <div class="movie-poster-image-placeholder"></div>
                         </div>
-                        <div>
+                        
+                        <div class="movie-info mt-4">
                             <div class="label-placeholder"></div>
-                            <div class="flex flex-row gap-2 mb-4">
-                                <div class="grow platform-button-placeholder"></div>
-                                <div class="grow platform-button-placeholder"></div>
-                                <div class="grow platform-button-placeholder"></div>
-                                <div class="grow platform-button-placeholder"></div>
-                                <div class="grow platform-button-placeholder"></div>
-                            </div>
+                            <div class="value-placeholder"></div>
+                            <div class="label-placeholder"></div>
+                            <div class="text-area-placeholder"></div>
                         </div>
                     </div>
 
-                    
-                </div>
-                <div class="movie-info mt-4">
-                    <div class="label-placeholder"></div>
-                    <div class="value-placeholder"></div>
-                    <div class="label-placeholder"></div>
-                    <div class="text-area-placeholder"></div>
+                        <div class="ownership-controls mt-8">
+                            <div class="label-placeholder"></div>
+                            <div>
+                                <div class="flex flex-row gap-2 mb-4">
+                                    <div class="grow platform-button-placeholder"></div>
+                                    <div class="grow platform-button-placeholder"></div>
+                                    <div class="grow platform-button-placeholder"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex flex-row gap-2 mb-4">
+                                    <div class="grow platform-button-placeholder"></div>
+                                    <div class="grow platform-button-placeholder"></div>
+                                    <div class="grow platform-button-placeholder"></div>
+                                    <div class="grow platform-button-placeholder"></div>
+                                    <div class="grow platform-button-placeholder"></div>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>

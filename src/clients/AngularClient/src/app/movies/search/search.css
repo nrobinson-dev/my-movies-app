@@ -1,7 +1,7 @@
 @reference "../../../styles.css";
 
 .page-title {
-    @apply text-center text-3xl mb-4;
+    @apply text-center text-2xl mb-4;
 }
 
 .search-form {
@@ -9,7 +9,7 @@
 }
 
 .search-field {
-     @apply flex-grow self-stretch border rounded py-2 px-3;
+     @apply flex-grow self-stretch border border-gray-500 rounded py-2 px-3;
 }
 
 .search-button {

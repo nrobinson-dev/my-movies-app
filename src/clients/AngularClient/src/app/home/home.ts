@@ -54,7 +54,7 @@ import { LoadMoreButton } from '../shared/load-more-button/load-more-button';
           <load-more-button (loadMore)="loadMore()"></load-more-button>
         }
       } @else {
-        <div class="flex flex-row items-center min-h-[80vh]">
+        <div class="flex flex-row items-center min-h-[75vh]">
           <div class="flex flex-col items-center text-center max-w-lg mx-auto">
             <div class="stacks"></div>
 
@@ -69,62 +69,36 @@ import { LoadMoreButton } from '../shared/load-more-button/load-more-button';
       }
       </section>
     } @placeholder {
-      <p role="status" class="text-center text-2xl mb-4">Loading your movies...</p>
-      <div class="movie-grid gap-4" aria-hidden="true">
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-      </div>
-    } @loading (minimum 500ms) {
-      <p role="status" class="text-center text-2xl mb-4">Loading your movies...</p>
-      <div class="movie-grid gap-4" aria-hidden="true">
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
-        </div>
-
-        <div class="placeholder-movie-card">
-          <div class="placeholder-movie-card__title"></div>
-          <div class="placeholder-movie-card__poster"></div>
+      <div class="fade-in">
+        <p role="status" class="text-center text-2xl mb-4">Loading your movies...</p>
+        <div class="movie-grid gap-4" aria-hidden="true">
+          <div class="placeholder-movie-card">
+            <div class="placeholder-movie-card__title"></div>
+            <div class="placeholder-movie-card__poster"></div>
+          </div>
+  
+          <div class="placeholder-movie-card">
+            <div class="placeholder-movie-card__title"></div>
+            <div class="placeholder-movie-card__poster"></div>
+          </div>
+  
+          <div class="placeholder-movie-card">
+            <div class="placeholder-movie-card__title"></div>
+            <div class="placeholder-movie-card__poster"></div>
+          </div>
+  
+          <div class="placeholder-movie-card">
+            <div class="placeholder-movie-card__title"></div>
+            <div class="placeholder-movie-card__poster"></div>
+          </div>
+  
+          <div class="placeholder-movie-card">
+            <div class="placeholder-movie-card__title"></div>
+            <div class="placeholder-movie-card__poster"></div>
+          </div>
         </div>
       </div>
-    } @error {
+    }  @error {
       <p role="alert" class="text-center pt-10">
         Failed to load the page.
         <button class="underline text-blue-500" (click)="refresh()">Please refresh the page.</button>
