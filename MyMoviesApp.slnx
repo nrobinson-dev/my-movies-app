@@ -1,5 +1,7 @@
 <Solution>
+  <Folder Name="/src/" />
   <Folder Name="/src/backend/">
+    <File Path="src\backend\README.md" />
     <Project Path="src/backend/MyMoviesApp.Api/MyMoviesApp.Api.csproj" />
     <Project Path="src/backend/MyMoviesApp.Application/MyMoviesApp.Application.csproj" />
     <Project Path="src/backend/MyMoviesApp.Domain/MyMoviesApp.Domain.csproj" />
