@@ -9,7 +9,7 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
   selector: 'search',
   imports: [MovieCard, LoadMoreButton],
   template: `
-    <h1 class="page-title">Discover Movies</h1>
+    <h1 class="page-title mt-10">Add movies to your collection</h1>
     <form
       (submit)="performSearch($event)"
       class="search-form"
@@ -25,7 +25,7 @@ import { LoadMoreButton } from '../../shared/load-more-button/load-more-button';
       />
       <button
         type="submit"
-        class="search-button"
+        class="search-button button--gold"
         (click)="performSearch($event)"
         [disabled]="isSearching()"
       >

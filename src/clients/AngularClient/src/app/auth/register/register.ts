@@ -7,7 +7,11 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
   selector: 'register',
   imports: [RouterLink],
   template: `
+  <div class="logo-wrapper logo-wrapper--large">
+    <div class="logo"></div>
+  </div>
   <div class="auth-wrapper">
+
     <h2 id="register-title" class="page-title">Create Account</h2>
     <div class="flex justify-center">
       <form
@@ -47,17 +51,17 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
               type="button" 
               (click)="togglePasswordVisibility()"
               aria-label="Password visibility toggler."
-              class="btn-password-toggler">
+              class="btn-password-toggler button--gold">
               {{ isPasswordVisible() ? 'Hide' : 'Show' }}
             </button>
           </div>
         </div>
 
         <div id="password-criteria">
-          <p><small id="password-criteria-uppercase" [class]="passwordUppercaseHintClass()" class="auth-form__hint">Password has at least one uppercase letter.</small></p>
-          <p><small id="password-criteria-lowercase" [class]="passwordLowercaseHintClass()" class="auth-form__hint">Password has at least one lowercase letter.</small></p>
-          <p><small id="password-criteria-number" [class]="passwordNumberHintClass()" class="auth-form__hint">Password has at least one number.</small></p>
-          <p><small id="password-criteria-length" [class]="passwordMinCharacterHintClass()" class="auth-form__hint">Password has at least 8 characters.</small></p>
+          <p><small id="password-criteria-uppercase" [class]="passwordUppercaseHintClass()" class="auth-form__hint">Contains an uppercase letter.</small></p>
+          <p><small id="password-criteria-lowercase" [class]="passwordLowercaseHintClass()" class="auth-form__hint">Contains a lowercase letter.</small></p>
+          <p><small id="password-criteria-number" [class]="passwordNumberHintClass()" class="auth-form__hint">Contains a number.</small></p>
+          <p><small id="password-criteria-length" [class]="passwordMinCharacterHintClass()" class="auth-form__hint">Has at least 8 characters.</small></p>
         </div>
 
         <button
@@ -65,7 +69,7 @@ import { EMAIL_REGEX } from '../../shared/constants/constants';
           [disabled]="!isFormValid() || isProcessing()"
           class="{{
             !isFormValid() || isProcessing() ? 'auth-form__submit--disabled' : 'auth-form__submit--enabled'
-          }} auth-form__submit"
+          }} auth-form__submit button--gold"
         >
         @if (isProcessing()) {
           Registerring...

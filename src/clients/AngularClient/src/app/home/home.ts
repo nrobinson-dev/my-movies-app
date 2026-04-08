@@ -17,8 +17,6 @@ import { LoadMoreButton } from '../shared/load-more-button/load-more-button';
           <button class="underline text-blue-500" (click)="refresh()">Please refresh the page.</button>
         </p>
       } @else if (movies().length > 0) {
-        <h1 class="text-center text-2xl mb-4">My Movies</h1>
-
         <dl class="stats-container">
           <div class="stat-item">
             <dt class="stat-label">Total Movies</dt>
@@ -61,9 +59,9 @@ import { LoadMoreButton } from '../shared/load-more-button/load-more-button';
             <h3 class="text-center text-4xl mb-4">Your collection awaits</h3>
             
             <p class="pt-2 pb-6">Start building your personal movie library. Search for films
-              you love and add them to your collection.</p>
+              you own and add them to your collection.</p>
               
-            <a routerLink="/search" class="button-link"><img src="/images/icons/search.svg" alt="Search icon"/> Discover Movies</a>
+            <a routerLink="/search" class="button-link button--gold"><img src="/images/icons/search.svg" alt="Search icon"/> Discover Movies</a>
           </div>
         </div>
       }

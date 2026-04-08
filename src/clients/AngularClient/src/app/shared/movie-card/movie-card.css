@@ -6,6 +6,14 @@
   @apply relative bg-zinc-900 flex flex-col border border-gray-600 shadow-sm rounded-md overflow-hidden hover:shadow-xl transition;
 }
 
+.movie-card:hover {
+  border-color: #cb861a;
+
+  .movie-card__poster {
+    border-color: #cb861a;
+  }
+}
+
 .movie-card__header {
     @apply py-1 px-2 text-white text-center;
 }
@@ -23,7 +31,11 @@
 }
 
 .movie-card__poster {
-  @apply border border-gray-600;
+  @apply transition border border-gray-600;
+}
+
+.movie-card:hover .movie-card__poster {
+  border-color: #cb861a;
 }
 
 .movie-card__placeholder-poster {

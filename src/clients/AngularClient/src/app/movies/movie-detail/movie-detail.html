@@ -29,20 +29,16 @@
                     }
 
                     <dl class="movie-info">
-                        <dt class="mb-2"><strong>Tagline</strong></dt>
                         <dd class="mb-2">{{ movieDetail()?.tagline }}</dd>
-                        <dt class="mb-2"><strong>Overview</strong></dt>
                         <dd class="mb-2">{{ movieDetail()?.overview }}</dd>
-                        <dt class="mb-2"><strong>Release Date</strong></dt>
                         <dd class="mb-2">{{ movieDetail()?.releaseDate | date }}</dd>
-                        <dt class="mb-2"><strong>Runtime</strong></dt>
                         <dd class="mb-2">{{ movieDetail()?.runtime }} minutes</dd>
                     </dl>
                 </div>
 
                     @if (!isReleaseDateInFuture()) {
                     <div class="ownership-controls">
-                        <p class="mb-1" id="physical-media-label"><small>I own this movie on (click to toggle)</small>:</p>
+                        <p class="mt-4 mb-2 text-center text-2xl" id="physical-media-label">I own this movie on:</p>
                         <div role="group" aria-labelledby="physical-media-label">
                             <div class="flex flex-wrap gap-2 mb-4">
                                 @for (format of ownedFormats(); track format.value) {
@@ -85,7 +81,7 @@
                         </div>
     
                         <div class="button-row">
-                            <button class="submit" (click)="saveOwnership()">
+                            <button class="submit button--gold" (click)="saveOwnership()">
                                 <img src="/images/icons/save.svg" alt="" aria-hidden="true" class="w-6 h-6 inline" />
                                 <span>Save To Collection</span>
                             </button>
@@ -93,7 +89,7 @@
                     </div>
                     }
                     
-                <p><small><a href="#" class="hover:underline" (click)="deleteMovieOwnership()">Remove from my collection</a></small></p>
+                <p><small><button class="cursor-pointer hover:underline" (click)="deleteMovieOwnership()">Remove from my collection</button></small></p>
             </div>
         </div>
     </div>

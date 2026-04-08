@@ -13,26 +13,37 @@ import { AuthService } from './auth/auth.service';
       Skip to main content
     </a>
 
+    @if (isAuthenticated()) {
     <header>
-      <nav aria-label="Main navigation">
+      <div class="container flex items-center justify-between mx-auto px-4 py-2">
+        <div class="logo-wrapper">
+          <a routerLink="/" class="logo"></a>
+        </div>
         @if (isAuthenticated()) {
-          <a
-            routerLink="/"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            class="nav-link"
-            >My Collection</a
-          >
-          <a routerLink="/search" routerLinkActive="active" class="nav-link">Discover</a>
-          <button (click)="auth.logout()" class="logout-link">Logout</button>
-        } @else {
-          <h1 class="welcome-title">Welcome to FlickList!</h1>
+        <button (click)="auth.logout()" class="logout-link">Sign Out</button>
         }
-      </nav>
+      </div>
     </header>
-
+    }
+  
     <div class="main-wrapper">
       <main id="main-content">
+        <div class="-mx-4">
+          @if (isAuthenticated()) {
+          <nav aria-label="Main navigation">
+              <a
+                routerLink="/"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                class="nav-link"
+                ><img src="/images/icons/bookmark.svg" alt="Bookmark icon" /> My&nbsp;Movies</a
+              >
+              <a routerLink="/search" routerLinkActive="active" class="nav-link">
+                <img src="/images/icons/search.svg" alt="Search icon" /> Discover</a>
+              </nav>
+            }
+        </div>
+
         <router-outlet />
       </main>
 

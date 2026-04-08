@@ -3,15 +3,38 @@
 @import 'tailwindcss';
 
 body {
-    @apply bg-gray-900 text-gray-100;
+    @apply text-gray-100;
+    background: radial-gradient(#351a1a, #000000);
+    background: radial-gradient(#460b0b 10%, #000000 130%);
+}
+
+.logo-wrapper {
+    width: 150px;
+    max-width: 100%;
+}
+
+.logo-wrapper--large {
+    width: 220px;
+    margin-bottom: 4rem;
+    margin: auto;
+    margin-top: 3rem;
+}
+
+.logo {
+    display: block;
+    width: 100%;
+    padding-bottom: 20%;
+    background: linear-gradient(180deg, #ffdb84 0%, #cb861a 100%);
+    mask: url('/images/FlickList-logo-wordmark.svg') no-repeat center / contain;
 }
 
 .main-wrapper {
-    @apply flex flex-col min-h-screen;
+    @apply flex flex-col;
+    min-height: 94vh;
 }
 
 main {
-    @apply px-4 mt-20 mb-4 flex-grow;
+    @apply px-4 mb-4 flex-grow;
 }
 
 footer {
@@ -19,7 +42,8 @@ footer {
 }
 
 .link {
-    @apply text-blue-500 hover:underline;
+    @apply hover:underline;
+    color: #f8a92a;
 }
 
 .page-title {
@@ -28,23 +52,25 @@ footer {
 
 .auth-wrapper {
     @apply flex flex-col items-center justify-center;
-    min-height: 70vh;
+    min-height: 75vh;
 }
 
 .auth-form {
-    @apply flex flex-col justify-stretch w-96 p-6 bg-gray-800 rounded-lg shadow-md border border-gray-700;
+    @apply flex flex-col justify-stretch w-96 p-6 rounded-lg shadow-md;
     max-width: 100vw;
+    background-color: #00000054;
 
     .auth-form__field {
-        @apply border border-gray-500 rounded p-1 mb-4;
+        @apply border rounded p-1 mb-4;
+        border-color: #794a17;
     }
 
     .auth-form__submit {
-        @apply transition mt-4 bg-blue-500 text-white px-4 py-2 rounded-md;
+        @apply transition mt-4 text-white px-4 py-2 rounded-md;
     }
 
     .auth-form__submit--enabled {
-        @apply hover:bg-blue-600 cursor-pointer;
+        @apply cursor-pointer;
     }
 
     .auth-form__submit--disabled {
@@ -66,7 +92,7 @@ footer {
 
 .btn-password-toggler {
     height: 34px;
-    @apply transition bg-blue-500 text-white px-3 rounded ml-2 self-start hover:bg-blue-600 cursor-pointer;
+    @apply transition text-white px-3 rounded ml-2 self-start cursor-pointer;
 }
 
 .movie-grid {
@@ -116,4 +142,15 @@ footer {
     animation: fade-in 0.5s ease-in forwards;
     animation-delay: 0.5s;
     opacity: 0;
+}
+
+.button--gold,
+.button--gold.auth-form__submit--disabled:hover {
+    background: linear-gradient(45deg, #cf8d23, #64430f);
+    border: 1px solid #cf8d23;
+}
+
+.button--gold:hover {
+    background: linear-gradient(45deg, #cf8d23, #cf8d23);
+    border: 1px solid #cf8d23;
 }

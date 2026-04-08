@@ -1,25 +1,31 @@
 @reference "../styles.css";
 
 header {
-    @apply bg-gray-950 fixed top-0 left-0 right-0 z-50 shadow-md;
+    @apply flex items-center justify-between;
 }
 
 nav {
-    @apply container flex flex-row items-center mx-auto px-4;
+    @apply flex flex-row justify-center mx-auto gap-1 py-1 px-4;
+
+    background-color: #181b24;
     
     .nav-link {
-        @apply block transition border-b-3 border-l-1 border-r-1 border-l-gray-800 border-r-gray-800 border-b-transparent py-2 px-4 hover:bg-rose-950;
+        @apply rounded-md flex items-center transition py-2 pl-3 pr-4;
+        border-bottom: 2px solid transparent;
+
+        img {
+            margin-right: 4px;
+        }
     }
 
-    .nav-link.active {
-        @apply bg-rose-950;
+    .nav-link.active,
+    .nav-link:hover {
+        background-color: #432e0d;
+        border-bottom: 2px solid #d3942c;
     }
 
-    .logout-link {
-        @apply ml-auto px-2 hover:underline cursor-pointer;
-    }
 }
 
-.welcome-title {
-    @apply flex-grow text-center p-2 text-2xl text-gray-100 mr-4;
+.logout-link {
+    @apply ml-auto px-2 hover:underline cursor-pointer;
 }
