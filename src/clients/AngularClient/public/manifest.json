@@ -1,0 +1,16 @@
+{
+    "name": "FlickList",
+    "icons": [
+        {
+            "src": "/images/FL-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/FL-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

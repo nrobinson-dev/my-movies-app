@@ -4,7 +4,6 @@
 
 body {
     @apply text-gray-100;
-    background: radial-gradient(#351a1a, #000000);
     background: radial-gradient(#460b0b 10%, #000000 130%);
 }
 

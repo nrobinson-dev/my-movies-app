@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'src/backend/**'
+      - 'MyMoviesApp.slnx'
   workflow_dispatch:
 
 jobs:
