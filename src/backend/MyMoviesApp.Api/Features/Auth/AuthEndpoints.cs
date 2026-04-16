@@ -24,8 +24,8 @@ public static class AuthEndpoints
         .WithSummary("Register a new user account")
         .WithDescription("Creates a new user account and returns a JWT access token on success.")
         .Produces<LoginUserResultDto>(StatusCodes.Status201Created)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status409Conflict);
+        .ProducesValidationProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status409Conflict);
         
         group.MapPost("/login", async (LoginUserCommand command, IMediator mediator, CancellationToken cancellationToken) =>
         {
@@ -40,8 +40,8 @@ public static class AuthEndpoints
         .WithSummary("Log in and receive a JWT")
         .WithDescription("Authenticates a user with email and password and returns a JWT access token.")
         .Produces<LoginUserResultDto>(StatusCodes.Status200OK)
-        .Produces(StatusCodes.Status400BadRequest)
-        .Produces(StatusCodes.Status401Unauthorized)
+        .ProducesValidationProblem(StatusCodes.Status400BadRequest)
+        .ProducesProblem(StatusCodes.Status401Unauthorized)
         .Produces(StatusCodes.Status429TooManyRequests);
         
         group.MapDelete("/delete/{userId:guid}", async (Guid userId, ClaimsPrincipal caller, IMediator mediator, CancellationToken cancellationToken) =>
@@ -58,7 +58,7 @@ public static class AuthEndpoints
             .WithSummary("Delete a user account")
             .WithDescription("Permanently deletes the authenticated user's account. The caller must match the userId in the route.")
             .Produces(StatusCodes.Status204NoContent)
-            .Produces(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
             .RequireAuthorization();
     }
 }

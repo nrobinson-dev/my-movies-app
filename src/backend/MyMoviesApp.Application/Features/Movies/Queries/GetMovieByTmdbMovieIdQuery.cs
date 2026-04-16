@@ -3,7 +3,7 @@ using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Application.Features.Movies.Dtos;
 
-namespace MyMoviesApp.Application.Features.User.Queries;
+namespace MyMoviesApp.Application.Features.Movies.Queries;
 
 public record GetMovieByTmdbMovieIdQuery(Guid UserId, int MovieId) : IRequest<MovieDetailDto>;
 
@@ -16,6 +16,11 @@ public class GetMovieByTmdbMovieIdQueryHandler(IUserRepository userRepository, I
 
         await Task.WhenAll(formatsAndRetailersTask, movieDetailTask);
 
+        if (movieDetailTask.Result is null)
+        {
+            throw new Exception($"Failed to fetch movie details from TMDB for MovieId: {request.MovieId}");
+        }
+        
         return new MovieDetailDto(movieDetailTask.Result)
         {
             Formats = formatsAndRetailersTask.Result.Formats

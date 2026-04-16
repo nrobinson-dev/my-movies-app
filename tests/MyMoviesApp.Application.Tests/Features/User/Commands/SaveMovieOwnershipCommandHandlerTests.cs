@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Common.Models;
+using MyMoviesApp.Application.Common.Services;
 using MyMoviesApp.Application.Features.User.Commands;
 using MyMoviesApp.Application.Tests.Common;
 using MyMoviesApp.Domain.Enums;
@@ -12,12 +13,13 @@ namespace MyMoviesApp.Application.Tests.Features.User.Commands;
 public class SaveMovieOwnershipCommandHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
+    private readonly Mock<ITitleFormattingService> _titleFormattingServiceMock = new();
     private readonly Mock<ILogger<SaveMovieOwnershipCommandHandler>> _logger = new();
     private readonly SaveMovieOwnershipCommandHandler _handler;
 
     public SaveMovieOwnershipCommandHandlerTests()
     {
-        _handler = new SaveMovieOwnershipCommandHandler(_userRepositoryMock.Object, _logger.Object);
+        _handler = new SaveMovieOwnershipCommandHandler(_userRepositoryMock.Object, _titleFormattingServiceMock.Object, _logger.Object);
     }
 
     [Fact]

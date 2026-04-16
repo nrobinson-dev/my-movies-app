@@ -1,4 +1,5 @@
 using MyMoviesApp.Application.Common.Models;
+using MyMoviesApp.Application.Common.Services;
 using MyMoviesApp.Domain.Entities;
 
 namespace MyMoviesApp.Application.Common.Dtos;
@@ -37,6 +38,21 @@ public class MovieSummaryDto
         {
             TmdbId = m.MovieId,
             Title = m.Title,
+            ReleaseDate = m.ReleaseDate,
+            PosterPath = m.PosterPath,
+            Formats = m.Formats
+                .Select(f => new UserMovieFormatItem { Id = (int)f, Name = f.ToString() })
+                .ToList(),
+            DigitalRetailers = m.DigitalRetailers
+                .Select(r => new UserMovieDigitalRetailerItem { Id = (int)r, Name = r.ToString() })
+                .ToList()
+        };
+    
+    public static MovieSummaryDto FromDomain(MovieSummary m, ITitleFormattingService titleFormattingService) =>
+        new MovieSummaryDto
+        {
+            TmdbId = m.MovieId,
+            Title = titleFormattingService.FormatForDisplay(m.Title),
             ReleaseDate = m.ReleaseDate,
             PosterPath = m.PosterPath,
             Formats = m.Formats

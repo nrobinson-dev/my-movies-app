@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
+using MyMoviesApp.Application.Common.Services;
 using MyMoviesApp.Application.Features.User.Queries;
 using MyMoviesApp.Application.Tests.Common;
 using MyMoviesApp.Domain.Entities;
@@ -10,6 +11,7 @@ namespace MyMoviesApp.Application.Tests.Features.User.Queries;
 public class GetMovieOwnershipQueryHandlerTests
 {
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
+    private readonly Mock<ITitleFormattingService> _titleFormattingServiceMock = new();
     private readonly GetMovieOwnershipQueryHandler _handler;
     
     private readonly int _pageNumber = TestConstants.Pagination.DefaultPageNumber;
@@ -17,7 +19,7 @@ public class GetMovieOwnershipQueryHandlerTests
     
     public GetMovieOwnershipQueryHandlerTests()
     {
-        _handler = new GetMovieOwnershipQueryHandler(_userRepositoryMock.Object);
+        _handler = new GetMovieOwnershipQueryHandler(_userRepositoryMock.Object,  _titleFormattingServiceMock.Object);
     }
 
     [Fact]

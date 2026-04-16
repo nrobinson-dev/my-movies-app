@@ -207,12 +207,47 @@ GET /movies?search={movieName}&page={page}&userId={userId}
 
 ---
 
-### User Movies
-
-#### Get User Movie Ownership
+#### Get Movie Detail
 
 ```
-GET /users/{userId}/movies?page={page}&pageSize={pageSize}
+GET /movies/{tmdbId}
+```
+
+**Authorization:** `Bearer {token}`
+
+**Response**
+```json
+{
+  "tmdbId": 123,
+  "title": "Movie Title",
+  "releaseDate": "0001-01-01",
+  "runtime": 120,
+  "posterPath": "/poster.jpg",
+  "backdropPath": "/backdrop.jpg",
+  "tagline": "Example tagline",
+  "overview": "Movie description",
+  "formats": [
+    { "id": 1, "name": "Dvd" }
+  ],
+  "digitalRetailers": [
+    { "id": 1, "name": "MoviesAnywhere" }
+  ]
+}
+```
+**Status Codes**
+- `200 OK` — login successful
+- `401 Unauthorized` — invalid credentials
+- `403 Forbidden` — user can only access their own collection
+- `503 Service Unavailable` — TMDB API is down or rate limit exceeded
+
+---
+
+### Authenticated User's Movies
+
+#### Get Authenticated User's Movie Collection
+
+```
+GET /users/me/movies?page={page}&pageSize={pageSize}
 ```
 
 **Authorization:** `Bearer {token}`
@@ -250,45 +285,10 @@ GET /users/{userId}/movies?page={page}&pageSize={pageSize}
 
 ---
 
-#### Get Movie
-
-```
-GET /users/{userId}/movies/{tmdbId}
-```
-
-**Authorization:** `Bearer {token}`
-
-**Response**
-```json
-{
-  "tmdbId": 123,
-  "title": "Movie Title",
-  "releaseDate": "0001-01-01",
-  "runtime": 120,
-  "posterPath": "/poster.jpg",
-  "backdropPath": "/backdrop.jpg",
-  "tagline": "Example tagline",
-  "overview": "Movie description",
-  "formats": [
-    { "id": 1, "name": "Dvd" }
-  ],
-  "digitalRetailers": [
-    { "id": 1, "name": "MoviesAnywhere" }
-  ]
-}
-```
-**Status Codes**
-- `200 OK` — login successful
-- `401 Unauthorized` — invalid credentials
-- `403 Forbidden` — user can only access their own collection
-- `503 Service Unavailable` — TMDB API is down or rate limit exceeded
-
----
-
 #### Add Movie to Collection
 
 ```
-POST /users/{userId}/movies
+POST /users/me/movies
 ```
 
 **Authorization:** `Bearer {token}`
@@ -315,10 +315,10 @@ POST /users/{userId}/movies
 
 ---
 
-#### Delete Movie
+#### Remove Movie from Authenticated User's Collection
 
 ```
-DELETE /users/{userId}/movies/{tmdbId}
+DELETE /users/me/movies/{tmdbId}
 ```
 
 **Authorization:** `Bearer {token}`

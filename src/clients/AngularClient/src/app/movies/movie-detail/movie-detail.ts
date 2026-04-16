@@ -38,7 +38,7 @@ export class MovieDetail {
 
     if (movieId) {
       this.movieService
-        .getMovieById(localStorage.getItem('auth_user_id') || '', movieId)
+        .getMovieById(movieId)
         .subscribe({
           next: (detail) => {
             if (!detail) {
@@ -126,7 +126,7 @@ export class MovieDetail {
     this.saveMovieRequest.digitalRetailers = this.getOwnedPlatformIds(this.ownedDigitalRetailers());
 
     this.movieService
-      .saveMovieOwnership(localStorage.getItem('auth_user_id') || '', this.saveMovieRequest)
+      .saveMovieOwnership(this.saveMovieRequest)
       .subscribe({
         next: () => {
           this.isProcessing.set(false);
@@ -149,7 +149,6 @@ export class MovieDetail {
 
     this.movieService
       .deleteMovieOwnership(
-        localStorage.getItem('auth_user_id') || '',
         this.route.snapshot.paramMap.get('movieId') || '',
       )
       .subscribe({

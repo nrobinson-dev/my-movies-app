@@ -2,7 +2,7 @@ using FluentAssertions;
 using Moq;
 using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Common.Models;
-using MyMoviesApp.Application.Features.User.Queries;
+using MyMoviesApp.Application.Features.Movies.Queries;
 using MyMoviesApp.Application.Tests.Common;
 using MyMoviesApp.Domain.Entities;
 

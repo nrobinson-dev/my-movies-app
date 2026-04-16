@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using MyMoviesApp.Application.Common.Services;
 using MyMoviesApp.Application.Features.Auth.Commands;
 using MyMoviesApp.Application.Features.Movies.Queries;
 using MyMoviesApp.Application.Features.User.Commands;
@@ -23,6 +24,8 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssembly(typeof(SaveMovieOwnershipCommand).Assembly);
             cfg.RegisterServicesFromAssembly(typeof(DeleteMovieCommand).Assembly);
         });
+        
+        services.AddScoped<ITitleFormattingService, TitleFormattingService>();
 
         return services;
     }

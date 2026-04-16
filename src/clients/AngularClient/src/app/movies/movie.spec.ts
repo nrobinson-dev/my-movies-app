@@ -52,10 +52,10 @@ describe('MovieService', () => {
     };
 
     it('should GET user movies with default pagination', () => {
-      service.getUserMovies(userId).subscribe();
+      service.getUserMovies().subscribe();
 
       const req = httpTesting.expectOne(
-        (r) => r.url === `${baseUrl}/users/${userId}/movies`,
+        (r) => r.url === `${baseUrl}/users/me/movies`,
       );
       expect(req.request.method).toBe('GET');
       expect(req.request.params.get('page')).toBe('1');
@@ -64,10 +64,10 @@ describe('MovieService', () => {
     });
 
     it('should GET user movies with custom pagination', () => {
-      service.getUserMovies(userId, 3, 25).subscribe();
+      service.getUserMovies(3, 25).subscribe();
 
       const req = httpTesting.expectOne(
-        (r) => r.url === `${baseUrl}/users/${userId}/movies`,
+        (r) => r.url === `${baseUrl}/users/me/movies`,
       );
       expect(req.request.params.get('page')).toBe('3');
       expect(req.request.params.get('pageSize')).toBe('25');
@@ -76,10 +76,10 @@ describe('MovieService', () => {
 
     it('should return the movie collection', () => {
       let result: MovieSummaryCollection | undefined;
-      service.getUserMovies(userId).subscribe((r) => (result = r));
+      service.getUserMovies().subscribe((r) => (result = r));
 
       httpTesting
-        .expectOne((r) => r.url === `${baseUrl}/users/${userId}/movies`)
+        .expectOne((r) => r.url === `${baseUrl}/users/me/movies`)
         .flush(mockCollection);
 
       expect(result).toEqual(mockCollection);
@@ -150,41 +150,41 @@ describe('MovieService', () => {
     };
 
     it('should GET movie detail by userId and movieId', () => {
-      service.getMovieById(userId, '550').subscribe();
+      service.getMovieById('550').subscribe();
 
-      const req = httpTesting.expectOne(`${baseUrl}/users/${userId}/movies/550`);
+      const req = httpTesting.expectOne(`${baseUrl}/movies/550`);
       expect(req.request.method).toBe('GET');
       req.flush(mockDetail);
     });
 
     it('should return movie detail', () => {
       let result: MovieDetail | undefined;
-      service.getMovieById(userId, '550').subscribe((r) => (result = r));
+      service.getMovieById('550').subscribe((r) => (result = r));
 
-      httpTesting.expectOne(`${baseUrl}/users/${userId}/movies/550`).flush(mockDetail);
+      httpTesting.expectOne(`${baseUrl}/movies/550`).flush(mockDetail);
 
       expect(result).toEqual(mockDetail);
     });
 
     it('should cache movie detail after first fetch', () => {
-      service.getMovieById(userId, '550').subscribe();
-      httpTesting.expectOne(`${baseUrl}/users/${userId}/movies/550`).flush(mockDetail);
+      service.getMovieById('550').subscribe();
+      httpTesting.expectOne(`${baseUrl}/movies/550`).flush(mockDetail);
 
       // Second call should NOT make an HTTP request
       let cachedResult: MovieDetail | undefined;
-      service.getMovieById(userId, '550').subscribe((r) => (cachedResult = r));
-      httpTesting.expectNone(`${baseUrl}/users/${userId}/movies/550`);
+      service.getMovieById('550').subscribe((r) => (cachedResult = r));
+      httpTesting.expectNone(`${baseUrl}/movies/550`);
 
       expect(cachedResult).toEqual(mockDetail);
     });
 
     it('should fetch different movies separately', () => {
-      service.getMovieById(userId, '550').subscribe();
-      httpTesting.expectOne(`${baseUrl}/users/${userId}/movies/550`).flush(mockDetail);
+      service.getMovieById('550').subscribe();
+      httpTesting.expectOne(`${baseUrl}/movies/550`).flush(mockDetail);
 
-      service.getMovieById(userId, '999').subscribe();
+      service.getMovieById('999').subscribe();
       httpTesting
-        .expectOne(`${baseUrl}/users/${userId}/movies/999`)
+        .expectOne(`${baseUrl}/movies/999`)
         .flush({ ...mockDetail, tmdbId: 999 });
     });
   });
@@ -200,9 +200,9 @@ describe('MovieService', () => {
     };
 
     it('should POST to save movie ownership', () => {
-      service.saveMovieOwnership(userId, saveRequest).subscribe();
+      service.saveMovieOwnership(saveRequest).subscribe();
 
-      const req = httpTesting.expectOne(`${baseUrl}/users/${userId}/movies`);
+      const req = httpTesting.expectOne(`${baseUrl}/users/me/movies`);
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual(saveRequest);
       req.flush({});
@@ -222,16 +222,16 @@ describe('MovieService', () => {
         formats: [],
         digitalRetailers: [],
       };
-      service.getMovieById(userId, '550').subscribe();
-      httpTesting.expectOne(`${baseUrl}/users/${userId}/movies/550`).flush(mockDetail);
+      service.getMovieById('550').subscribe();
+      httpTesting.expectOne(`${baseUrl}/movies/550`).flush(mockDetail);
 
       // Now save ownership
-      service.saveMovieOwnership(userId, saveRequest).subscribe();
-      httpTesting.expectOne(`${baseUrl}/users/${userId}/movies`).flush({});
+      service.saveMovieOwnership(saveRequest).subscribe();
+      httpTesting.expectOne(`${baseUrl}/users/me/movies`).flush({});
 
       // Verify cache was updated (no new HTTP request)
       let cachedMovie: MovieDetail | undefined;
-      service.getMovieById(userId, '550').subscribe((r) => (cachedMovie = r));
+      service.getMovieById('550').subscribe((r) => (cachedMovie = r));
 
       expect(cachedMovie!.formats.length).toBe(2);
       expect(cachedMovie!.formats.map((f) => f.id)).toContain(FormatId.BluRay);
@@ -243,9 +243,9 @@ describe('MovieService', () => {
 
   describe('deleteMovieOwnership', () => {
     it('should DELETE movie ownership', () => {
-      service.deleteMovieOwnership(userId, '550').subscribe();
+      service.deleteMovieOwnership('550').subscribe();
 
-      const req = httpTesting.expectOne(`${baseUrl}/users/${userId}/movies/550`);
+      const req = httpTesting.expectOne(`${baseUrl}/users/me/movies/550`);
       expect(req.request.method).toBe('DELETE');
       req.flush({});
     });
@@ -264,16 +264,16 @@ describe('MovieService', () => {
         formats: [{ id: FormatId.BluRay, name: 'Blu-ray' }],
         digitalRetailers: [{ id: DigitalRetailerId.AppleTv, name: 'Apple TV' }],
       };
-      service.getMovieById(userId, '550').subscribe();
-      httpTesting.expectOne(`${baseUrl}/users/${userId}/movies/550`).flush(mockDetail);
+      service.getMovieById('550').subscribe();
+      httpTesting.expectOne(`${baseUrl}/movies/550`).flush(mockDetail);
 
       // Delete ownership
-      service.deleteMovieOwnership(userId, '550').subscribe();
-      httpTesting.expectOne(`${baseUrl}/users/${userId}/movies/550`).flush({});
+      service.deleteMovieOwnership('550').subscribe();
+      httpTesting.expectOne(`${baseUrl}/users/me/movies/550`).flush({});
 
       // Verify cache was updated
       let cachedMovie: MovieDetail | undefined;
-      service.getMovieById(userId, '550').subscribe((r) => (cachedMovie = r));
+      service.getMovieById('550').subscribe((r) => (cachedMovie = r));
 
       expect(cachedMovie!.formats).toEqual([]);
       expect(cachedMovie!.digitalRetailers).toEqual([]);

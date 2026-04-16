@@ -1,90 +1,152 @@
-# FlickList
+# 🎬 FlickList
 
-A passion project and a portfolio piece that integrates with [The Movie Database (TMDB) API](https://www.themoviedb.org/) 
-to allow users to track their personal movie collection.
+**Track your movie collection across physical and digital formats.**
 
-> **Note:** This repository represents the Minimum Viable Product (MVP) and is still in early development.
+Search [TMDB’s](https://www.themoviedb.org/) catalog, tag what you own — DVD, Blu-ray, 4K, or digital — and see your full library at a glance.
 
----
 
-## Overview
+-----
 
-FlickList lets you keep track of your movie collection across physical and digital formats.
+## Architecture & Design Decisions
 
-**Physical Formats**
-- DVD
-- Blu-ray
-- 4K Blu-ray
+This isn’t a tutorial project — it’s a deliberately architected system built to demonstrate real-world engineering patterns.
 
-**Digital Retailers**
-- Apple TV
-- Movies Anywhere
-- Fandango at Home
-- YouTube
-- Amazon Prime Video
+```
+┌─────────────────────────────────────────────────────┐
+│  Clients (Angular · React · Vue · Blazor)           │
+├─────────────────────────────────────────────────────┤
+│  API Layer          Minimal APIs + 1 Controller     │
+│  Application        MediatR · CQRS-style handlers   │
+│  Domain             Entities · Value Objects        │
+│  Infrastructure     EF Core · SQLite · Redis · TMDB │
+└─────────────────────────────────────────────────────┘
+```
 
----
+**Key choices and why:**
 
-## Live Demo
+- **Clean Architecture** — strict dependency inversion; inner layers have zero knowledge of infrastructure.
+- **Minimal APIs as default, one controller-based endpoint** — shows fluency in both; Minimal APIs are the idiomatic path for new .NET projects.
+- **MediatR for request dispatch** — decouples handlers from transport; planned migration to a custom pipeline to demonstrate going beyond the library.
+- **Redis for TMDB response caching** — avoids hammering a third-party API and keeps search snappy.
+- **SQLite for local dev, PostgreSQL planned for prod** — right tool for the phase; migration path is trivial with EF Core.
 
-**[FlickList Live Demo - Angular App](https://brave-mud-06345141e.2.azurestaticapps.net/)**
+-----
 
-Explore the app without local setup. Use the provided demo account or create a new account, search for movies on TMDB, 
-and start tracking your movie collection.
+## Tech Stack
 
-> **Note:** The API is hosted on Azure's free tier and may take up to 1 minute to respond on the first request after 
-> inactivity (cold start). Subsequent requests will be much faster. Saved data may be periodically cleared in the demo 
-> environment.
+|Layer   |Technology                                    |
+|--------|----------------------------------------------|
+|API     |.NET 10 · Minimal APIs · MediatR · Serilog    |
+|Data    |EF Core · SQLite · Redis Cloud                |
+|Docs    |Scalar (OpenAPI)                              |
+|Frontend|Angular v21 (MVP)                             |
+|Hosting |Azure App Service + Static Web Apps           |
+|CI/CD   |GitHub Actions → auto-deploy on push to `main`|
 
----
+**Supported formats:** DVD · Blu-ray · 4K Blu-ray
 
-## Why This Project Exists
+**Supported digital retailers:** Apple TV · Movies Anywhere · Fandango at Home · YouTube · Amazon Prime Video
 
-As a full-stack software engineer, this project demonstrates my ability to design and implement a modern server-side system 
-as well as client-side frameworks.
+-----
 
-The Web API is built using a **Clean Architecture**. Most endpoints are implemented using **Minimal APIs**, with one 
-controller-based endpoint included to demonstrate familiarity with both approaches.
+## Roadmap
 
-**Current technology choices** (intended for quick setup and development):
-- **.NET Core 10**
-- **EF Core**
-- **SQLite** — simple local database
-- **MediatR** — request handling
-- **Serilog** — logging
-- **Scalar** — API documentation
-- **Redis cloud** — Caching TMDB API responses
-- **Angular v21** — client-side framework
-- **Azure** — cloud hosting and deployment via GitHub Actions
+|Feature                                         |Status   |
+|------------------------------------------------|---------|
+|Core API with auth, search, collection CRUD     |✅ Done   |
+|Rate limiting                                   |✅ Done   |
+|Centralized exception handling                  |✅ Done   |
+|Structured logging (Serilog)                    |✅ Done   |
+|Scalar / OpenAPI documentation                  |✅ Done   |
+|Redis caching for TMDB responses                |✅ Done   |
+|Angular client (MVP)                            |✅ Done   |
+|CI/CD via GitHub Actions                        |✅ Done   |
+|Replace MediatR with custom request pipeline    |🔧 Planned|
+|React client                                    |🔧 Planned|
+|Vue client                                      |🔧 Planned|
+|Blazor client                                   |🔧 Planned|
+|Email service (account creation, password reset)|🔧 Planned|
+|PostgreSQL migration                            |🔧 Planned|
+|OpenTelemetry observability                     |🔧 Planned|
+|Docker containerization                         |🔧 Planned|
 
----
-
-## Project Goals
-
-The long-term goal is to evolve this into a full ecosystem:
-
-**Web API**
-- Logging (Complete)
-- Rate limiting (Complete)
-- Scalar / OpenAPI documentation (Complete)
-- Centralized exception handling (Complete)
-- Remove MediatR and implement custom request handling
-
-**Web Applications** — multiple client-side implementations of the same API:
-- Angular (MVP complete)
-- React
-- Vue
-- Blazor
-
-**Infrastructure**
-- Email service for account creation and password resets
-- PostgreSQL database
-- Caching strategy for TMDB API responses (Complete)
-- OpenTelemetry for logging and monitoring
-- Docker containerization
-
----
+-----
 
 ## Getting Started
 
-Visit the backend [README](https://github.com/nrobinson-dev/my-movies-app/tree/main/src/backend/README.md) for setup instructions.
+### Prerequisites
+
+- .NET 10 SDK
+- EF Core CLI (`dotnet tool install --global dotnet-ef`)
+- [TMDB API Access Token](https://www.themoviedb.org/settings/api)
+- [JWT Signing Token](https://jwtsecretkeygenerator.com/) (256-bit)
+- [Redis Cloud Account](https://redis.io/try-free/) (for caching TMDB API responses)
+
+### Setup
+
+1. **Clone and configure:**
+
+```bash
+git clone https://github.com/nrobinson-dev/my-movies-app.git
+cd my-movies-app
+```
+
+Copy `appsettings.Example.json` → `appsettings.json`, then fill in `TmdbSettings:BearerToken` and `JwtSettings:SigningKey`.
+1. **Create and seed the database:**
+
+```bash
+# Install EF Core CLI
+dotnet tool install --global dotnet-ef
+   
+# Create database migration
+dotnet ef migrations add InitialCreate \
+  --project src/backend/MyMoviesApp.Infrastructure/MyMoviesApp.Infrastructure.csproj \
+  --startup-project src/backend/MyMoviesApp.Api/MyMoviesApp.Api.csproj \
+  --output-dir Data/Migrations
+
+# Apply database migration
+dotnet ef database update \
+  --project src/backend/MyMoviesApp.Infrastructure \
+  --startup-project src/backend/MyMoviesApp.Api
+```
+1. **Run:**
+
+```bash
+dotnet run --project src/backend/MyMoviesApp.Api
+```
+
+API docs available at `https://localhost:7184/scalar/v1`.
+
+-----
+
+## API at a Glance
+
+Full interactive docs via [Scalar](https://localhost:7184/scalar/v1) when running locally. Here’s the surface:
+
+|Method  |Endpoint                             |Auth|Description           |
+|--------|-------------------------------------|----|----------------------|
+|`POST`  |`/api/auth/create`                   |—   |Create account        |
+|`POST`  |`/api/auth/login`                    |—   |Login → JWT           |
+|`POST`  |`/api/auth/delete/{userId}`          |🔒   |Delete own account    |
+|`GET`   |`/api/movies?search=&page=&userId=`  |🔒   |Search TMDB           |
+|`GET`   |`/api/users/{userId}/movies`         |🔒   |List collection       |
+|`GET`   |`/api/users/{userId}/movies/{tmdbId}`|🔒   |Get movie detail      |
+|`POST`  |`/api/users/{userId}/movies`         |🔒   |Add to collection     |
+|`DELETE`|`/api/users/{userId}/movies/{tmdbId}`|🔒   |Remove from collection|
+
+-----
+
+## Deployment
+
+Deployed on **Azure** via **GitHub Actions** — push to `main` triggers build and deploy automatically.
+
+- **API:** Azure App Service (.NET 10, free tier)
+- **Angular Client:** Azure Static Web Apps
+
+See [`.github/workflows/`](.github/workflows/) for pipeline configuration.
+
+-----
+
+## License
+
+[MIT](LICENSE)

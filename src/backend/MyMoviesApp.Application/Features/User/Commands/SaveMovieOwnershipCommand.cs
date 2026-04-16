@@ -4,6 +4,7 @@ using MyMoviesApp.Application.Common.Interfaces;
 using MyMoviesApp.Application.Common.Models;
 using MyMoviesApp.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using MyMoviesApp.Application.Common.Services;
 
 namespace MyMoviesApp.Application.Features.User.Commands;
 
@@ -17,14 +18,19 @@ public record SaveMovieOwnershipCommand(
     HashSet<DigitalRetailer> DigitalRetailers
     ) : IRequest<int>;
 
-public class SaveMovieOwnershipCommandHandler(IUserRepository userRepository, ILogger<SaveMovieOwnershipCommandHandler> logger) : IRequestHandler<SaveMovieOwnershipCommand, int>
+public class SaveMovieOwnershipCommandHandler(
+    IUserRepository userRepository, 
+    ITitleFormattingService titleFormattingService,
+    ILogger<SaveMovieOwnershipCommandHandler> logger) : IRequestHandler<SaveMovieOwnershipCommand, int>
 {
     public async Task<int> Handle(SaveMovieOwnershipCommand request, CancellationToken cancellationToken)
     {
+        var normalizedTitle = titleFormattingService.NormalizeForStorage(request.Title);
+        
         var movieSummary = new SaveMovieSummary
         {
             MovieId = request.TmdbId,
-            Title = request.Title,
+            Title = normalizedTitle,
             ReleaseDate = request.ReleaseDate,
             PosterPath = request.PosterPath,
             Formats = request.Formats.ToList(),

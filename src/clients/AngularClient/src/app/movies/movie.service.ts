@@ -20,11 +20,10 @@ export class MovieService {
   private lastMovieResults: MovieSummaryCollection | null = null;
 
   getUserMovies(
-    userId: string,
     pageNumber: number = 1,
     pageSize: number = 10,
   ): Observable<MovieSummaryCollection> {
-    return this.http.get<MovieSummaryCollection>(`${this.baseUrl}/users/${userId}/movies`, {
+    return this.http.get<MovieSummaryCollection>(`${this.baseUrl}/users/me/movies`, {
       params: { page: pageNumber.toString(), pageSize: pageSize.toString() },
     });
   }
@@ -35,18 +34,18 @@ export class MovieService {
     });
   }
 
-  getMovieById(userId: string, movieId: string): Observable<MovieDetail> {
+  getMovieById(movieId: string): Observable<MovieDetail> {
     if (this.movieDetailCache.has(movieId)) {
       return of(this.movieDetailCache.get(movieId)!);
     }
 
     return this.http
-      .get<MovieDetail>(`${this.baseUrl}/users/${userId}/movies/${movieId}`)
+      .get<MovieDetail>(`${this.baseUrl}/movies/${movieId}`)
       .pipe(tap((movieDetail) => this.movieDetailCache.set(movieId, movieDetail)));
   }
 
-  saveMovieOwnership(userId: string, movieData: SaveMovieRequest) {
-    return this.http.post(`${this.baseUrl}/users/${userId}/movies`, movieData).pipe(
+  saveMovieOwnership(movieData: SaveMovieRequest) {
+    return this.http.post(`${this.baseUrl}/users/me/movies`, movieData).pipe(
       tap(() => {
         const movieId = movieData.tmdbId.toString();
         if (this.movieDetailCache.has(movieId)) {
@@ -64,8 +63,8 @@ export class MovieService {
     );
   }
 
-  deleteMovieOwnership(userId: string, movieId: string): Observable<any> {
-    return this.http.delete(`${this.baseUrl}/users/${userId}/movies/${movieId}`).pipe(
+  deleteMovieOwnership(movieId: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/users/me/movies/${movieId}`).pipe(
       tap(() => {
         if (this.movieDetailCache.has(movieId)) {
           const movie = this.movieDetailCache.get(movieId)!;

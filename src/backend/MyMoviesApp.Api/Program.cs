@@ -10,6 +10,7 @@ using MyMoviesApp.Api.OpenApi;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
+using MyMoviesApp.Domain.Enums;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -52,6 +53,26 @@ try
         });
 
         options.AddOperationTransformer<BearerSecuritySchemeTransformer>();
+
+        options.AddSchemaTransformer((schema, context, _) =>
+        {
+            var type = context.JsonTypeInfo.Type;
+
+            if (type == typeof(Format) || type == typeof(HashSet<Format>))
+            {
+                var target = type == typeof(HashSet<Format>) ? schema.Items : schema;
+                if (target is not null)
+                    target.Description = "Physical format: Dvd = 1, BluRay = 2, BluRay4K = 3";
+            }
+            else if (type == typeof(DigitalRetailer) || type == typeof(HashSet<DigitalRetailer>))
+            {
+                var target = type == typeof(HashSet<DigitalRetailer>) ? schema.Items : schema;
+                if (target is not null)
+                    target.Description = "Digital retailer: MoviesAnywhere = 1, AppleTv = 2, FandangoAtHome = 3, YouTube = 4, AmazonPrime = 5";
+            }
+
+            return Task.CompletedTask;
+        });
     });
 
     // --- Layer Registrations ---
@@ -124,7 +145,6 @@ try
     app.MapUsersEndpoints();
     app.MapControllers();
     app.MapHealthChecks("/health");
-    app.MapPost("/test-post", () => Results.Ok("Post works!"));
 
     await app.RunAsync();
 }

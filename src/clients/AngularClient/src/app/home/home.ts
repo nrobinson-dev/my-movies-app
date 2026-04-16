@@ -129,7 +129,6 @@ export class Home {
   loadMovies() {
     this.movieService
       .getUserMovies(
-        localStorage.getItem('auth_user_id') || '',
         this.currentPage(),
         this.pageSize(),
       )
