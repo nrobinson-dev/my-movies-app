@@ -94,7 +94,7 @@ cd my-movies-app
 ```
 
 Copy `appsettings.Example.json` → `appsettings.json`, then fill in `TmdbSettings:BearerToken` and `JwtSettings:SigningKey`.
-1. **Create and seed the database:**
+2. **Create and seed the database:**
 
 ```bash
 # Install EF Core CLI
@@ -111,7 +111,7 @@ dotnet ef database update \
   --project src/backend/MyMoviesApp.Infrastructure \
   --startup-project src/backend/MyMoviesApp.Api
 ```
-1. **Run:**
+3. **Run:**
 
 ```bash
 dotnet run --project src/backend/MyMoviesApp.Api
