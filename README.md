@@ -4,7 +4,6 @@
 
 Search [TMDB’s](https://www.themoviedb.org/) catalog, tag what you own — DVD, Blu-ray, 4K, or digital — and see your full library at a glance.
 
-
 🔗 **[Live Demo](https://brave-mud-06345141e.2.azurestaticapps.net/)** · *First request may take ~60s (Azure free-tier cold start)*
 
 -----
@@ -94,6 +93,7 @@ cd my-movies-app
 ```
 
 Copy `appsettings.Example.json` → `appsettings.json`, then fill in `TmdbSettings:BearerToken` and `JwtSettings:SigningKey`.
+
 2. **Create and seed the database:**
 
 ```bash
