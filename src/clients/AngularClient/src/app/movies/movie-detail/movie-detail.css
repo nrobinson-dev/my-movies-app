@@ -1,20 +1,45 @@
 @reference "../../../styles.css";
 
 .movie-detail-wrapper {
-    min-height: 85vh;
-    @apply relative bg-cover bg-top flex items-center justify-center -mx-4;
+    @apply relative bg-cover bg-top flex flex-col items-center -mx-4;
+    background-color: black;
 }
 
 .background-layer {
-    @apply absolute top-0 left-0 w-full h-full bg-cover bg-center;
+    @apply top-0 left-0 w-full h-full bg-contain bg-no-repeat;
+    background-position: top center;
 }
 
-.overlay {
-    @apply bg-black opacity-80 absolute top-0 left-0 w-full h-full;
+.background-image {
+    @apply w-full;
 }
 
 .movie-detail-container {
-    @apply relative z-10 backdrop-blur-xs text-white p-6 pt-4 max-w-3xl mx-auto rounded-lg shadow-md overflow-hidden;
+    @apply relative z-10 text-white p-6 pt-4 max-w-3xl mx-auto shadow-md overflow-hidden;
+    margin-top: 3rem;
+}
+
+.movie-detail-container.has-background {
+    margin-top: -100px;
+}
+
+@media (min-width: 768px) {
+    .background-layer {
+        @apply absolute;
+    }
+
+    .background-image {
+        display: none;
+    }
+
+    .movie-detail-container.has-background {
+        margin-top: 30vh;
+    }
+}
+
+.overlay {
+    @apply bg-black absolute top-0 left-0 w-full h-full;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0, 0.85) 50px, black 100%);
 }
 
 .movie-detail {
@@ -22,7 +47,7 @@
 }
 
 .movie-detail__title {
-    @apply text-center text-3xl mb-4 mx-10 grow;
+    @apply text-2xl;
 }
 
 .back-button {
@@ -53,8 +78,14 @@
 }
 
 .ownership-controls {
-    flex-grow: 1;
     @apply mb-4;
+    flex-grow: 1;
+    background: black;
+    border: 1px solid #303030;
+    border-radius: 5px;
+    padding: 0px 10px 10px 10px;
+    margin-left: -10px;
+    margin-right: -10px;
 }
 
 .platform-button {

@@ -7,38 +7,36 @@
     
     @if (movieDetail()) {
     <div class="movie-detail-wrapper">
-    <div class="background-layer" [style.background-image]="'url(' + backgroundImageUrl() + ')'"></div>
-        <div class="movie-detail-container">
-            <div class="overlay "></div>
+    <div class="background-layer" [style.background-image]="'url(' + backgroundImageUrl() + ')'">
+        <img src="{{ backgroundImageUrl() }}" class="background-image" alt="">
+    </div>
     
-            <button (click)="location.back()" class="back-button" aria-label="Go back">
-                <img src="/images/icons/arrow_back.svg" alt="" aria-hidden="true" />
-            </button>
-    
-            <div class="movie-detail">
-                <h1 class="movie-detail__title">
-                    {{ movieDetail()?.title }}
-                </h1>
-    
-                <div class="eye-candy" [class]="isReleaseDateInFuture() ? 'future-release' : 'released'">
-                    @if (movieDetail()?.posterPath) {
-                    <div class="movie-poster">
-                        <img class="movie-card__poster" [src]="posterUrl()" [alt]="movieDetail()?.title + ' poster'"
-                            class="movie-poster__image" />
-                    </div>
-                    }
+    <button (click)="location.back()" class="back-button" aria-label="Go back">
+        <img src="/images/icons/arrow_back.svg" alt="" aria-hidden="true" />
+    </button>
 
+        <div class="movie-detail-container" [class]="backgroundImageUrl() ? 'has-background' : ''">
+            <div class="overlay "></div>
+            <div class="movie-detail">
+                
+                <div class="eye-candy" [class]="isReleaseDateInFuture() ? 'future-release' : 'released'">
+                    @if (!backgroundImageUrl() && movieDetail()?.posterPath) {
+                        <div class="movie-poster">
+                            <img class="movie-card__poster" [src]="posterUrl()" [alt]="movieDetail()?.title + ' poster'"
+                            class="movie-poster__image" />
+                        </div>
+                    }
                     <dl class="movie-info">
-                        <dd class="mb-2">{{ movieDetail()?.tagline }}</dd>
-                        <dd class="mb-2">{{ movieDetail()?.overview }}</dd>
-                        <dd class="mb-2">{{ movieDetail()?.releaseDate | date }}</dd>
-                        <dd class="mb-2">{{ movieDetail()?.runtime }} minutes</dd>
+                        <dd class="movie-detail__title">{{ movieDetail()?.title }}</dd>
+                        <dd class="mb-2"><small>{{ movieDetail()?.releaseDate | date }} &mdash; {{ movieDetail()?.runtime }} minutes</small></dd>
+                        <dd class="mb-2"><small>{{ movieDetail()?.tagline }}</small></dd>
+                        <dd class="mb-4"><small>{{ movieDetail()?.overview }}</small></dd>
                     </dl>
                 </div>
 
                     @if (!isReleaseDateInFuture()) {
                     <div class="ownership-controls">
-                        <p class="mt-4 mb-2 text-center text-2xl" id="physical-media-label">I own this movie on:</p>
+                        <p class="mt-2 mb-2 text-center text-l uppercase" id="physical-media-label">I own this movie on</p>
                         <div role="group" aria-labelledby="physical-media-label">
                             <div class="flex flex-wrap gap-2 mb-4">
                                 @for (format of ownedFormats(); track format.value) {
@@ -87,7 +85,7 @@
                             </button>
                         </div>
                     </div>
-                    <p><small><button class="cursor-pointer hover:underline" (click)="deleteMovieOwnership()">Remove from my collection</button></small></p>
+                    <p><small><button class="flex items-center gap-1 cursor-pointer hover:underline" (click)="deleteMovieOwnership()"><img src="/images/icons/delete.svg" alt="" aria-hidden="true" class="w-4 h-4" />Remove from my collection</button></small></p>
                     }
             </div>
         </div>

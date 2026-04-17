@@ -4,6 +4,8 @@
 
 Search [TMDB’s](https://www.themoviedb.org/) catalog, tag what you own — DVD, Blu-ray, 4K, or digital — and see your full library at a glance.
 
+> ![FlickList Preview](assets/FlickList-Preview.png)
+
 🔗 **[Live Demo](https://brave-mud-06345141e.2.azurestaticapps.net/)** · *First request may take ~60s (Azure free-tier cold start)*
 
 -----
@@ -14,12 +16,12 @@ This isn’t a tutorial project — it’s a deliberately architected system bui
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Clients (Angular · React · Vue · Blazor)           │
+│  Clients (Angular · React · Vue · Blazor)           │
 ├─────────────────────────────────────────────────────┤
-│  API Layer          Minimal APIs + 1 Controller     │
-│  Application        MediatR · CQRS-style handlers   │
-│  Domain             Entities · Value Objects        │
-│  Infrastructure     EF Core · SQLite · Redis · TMDB │
+│  API Layer          Minimal APIs + 1 Controller     │
+│  Application        MediatR · CQRS-style handlers   │
+│  Domain             Entities · Value Objects        │
+│  Infrastructure     EF Core · SQLite · Redis · TMDB │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -35,14 +37,14 @@ This isn’t a tutorial project — it’s a deliberately architected system bui
 
 ## Tech Stack
 
-|Layer   |Technology                                    |
-|--------|----------------------------------------------|
-|API     |.NET 10 · Minimal APIs · MediatR · Serilog    |
-|Data    |EF Core · SQLite · Redis Cloud                |
-|Docs    |Scalar (OpenAPI)                              |
-|Frontend|Angular v21 (MVP)                             |
-|Hosting |Azure App Service + Static Web Apps           |
-|CI/CD   |GitHub Actions → auto-deploy on push to `main`|
+| Layer    | Technology                                     |
+|----------|------------------------------------------------|
+| API      | .NET 10 · Minimal APIs · MediatR · Serilog     |
+| Data     | EF Core · SQLite · Redis Cloud                 |
+| Docs     | Scalar (OpenAPI)                               |
+| Frontend | Angular v21 (MVP)                              |
+| Hosting  | Azure App Service + Static Web Apps            |
+| CI/CD    | GitHub Actions → auto-deploy on push to `main` |
 
 **Supported formats:** DVD · Blu-ray · 4K Blu-ray
 
@@ -52,24 +54,24 @@ This isn’t a tutorial project — it’s a deliberately architected system bui
 
 ## Roadmap
 
-|Feature                                         |Status   |
-|------------------------------------------------|---------|
-|Core API with auth, search, collection CRUD     |✅ Done   |
-|Rate limiting                                   |✅ Done   |
-|Centralized exception handling                  |✅ Done   |
-|Structured logging (Serilog)                    |✅ Done   |
-|Scalar / OpenAPI documentation                  |✅ Done   |
-|Redis caching for TMDB responses                |✅ Done   |
-|Angular client (MVP)                            |✅ Done   |
-|CI/CD via GitHub Actions                        |✅ Done   |
-|Replace MediatR with custom request pipeline    |🔧 Planned|
-|React client                                    |🔧 Planned|
-|Vue client                                      |🔧 Planned|
-|Blazor client                                   |🔧 Planned|
-|Email service (account creation, password reset)|🔧 Planned|
-|PostgreSQL migration                            |🔧 Planned|
-|OpenTelemetry observability                     |🔧 Planned|
-|Docker containerization                         |🔧 Planned|
+| Feature                                          | Status     |
+|--------------------------------------------------|------------|
+| Core API with auth, search, collection CRUD      | ✅ Done     |
+| Rate limiting                                    | ✅ Done     |
+| Centralized exception handling                   | ✅ Done     |
+| Structured logging (Serilog)                     | ✅ Done     |
+| Scalar / OpenAPI documentation                   | ✅ Done     |
+| Redis caching for TMDB responses                 | ✅ Done     |
+| Angular client (MVP)                             | ✅ Done     |
+| CI/CD via GitHub Actions                         | ✅ Done     |
+| Replace MediatR with custom request pipeline     | 🔧 Planned |
+| React client                                     | 🔧 Planned |
+| Vue client                                       | 🔧 Planned |
+| Blazor client                                    | 🔧 Planned |
+| Email service (account creation, password reset) | 🔧 Planned |
+| PostgreSQL migration                             | 🔧 Planned |
+| OpenTelemetry observability                      | 🔧 Planned |
+| Docker containerization                          | 🔧 Planned |
 
 -----
 
@@ -125,16 +127,16 @@ API docs available at `https://localhost:7184/scalar/v1`.
 
 Full interactive docs via [Scalar](https://localhost:7184/scalar/v1) when running locally. Here’s the surface:
 
-|Method  |Endpoint                             |Auth|Description           |
-|--------|-------------------------------------|----|----------------------|
-|`POST`  |`/api/auth/create`                   |—   |Create account        |
-|`POST`  |`/api/auth/login`                    |—   |Login → JWT           |
-|`POST`  |`/api/auth/delete/{userId}`          |🔒   |Delete own account    |
-|`GET`   |`/api/movies?search=&page=&userId=`  |🔒   |Search TMDB           |
-|`GET`   |`/api/users/{userId}/movies`         |🔒   |List collection       |
-|`GET`   |`/api/users/{userId}/movies/{tmdbId}`|🔒   |Get movie detail      |
-|`POST`  |`/api/users/{userId}/movies`         |🔒   |Add to collection     |
-|`DELETE`|`/api/users/{userId}/movies/{tmdbId}`|🔒   |Remove from collection|
+| Method   | Endpoint                            | Auth | Description            |
+|----------|-------------------------------------|------|------------------------|
+| `POST`   | `/api/auth/create`                  | —    | Create account → JWT   |
+| `POST`   | `/api/auth/login`                   | —    | Login → JWT            |
+| `POST`   | `/api/auth/delete/{userId}`         | 🔒   | Delete own account     |
+| `GET`    | `/api/movies?search=&page=&userId=` | 🔒   | Search TMDB            |
+| `GET`    | `/api/movies/{tmdbId}`              | 🔒   | Get movie detail       |
+| `GET`    | `/api/users/me/movies`              | 🔒   | List collection        |
+| `POST`   | `/api/users/me/movies`              | 🔒   | Add to collection      |
+| `DELETE` | `/api/users/me/movies/{tmdbId}`     | 🔒   | Remove from collection |
 
 -----
 
